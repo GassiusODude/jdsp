@@ -1,5 +1,10 @@
 
 import jdsp.filters.Filter;
+/**
+ * Tests the convolution function
+ * @author GassiusODude
+ * @since May 27, 2019
+ */
 public class TestFilters{
     public static void compareVectors(float[] vector1, float[] vector2){
         if (vector1.length != vector2.length){
@@ -8,14 +13,11 @@ public class TestFilters{
         boolean passed = true;
         for (int ind0=0; ind0<vector1.length; ind0++){
             if (vector1[ind0] != vector2[ind0]){
-                //throw new AssertionError("Element " + 
-                //        Float.toString(ind0) + " does not match");
-                //System.out.println("Failed on index = " + Float.toString(ind0));
-                //System.out.println("\t" + vector1[ind0] + "\tvs\t" + vector2[ind0]);
                 passed = false;
             }
         }
         if (!passed){
+            // ------------------  print vectors  ---------------------------
             for (int ind0=0; ind0<vector1.length; ind0++){
                 System.out.print(vector1[ind0] + ",");
             }
@@ -24,7 +26,10 @@ public class TestFilters{
                 System.out.print(vector2[ind0] + ",");
             }
             System.out.println();
-        }        
+
+            // raise exception
+            throw new AssertionError("Output does not match expected");
+        }
     }
 
     public static void testConv(){
@@ -57,6 +62,5 @@ public class TestFilters{
     }
     public static void main(String[] args){
         testConv();
-
     }
 }
