@@ -1,5 +1,5 @@
 package jdsp.filters;
-
+import jdsp.filters.FilterDesign;
 import java.security.InvalidParameterException;
 
 /**
@@ -29,7 +29,7 @@ public class Filter{
                 "Number Numerator Coefficients should be >= 1");
 
         // initialize to moving average filter
-        coefNumerator = designMovingAverage(numNumerator);
+        coefNumerator = FilterDesign.designMovingAverage(numNumerator);
         coefDenominator = new float[0];
     }
 
@@ -39,9 +39,10 @@ public class Filter{
      * @param numNum Number of numerator filter coefs.
      * @param numDen Number of denominator filter coefs.
      * @param design The design technique to use.
+     * @param bandwidth Normalized bandwidth. (0.5 = half the sampling rate)
      */
-    public void designFilter(int numNum, int numDen, String design)
-        throws InvalidParameterException{
+    public void designFilter(int numNum, int numDen, String design, 
+            float bandwidth) throws InvalidParameterException{
         // -------------------------  error checking  -----------------------
         if (numNum < 1)
             throw new InvalidParameterException(
@@ -53,13 +54,25 @@ public class Filter{
         // -------------------------  design filter  ------------------------
         switch (design){
             case "MOVING AVERAGE":
-                // update coefNumerator with new filter
-                coefNumerator = designMovingAverage(numNum);
+                coefNumerator = FilterDesign.designMovingAverage(numNum);
+                coefDenominator = new float[0];
                 break;
+
+            // handle window design method
+            case "BARTLETT":
+            case "HAMMING":
+            case "HANN":
+                coefNumerator = FilterDesign.fir_window_design(
+                    numNum, design, bandwidth);
+                coefDenominator = new float[0];    
+                break;
+
+            // no matches...design not supported
             default:
                 throw new InvalidParameterException(
                     "Design (" + design + ") not supported.");
         }
+        // TODO: update size of internal state
     }
 
     /**
@@ -122,23 +135,5 @@ public class Filter{
         return output;
     }
 
-    /**
-     * Design a moving average filter.
-     * @param numNum
-     * @return The designed filter
-     * @throws InvalidParameterException
-     */
-    public static float[] designMovingAverage(int numNum)
-        throws InvalidParameterException {
-        // -------------------------  error checking  -----------------------
-        if (numNum < 1)
-           throw new InvalidParameterException(
-                "Number Numerator Coefficients should be >= 1");
 
-        // initialize to moving average filter
-        float[] numerator = new float[numNum];
-        for (int ind0 = 0; ind0 < numNum; ind0++)
-            numerator[ind0] = 1.0f / numNum;
-        return numerator;
-    }
 }
