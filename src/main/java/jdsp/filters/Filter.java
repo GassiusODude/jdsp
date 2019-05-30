@@ -1,7 +1,6 @@
 package jdsp.filters;
 import jdsp.filters.FilterDesign;
 import java.security.InvalidParameterException;
-
 /**
  * The Filter class will implement the following static methods:
  *      convolve()
@@ -56,15 +55,17 @@ public class Filter{
             case "MOVING AVERAGE":
                 coefNumerator = FilterDesign.designMovingAverage(numNum);
                 coefDenominator = new float[0];
+                filterState = new float[numNum - 1];
                 break;
 
             // handle window design method
             case "BARTLETT":
             case "HAMMING":
             case "HANN":
-                coefNumerator = FilterDesign.fir_window_design(
+                coefNumerator = FilterDesign.firWindowDesign(
                     numNum, design, bandwidth);
-                coefDenominator = new float[0];    
+                coefDenominator = new float[0];
+                filterState = new float[numNum - 1];    
                 break;
 
             // no matches...design not supported
@@ -81,9 +82,25 @@ public class Filter{
      * @return Filtered output
      */
     public float[] applyFilter(float[] input){
-        // TODO: track the state of the filter.
-        // TODO: add support to include denominator
-        return convolve(input, coefNumerator);
+
+        // ------------------------  load filter state  ---------------------
+        float[] tmp = new float[input.length + filterState.length];
+        System.arraycopy(filterState, 0, tmp, 0, filterState.length);
+        System.arraycopy(input, 0, tmp, filterState.length, input.length);
+        float[] output = convolve(tmp, coefNumerator);
+
+
+        // update filterState
+        System.arraycopy(tmp, tmp.length - filterState.length, 
+            filterState, 0, filterState.length);
+
+        // prepare output
+        tmp = new float[input.length];
+        System.arraycopy(output, filterState.length, tmp, 0, tmp.length);
+
+        
+
+        return tmp;
     }
 
     // =====================  static methods  ===============================

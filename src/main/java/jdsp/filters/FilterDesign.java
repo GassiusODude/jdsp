@@ -39,7 +39,7 @@ public class FilterDesign {
         }
         return output;
     }
-    public static float[] fir_window_design(int numTap, String window,
+    public static float[] firWindowDesign(int numTap, String window,
             float normalizeBandwidth) throws InvalidParameterException{
         // ---------------------  prepare variables  ------------------------
         // prepare output
@@ -54,7 +54,7 @@ public class FilterDesign {
         
         if ((numTap&1) == 1){
             // odd
-            x[0] = -(numTap + 1) / 2.0f / numTap;
+            x[0] = -(numTap - 1) / 2.0f / numTap;
         }else{
             // even
             x[0] = (0.5f - numTap / 2) / numTap;
@@ -62,6 +62,9 @@ public class FilterDesign {
         for (int ind0 = 1; ind0 < numTap; ind0 ++){
             x[ind0] = x[ind0 - 1] + xInc;
         }
+        // -----------------------  design window  -------------------------
+        float[] win = designWindow(window, x);
+
         // -----------------  design ideal IIR filter  ----------------------
         // load sinc into output
         for (int ind0 = 0; ind0 < numTap; ind0++){
@@ -69,14 +72,15 @@ public class FilterDesign {
                 output[ind0] = 1.0f;
             }
             else{
-                tmp = normalizeBandwidth * pi * x[ind0];
+                tmp = normalizeBandwidth * pi * x[ind0] * numTap;
                 output[ind0] = (float) Math.sin(tmp) / tmp;
             }
         }
 
         // ----------------------  design window  ---------------------------
-        float[] win = designWindow(window, x);
         float mySum = 0.0f;
+        
+        // multiply IIR and window in time == convolve idea 
         for (int ind0 = 0; ind0 < numTap; ind0++){
             output[ind0] *= win[ind0];
             mySum += output[ind0];
