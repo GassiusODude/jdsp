@@ -68,8 +68,8 @@ public class DTFT {
     /**
      * Calculate the sum of the vector
      * 
-     * @param signal
-     * @return
+     * @param signal The input signal.
+     * @return The sum of the signal.
      */
     public static float sum(float[] signal){
         float my_sum = 0;

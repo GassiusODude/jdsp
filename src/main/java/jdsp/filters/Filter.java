@@ -14,6 +14,8 @@ public class Filter{
     private float[] coefNumerator;
     /** Denominator of filter */
     private float[] coefDenominator;
+
+    /** State of the filter */
     private float[] filterState;
 
     /**
@@ -34,7 +36,8 @@ public class Filter{
 
     /**
      * Design a filter based on the provided specifications
-     * and design technique.
+     * and design technique.  This will update interal properties.
+     * 
      * @param numNum Number of numerator filter coefs.
      * @param numDen Number of denominator filter coefs.
      * @param design The design technique to use.
@@ -98,8 +101,6 @@ public class Filter{
         tmp = new float[input.length];
         System.arraycopy(output, filterState.length, tmp, 0, tmp.length);
 
-        
-
         return tmp;
     }
 
@@ -151,6 +152,4 @@ public class Filter{
 
         return output;
     }
-
-
 }

@@ -4,13 +4,11 @@ import java.security.InvalidParameterException;
 
 public class FilterDesign {
     /**
-     * Supported windows =
-     *      
+     * Design filter
      * 
      * @param window Window Type from {"BARTLETT", "HAMMING", "HANN"}
      * @param x The x range to design the filter
-     * @return
-     * @throws InvalidParameterException
+     * @return The designed window function
      */
     public static float[] designWindow(String window, float[] x)
         throws InvalidParameterException{
@@ -39,6 +37,15 @@ public class FilterDesign {
         }
         return output;
     }
+    /**
+     * Design an FIR filter with the WindowDesigen Method.
+     * This first designs an ideal IIR filter of the specified bandwidth.
+     * This is multipled in time with the desired window.
+     * @param numTap Number of elements of the filter
+     * @param window The String name of the type of window
+     * @param normalizeBandwidth The desired bandwidth of the filter.
+     * @return The designed filter
+     */
     public static float[] firWindowDesign(int numTap, String window,
             float normalizeBandwidth) throws InvalidParameterException{
         // ---------------------  prepare variables  ------------------------
@@ -94,9 +101,8 @@ public class FilterDesign {
     }
     /**
      * Design a moving average filter.
-     * @param numNum
+     * @param numNum Number of elements of the filter.
      * @return The designed filter
-     * @throws InvalidParameterException
      */
     public static float[] designMovingAverage(int numNum)
         throws InvalidParameterException {
