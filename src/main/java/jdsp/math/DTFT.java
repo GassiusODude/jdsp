@@ -4,6 +4,7 @@ package jdsp.math;
  * @author GassiusODude
  */
 public class DTFT {
+    public final static long serialVersionUID = 0;
     /**
      * Calculates the discrete time fourier transform of a real input signal
      * @param signal Real signal

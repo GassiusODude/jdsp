@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import jdsp.dataformat.DataObject;
 
 public class Plot extends JPanel {
+    public final static long serialVersionUID = 0;
     protected final Color colorBG = Color.WHITE;
     protected final Color colorFG = Color.BLACK;
     public static final Color[] COLOR_MAP = {
@@ -205,7 +206,7 @@ public class Plot extends JPanel {
 
 
     /**
-     * Not implement/tested.
+     * Performs a line plot.
      * @param g Graphics object
      */
     public void drawData(Graphics g){
@@ -215,10 +216,15 @@ public class Plot extends JPanel {
         loadLineType(g2);
         for (int ind0 = 0; ind0 < data.getNumFeatures(); ind0++){
             g2.setColor(COLOR_MAP[ind0 % COLOR_MAP.length]);
-            drawPolyline(g2, data.getFeature(ind0));
+            draw(g2, data.getFeature(ind0));
         }
     }
-    public void drawPolyline(Graphics2D g2, ArrayList aList){
+
+    /**
+     * Draw a line based on ArrayList vector
+     * @param g2 The Graphics2D object.
+     */
+    public void draw(Graphics2D g2, ArrayList aList){
         int[] datX = new int[aList.size()];
         int[] datY = new int[aList.size()];
         float scaleX = axes[1] - axes[0];
@@ -238,7 +244,30 @@ public class Plot extends JPanel {
             }
         }
     }
-
+    /**
+     * Draw a line based on ArrayList vector
+     * @param g2 The Graphics2D object.
+     */
+    public void draw(Graphics2D g2, float[] realSig){
+        int[] datX = new int[realSig.length];
+        int[] datY = new int[realSig.length];
+        float scaleX = axes[1] - axes[0];
+        float scaleY = axes[3] - axes[2];
+        float normX, normY;
+        for (int ind0 = 0; ind0 < realSig.length; ind0++){
+            normX = (ind0 - axes[0]) / scaleX;
+            datX[ind0] = (int) (sideLeft + plotWidth * normX);
+            normY = (realSig[ind0] - axes[2]) / scaleY;
+            datY[ind0] = (int) (sideBottom - plotHeight * normY);
+        }
+        if (lineType != " ")
+            g2.drawPolyline(datX, datY, realSig.length);
+        if (marker != " "){
+            for (int ind0 = 0; ind0 < realSig.length; ind0++){
+                g2.drawString(marker, datX[ind0] - markerWidth / 2, datY[ind0]);
+            }
+        }
+    }
     /**
      * Draw the labels
      * @param g Graphics object
@@ -372,8 +401,12 @@ public class Plot extends JPanel {
                 cos[ind0] = (float) Math.cos(2 * Math.PI * 0.01 * ind0);
                 sin[ind0] = (float) Math.sin(2 * Math.PI * 0.01 * ind0);
             }
-            d.addFeature(cos, "Real");
-            d.addFeature(sin, "Imag");
+            //import jdsp.math.DTFT;
+            //float[] dtft = DTFT.discreteFourierTransform(cos, 128);
+            //float[] magnArray = DTFT.magnitude(dtft);
+            //d.addFeature(cos, "Real");
+            //d.addFeature(sin, "Imag");
+            //d.addFeature(magnArray, "MagnPSD");
             p.setData(d);
             newFrame.setSize(600,400);
             newFrame.add(p);
