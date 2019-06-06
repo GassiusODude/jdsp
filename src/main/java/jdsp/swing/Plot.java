@@ -223,6 +223,7 @@ public class Plot extends JPanel {
     /**
      * Draw a line based on ArrayList vector
      * @param g2 The Graphics2D object.
+     * @param aList The
      */
     public void draw(Graphics2D g2, ArrayList aList){
         int[] datX = new int[aList.size()];
@@ -231,9 +232,12 @@ public class Plot extends JPanel {
         float scaleY = axes[3] - axes[2];
         float normX, normY;
         for (int ind0 = 0; ind0 < aList.size(); ind0++){
+            // assume x is just the index used
             normX = (ind0 - axes[0]) / scaleX;
             datX[ind0] = (int) (sideLeft + plotWidth * normX);
-            normY = ((float)aList.get(ind0) - axes[2]) / scaleY;
+
+            // convert aList scaled by vertical margins and scale 
+            normY = ((float) aList.get(ind0) - axes[2]) / scaleY;
             datY[ind0] = (int) (sideBottom - plotHeight * normY);
         }
         if (lineType != " ")
@@ -247,6 +251,7 @@ public class Plot extends JPanel {
     /**
      * Draw a line based on ArrayList vector
      * @param g2 The Graphics2D object.
+     * @param realSig The real sign
      */
     public void draw(Graphics2D g2, float[] realSig){
         int[] datX = new int[realSig.length];
@@ -255,8 +260,11 @@ public class Plot extends JPanel {
         float scaleY = axes[3] - axes[2];
         float normX, normY;
         for (int ind0 = 0; ind0 < realSig.length; ind0++){
+            // assume x is just the index
             normX = (ind0 - axes[0]) / scaleX;
             datX[ind0] = (int) (sideLeft + plotWidth * normX);
+
+            // scale the vertical value based on margins and scale
             normY = (realSig[ind0] - axes[2]) / scaleY;
             datY[ind0] = (int) (sideBottom - plotHeight * normY);
         }

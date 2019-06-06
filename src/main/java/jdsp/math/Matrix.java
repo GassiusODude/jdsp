@@ -29,9 +29,10 @@ public class Matrix{
     }
     
     /**
-     *
-     * @param matrix
-     * @param out
+     * Gauss-Jordan is a Gaussian elimination method for solving a set of
+     * linear equations.
+     * @param matrix The Matrix
+     * @param out The output matrix
      */
     public static void gaussJordan(final double[][] matrix, double[][] out){
         // -----------------------  error checking  -------------------------
@@ -77,8 +78,8 @@ public class Matrix{
                 //Still zero, break out now.
                 break;
             else{
-                row_scale(out, ind0, 1 / temp[ind0][ind0]);
-                row_scale(temp, ind0, 1 / temp[ind0][ind0]);
+                rowScale(out, ind0, 1 / temp[ind0][ind0]);
+                rowScale(temp, ind0, 1 / temp[ind0][ind0]);
                 for (int ind1 = 0; ind1 < temp.length; ind1++)
                     if (ind1!= ind0){
                         rowSubtract(out, ind1, ind0, temp[ind1][ind0]);
@@ -87,7 +88,13 @@ public class Matrix{
             }
         }
     }
-    
+    /**
+     * Perform row swap
+     * 
+     * @param matrix Input matrix
+     * @param i First row
+     * @param j Second row
+     */
     public static void rowSwap(double[][] matrix, int i, int j){
         if (matrix.length > i && matrix.length > j && i >= 0 && j >= 0){
             if (i != j){
@@ -103,7 +110,7 @@ public class Matrix{
     }
     /**
      * Subtract row j from row i.
-     * @param matrix
+     * @param matrix Input matrix
      * @param i Target row
      * @param j The row holding the values to subtract.
      * @param scale The scalar factor to apply to row j before subtracting
@@ -122,11 +129,11 @@ public class Matrix{
     }
     /**
      * Scale a row by double value.
-     * @param matrix
+     * @param matrix Input matrix
      * @param i The row of the matrix to scale
      * @param scale The value to scale the matrix by.
      */
-    public static void row_scale(final double[][] matrix, int i, double scale){
+    public static void rowScale(final double[][] matrix, int i, double scale){
        if (matrix.length >0 && i >= 0 && i < matrix.length){
            for (int ind0 = 0; ind0 < matrix[i].length; ind0++)
                matrix[i][ind0] *= scale;
@@ -141,9 +148,9 @@ public class Matrix{
     /**
      * Perform multiplication of two matrices.  matrix 1 should have number of
      * columns matching the number of rows in matrix 2.
-     * @param mat1
-     * @param mat2
-     * @param out 
+     * @param mat1 Matrix 1 (a x b)
+     * @param mat2 Matrix 2 (b x c)
+     * @param out Output Matrix (a x c)
      */
     public static void matrixMultiply(final double[][] mat1, 
             final double[][] mat2, double[][] out){
@@ -172,8 +179,8 @@ public class Matrix{
     
     /**
      * Calculate the determinant of the given matrix
-     * @param matrix
-     * @return 
+     * @param matrix The input matrix
+     * @return Returns the determinant of the matrix
      */
     public static double determinant(final double[][] matrix){
         // perform error checking
@@ -203,6 +210,12 @@ public class Matrix{
                 }   return sum;
         }
     }
+
+    /**
+     * Print out the matrix
+     * 
+     * @param matrix The matrix to print
+     */
     public static void display(final double[][] matrix){
         for (double[] matrix1 : matrix) {
             for (int ind1 = 0; ind1 < matrix1.length; ind1++) {
@@ -211,16 +224,22 @@ public class Matrix{
             System.out.println();
         }
     }
-    public static void display(final double[] matrix){
-        for (int ind0 = 0; ind0 < matrix.length; ind0++)
-            System.out.print("\t" + matrix[ind0]);
+
+    /**
+     * Print out a vector
+     * 
+     * @param vector The vector to print.
+     */
+    public static void display(final double[] vector){
+        for (int ind0 = 0; ind0 < vector.length; ind0++)
+            System.out.print("\t" + vector[ind0]);
         System.out.println();
                     
     }
     /**
      * Calculate the cumulative product of every element in the matrix.
-     * @param matrix
-     * @return 
+     * @param matrix The input matrix
+     * @return The cumulative product of all elements of the matrix
      */
     public static double elementwiseProduct(final double[][] matrix){
         
@@ -237,16 +256,16 @@ public class Matrix{
     
     /**
      * Calculate the cumulative product of every element in a row vector.
-     * @param matrix
-     * @return 
+     * @param vector Input vector
+     * @return Return the cumulative product of all elements of vector
      */
-    public static double elementwiseProduct(final double[] matrix){
-        if (matrix.length == 0)
+    public static double elementwiseProduct(final double[] vector){
+        if (vector.length == 0)
             return 0;
         else{
             double out = 1;
-            for (int ind0 = 0; ind0 < matrix.length; ind0++)
-                out*= matrix[ind0];
+            for (int ind0 = 0; ind0 < vector.length; ind0++)
+                out*= vector[ind0];
             return out;
         }
             
