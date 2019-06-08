@@ -10,7 +10,7 @@ public class FilterDesign {
      * @param x The x range to design the filter
      * @return The designed window function
      */
-    public static float[] designWindow(String window, float[] x)
+    public static float[] designWindowF(String window, float[] x)
         throws InvalidParameterException{
         // ---------------------------  prepare output  ---------------------
         float[] output = new float[x.length];
@@ -46,7 +46,7 @@ public class FilterDesign {
      * @param normalizeBandwidth The desired bandwidth of the filter.
      * @return The designed filter
      */
-    public static float[] firWindowDesign(int numTap, String window,
+    public static float[] firWindowDesignF(int numTap, String window,
             float normalizeBandwidth) throws InvalidParameterException{
         // ---------------------  prepare variables  ------------------------
         // prepare output
@@ -70,7 +70,7 @@ public class FilterDesign {
             x[ind0] = x[ind0 - 1] + xInc;
         }
         // -----------------------  design window  -------------------------
-        float[] win = designWindow(window, x);
+        float[] win = designWindowF(window, x);
 
         // -----------------  design ideal IIR filter  ----------------------
         // load sinc into output
@@ -104,7 +104,7 @@ public class FilterDesign {
      * @param numNum Number of elements of the filter.
      * @return The designed filter
      */
-    public static float[] designMovingAverage(int numNum)
+    public static float[] designMovingAverageF(int numNum)
         throws InvalidParameterException {
         // -------------------------  error checking  -----------------------
         if (numNum < 1)
@@ -117,4 +117,122 @@ public class FilterDesign {
             numerator[ind0] = 1.0f / numNum;
         return numerator;
     }
+    // ======================================================================
+    // -------------------  double version  ---------------------------------
+    // ======================================================================
+    /**
+     * Design filter
+     * 
+     * @param window Window Type from {"BARTLETT", "HAMMING", "HANN"}
+     * @param x The x range to design the filter
+     * @return The designed window function
+     */
+    public static double[] designWindowD(String window, double[] x)
+        throws InvalidParameterException{
+        // ---------------------------  prepare output  ---------------------
+        double[] output = new double[x.length];
+        double pi = Math.PI;
+
+        switch (window){
+            case "BARTLETT":
+                for (int ind0 = 0; ind0 < x.length; ind0++)
+                    output[ind0] = 1.0f - Math.abs(2 * x[ind0]);
+                break;
+            case "HAMMING":
+                for (int ind0 = 0; ind0 < x.length; ind0++)
+                    output[ind0] = 0.54 + 0.46 * 
+                        Math.cos(2.0 * pi * x[ind0]);
+                break;
+            case "HANN":
+                for (int ind0 = 0; ind0 < x.length; ind0++)
+                    output[ind0] = 0.5f + 0.5 * 
+                        Math.cos(2.0 * pi * x[ind0]);
+                break;
+
+            default:
+                throw new InvalidParameterException("Unsupported window type");
+        }
+        return output;
+    }
+    /**
+     * Design an FIR filter with the WindowDesigen Method.
+     * This first designs an ideal IIR filter of the specified bandwidth.
+     * This is multipled in time with the desired window.
+     * @param numTap Number of elements of the filter
+     * @param window The String name of the type of window
+     * @param normalizeBandwidth The desired bandwidth of the filter.
+     * @return The designed filter
+     */
+    public static double[] firWindowDesignD(int numTap, String window,
+            double normalizeBandwidth) throws InvalidParameterException{
+        // ---------------------  prepare variables  ------------------------
+        // prepare output
+        double [] output = new double[numTap];
+
+        // local variables
+        double[] x = new double[numTap];
+        double pi = Math.PI;
+        double tmp;
+        // -------------------------  prepare x  ----------------------------
+        double xInc = 1.0f / numTap;
+        
+        if ((numTap&1) == 1){
+            // odd
+            x[0] = -(numTap - 1) / 2.0 / numTap;
+        }else{
+            // even
+            x[0] = (0.5 - numTap / 2) / numTap;
+        }
+        for (int ind0 = 1; ind0 < numTap; ind0 ++){
+            x[ind0] = x[ind0 - 1] + xInc;
+        }
+        // -----------------------  design window  -------------------------
+        double[] win = designWindowD(window, x);
+
+        // -----------------  design ideal IIR filter  ----------------------
+        // load sinc into output
+        for (int ind0 = 0; ind0 < numTap; ind0++){
+            if (x[ind0] == 0){
+                output[ind0] = 1.0;
+            }
+            else{
+                tmp = normalizeBandwidth * pi * x[ind0] * numTap;
+                output[ind0] = Math.sin(tmp) / tmp;
+            }
+        }
+
+        // ----------------------  design window  ---------------------------
+        double mySum = 0.0;
+        
+        // multiply IIR and window in time == convolve idea 
+        for (int ind0 = 0; ind0 < numTap; ind0++){
+            output[ind0] *= win[ind0];
+            mySum += output[ind0];
+        }
+
+        // normalize filter
+        for (int ind0 = 0; ind0 < numTap; ind0++){
+            output[ind0] /= mySum;
+        }
+        return output;
+    }
+    /**
+     * Design a moving average filter.
+     * @param numNum Number of elements of the filter.
+     * @return The designed filter
+     */
+    public static double[] designMovingAverageD(int numNum)
+        throws InvalidParameterException {
+        // -------------------------  error checking  -----------------------
+        if (numNum < 1)
+           throw new InvalidParameterException(
+                "Number Numerator Coefficients should be >= 1");
+
+        // initialize to moving average filter
+        double[] numerator = new double[numNum];
+        for (int ind0 = 0; ind0 < numNum; ind0++)
+            numerator[ind0] = 1.0 / numNum;
+        return numerator;
+    }
+
 }

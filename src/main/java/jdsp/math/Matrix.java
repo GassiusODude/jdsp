@@ -25,7 +25,8 @@ public class Matrix{
         }
 
         // ---------------------- perform inverse  --------------------------
-        // FIXME: not implemented yet.
+        // use the Gauss-Jordan method to find inverse
+        gaussJordan(matrix, out);
     }
     
     /**

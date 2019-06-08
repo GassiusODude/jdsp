@@ -1,15 +1,15 @@
 package jdsp.filters;
 import jdsp.filters.FilterDesign;
+import jdsp.math.Convolve;
 import java.security.InvalidParameterException;
 /**
- * The Filter class will implement the following static methods:
- *      convolve()
+ * The FilterF class will implement the following static methods:
  *
  * @author GassiusODude
  * @since May 27, 2019
  * @version 0.0
  */
-public class Filter{
+public class FilterF{
     /** Numerator of filter */
     private float[] coefNumerator;
     /** Denominator of filter */
@@ -23,14 +23,14 @@ public class Filter{
      *
      * @param numNumerator Number of numerator elements.
      */
-    public Filter(int numNumerator) throws InvalidParameterException {
+    public FilterF(int numNumerator) throws InvalidParameterException {
         // -------------------------  error checking  -----------------------
         if (numNumerator < 1)
             throw new InvalidParameterException(
                 "Number Numerator Coefficients should be >= 1");
 
         // initialize to moving average filter
-        coefNumerator = FilterDesign.designMovingAverage(numNumerator);
+        coefNumerator = FilterDesign.designMovingAverageF(numNumerator);
         coefDenominator = new float[0];
     }
 
@@ -56,7 +56,7 @@ public class Filter{
         // -------------------------  design filter  ------------------------
         switch (design){
             case "MOVING AVERAGE":
-                coefNumerator = FilterDesign.designMovingAverage(numNum);
+                coefNumerator = FilterDesign.designMovingAverageF(numNum);
                 coefDenominator = new float[0];
                 filterState = new float[numNum - 1];
                 break;
@@ -65,7 +65,7 @@ public class Filter{
             case "BARTLETT":
             case "HAMMING":
             case "HANN":
-                coefNumerator = FilterDesign.firWindowDesign(
+                coefNumerator = FilterDesign.firWindowDesignF(
                     numNum, design, bandwidth);
                 coefDenominator = new float[0];
                 filterState = new float[numNum - 1];    
@@ -90,7 +90,7 @@ public class Filter{
         float[] tmp = new float[input.length + filterState.length];
         System.arraycopy(filterState, 0, tmp, 0, filterState.length);
         System.arraycopy(input, 0, tmp, filterState.length, input.length);
-        float[] output = convolve(tmp, coefNumerator);
+        float[] output = Convolve.convolve(tmp, coefNumerator);
 
 
         // update filterState
@@ -102,54 +102,5 @@ public class Filter{
         System.arraycopy(output, filterState.length, tmp, 0, tmp.length);
 
         return tmp;
-    }
-
-    // =====================  static methods  ===============================
-    /**
-     * Convolve 2 vectors together.
-     *
-     * @param input1 First vector (length N)
-     * @param input2 Second vector (length M)
-     * @return The convolved outputed (length M+N-1)
-     */
-    public static float[] convolve(float[] input1, float[] input2){
-        // ----------------  setup local variables  -------------------------
-        int len1 = input1.length;
-        int len2 = input2.length;
-        int len3 = len1 + len2 - 1;
-        int start;
-        float[] output = new float[len3];
-
-
-        if (len2 >= len1){
-            for (int ind0 = 0; ind0 < len1; ind0++){
-                for (int ind1 = 0; ind1 < ind0+1; ind1++){
-                    output[ind0] += input1[ind0 - ind1] * input2[ind1];
-                }
-            }
-            for (int ind0 = len1; ind0 < len3; ind0++){
-                start = (ind0-len2+1<0) ? 0 : ind0 - len2 + 1;
-                for (int ind1=start; ind1 < len1; ind1++){
-                    float tmp = input2[ind0-ind1];
-                    output[ind0] += input1[ind1] * tmp;
-                }
-            }
-        }
-        else{
-            for (int ind0 = 0; ind0 < len2; ind0++){
-                for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
-                    output[ind0] += input2[ind0 - ind1] * input1[ind1];
-                }
-            }
-            for (int ind0 = len2; ind0 < len3; ind0++){
-                start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
-                for (int ind1=start; ind1 < len2; ind1++){
-                    float tmp = input1[ind0-ind1];
-                    output[ind0] += input2[ind1] * tmp;
-                }
-            }
-        }
-
-        return output;
     }
 }
