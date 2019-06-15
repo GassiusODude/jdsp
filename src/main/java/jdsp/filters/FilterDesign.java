@@ -1,6 +1,5 @@
 package jdsp.filters;
 
-import java.security.InvalidParameterException;
 
 public class FilterDesign {
     /**
@@ -11,7 +10,7 @@ public class FilterDesign {
      * @return The designed window function
      */
     public static float[] designWindowF(String window, float[] x)
-        throws InvalidParameterException{
+        throws IllegalArgumentException{
         // ---------------------------  prepare output  ---------------------
         float[] output = new float[x.length];
         float pi = (float)Math.PI;
@@ -33,7 +32,7 @@ public class FilterDesign {
                 break;
 
             default:
-                throw new InvalidParameterException("Unsupported window type");
+                throw new IllegalArgumentException("Unsupported window type");
         }
         return output;
     }
@@ -47,7 +46,7 @@ public class FilterDesign {
      * @return The designed filter
      */
     public static float[] firWindowDesignF(int numTap, String window,
-            float normalizeBandwidth) throws InvalidParameterException{
+            float normalizeBandwidth) throws IllegalArgumentException{
         // ---------------------  prepare variables  ------------------------
         // prepare output
         float [] output = new float[numTap];
@@ -105,16 +104,16 @@ public class FilterDesign {
      * @return The designed filter
      */
     public static float[] designMovingAverageF(int numNum)
-        throws InvalidParameterException {
+        throws IllegalArgumentException {
         // -------------------------  error checking  -----------------------
         if (numNum < 1)
-           throw new InvalidParameterException(
+           throw new IllegalArgumentException(
                 "Number Numerator Coefficients should be >= 1");
 
         // initialize to moving average filter
         float[] numerator = new float[numNum];
-        for (int ind0 = 0; ind0 < numNum; ind0++)
-            numerator[ind0] = 1.0f / numNum;
+        java.util.Arrays.fill(numerator, 1.0f / numNum);
+
         return numerator;
     }
     // ======================================================================
@@ -128,7 +127,7 @@ public class FilterDesign {
      * @return The designed window function
      */
     public static double[] designWindowD(String window, double[] x)
-        throws InvalidParameterException{
+            throws IllegalArgumentException{
         // ---------------------------  prepare output  ---------------------
         double[] output = new double[x.length];
         double pi = Math.PI;
@@ -150,7 +149,7 @@ public class FilterDesign {
                 break;
 
             default:
-                throw new InvalidParameterException("Unsupported window type");
+                throw new IllegalArgumentException("Unsupported window type");
         }
         return output;
     }
@@ -164,7 +163,7 @@ public class FilterDesign {
      * @return The designed filter
      */
     public static double[] firWindowDesignD(int numTap, String window,
-            double normalizeBandwidth) throws InvalidParameterException{
+            double normalizeBandwidth) throws IllegalArgumentException{
         // ---------------------  prepare variables  ------------------------
         // prepare output
         double [] output = new double[numTap];
@@ -222,10 +221,10 @@ public class FilterDesign {
      * @return The designed filter
      */
     public static double[] designMovingAverageD(int numNum)
-        throws InvalidParameterException {
+        throws IllegalArgumentException {
         // -------------------------  error checking  -----------------------
         if (numNum < 1)
-           throw new InvalidParameterException(
+           throw new IllegalArgumentException(
                 "Number Numerator Coefficients should be >= 1");
 
         // initialize to moving average filter
@@ -235,4 +234,42 @@ public class FilterDesign {
         return numerator;
     }
 
+    /**
+     * Design a square-root raised cosine filter
+     * 
+     * @param numNum The number of taps for the FIR filter
+     * @param sampleRate The sampling rate to design filter against
+     * @param baud The baud of the signal or the inverse of the desired period.
+     * @param rolloff The rolloff of the RRC
+     * @return Return the designed filter
+     */
+    public static double[] designSRRC(int numNum, double sampleRate, 
+            double baud, double rolloff){
+        // ---------------  setup internal variables  -----------------------
+        double time;
+        double[] filter = new double[numNum];
+        double pi = Math.PI;
+        double _4b = 4 * rolloff;
+        // -----------------------  setup time  -----------------------------
+        for (int ind0 = 0; ind0 < filter.length; ind0++){
+            time = (ind0 - (numNum - 1) / 2.0) / sampleRate;
+            if (time == 0)
+                filter[ind0] = baud * (1 + rolloff * (4 / pi - 1));
+            else if (Math.abs(time) == 1.0 / (baud * 4 * rolloff)){
+                filter[ind0] = rolloff * baud / Math.sqrt(2) * 
+                    ((1 + 2 / pi) * Math.sin(pi / _4b) +
+                    (1 - 2 / pi) * Math.cos(pi / _4b));
+            }
+            else{
+                filter[ind0] = baud * (Math.sin(pi * time * baud * (1 - rolloff)) + 
+                    _4b * time * baud * Math.cos(pi * time * baud * (1 + rolloff)))
+                    / (pi * time * baud * (1 - Math.pow(_4b * time * baud, 2)));
+            }
+
+        }
+
+        // ---------------------  design filter  ----------------------------
+
+        return filter;
+    }
 }

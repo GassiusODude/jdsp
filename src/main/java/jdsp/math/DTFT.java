@@ -47,26 +47,6 @@ public class DTFT {
     }
 
     /**
-     * Calculate the magnitude of each element in the array
-     * Assumes complex, interleaved samples.
-     *      Sample[0] = complexSig[0] + j * complexSig[1]
-     *      Sample[1] = complexSig[2] + j * complexSig[3]
-     * 
-     * @param complexSig Complex interleaved signal
-     * @return Real magnitude vector
-     */
-    public static float[] magnitude(float[] complexSig){
-        // magnitude is real, half the size of interleaved input
-        float[] output = new float[complexSig.length/2];
-        
-        for (int ind0 = 0; ind0 < output.length; ind0++){
-            output[ind0] = complexSig[ind0*2]*complexSig[ind0*2] + 
-                           complexSig[ind0*2+1]*complexSig[ind0*2+1];
-        }
-        return output;
-    }
-
-    /**
      * Calculate the sum of the vector
      * 
      * @param signal The input signal.

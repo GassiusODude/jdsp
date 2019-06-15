@@ -76,7 +76,6 @@ public class FilterF{
                 throw new InvalidParameterException(
                     "Design (" + design + ") not supported.");
         }
-        // TODO: update size of internal state
     }
 
     /**
