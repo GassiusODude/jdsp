@@ -1,9 +1,11 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import java.util.Arrays;
+import java.util.Random;
 import org.junit.Test;
 import jdsp.math.Convolve;
 import jdsp.filters.FilterD;
+import jdsp.filters.FilterF;
 
 /**
  * Tests the convolution function
@@ -82,5 +84,66 @@ public class TestFilters{
         
         assertEquals(out.length, outPart1.length + outPart2.length);
         assertArrayEquals(out, out2, 0.1);
+    }
+
+    @Test
+    public void testThroughputFloat(){
+        // ------------------------  setup  ---------------------------------
+        long tic, toc;
+        FilterF f2 = new FilterF(1);
+        f2.designFilter(101, 0, "HANN", 0.1f);
+        Random r = new Random();
+        float[] data = new float[100000];
+        int numIter = 100;
+        float[] out;
+        for (int ind0 = 0; ind0 < data.length; ind0 ++){
+            data[ind0] = r.nextFloat();
+        }
+        
+        // -------------------------  run on data  --------------------------
+        tic = System.nanoTime();
+        for (int ind0 = 0; ind0 < numIter; ind0++)
+            out = f2.applyFilter(data);
+
+        toc = System.nanoTime();
+
+        // ---------------------------- report  -----------------------------
+        float elapsed = (toc - tic) / 100000000.0f;
+        System.out.println("\nThroughut Test on Float (101 Filter taps)"+
+                           "\n=========================================");
+        System.out.println("Elapsed time = " + elapsed + " seconds");
+        long totalSamples = data.length * numIter;
+        System.out.println("Throughtput = " + (totalSamples / elapsed) +
+            " samples per second");
+    }
+    @Test
+    public void testThroughputDouble(){
+        // ------------------------  setup  ---------------------------------
+        long tic, toc;
+        FilterD f2 = new FilterD(1);
+        f2.designFilter(101, 0, "HANN", 0.1);
+        Random r = new Random();
+        double[] data = new double[100000];
+        int numIter = 100;
+        double[] out;
+        for (int ind0 = 0; ind0 < data.length; ind0 ++){
+            data[ind0] = r.nextDouble();
+        }
+        
+        // -------------------------  run on data  --------------------------
+        tic = System.nanoTime();
+        for (int ind0 = 0; ind0 < numIter; ind0++)
+            out = f2.applyFilter(data);
+
+        toc = System.nanoTime();
+
+        // ---------------------------- report  -----------------------------
+        float elapsed = (toc - tic) / 100000000.0f;
+        System.out.println("\nThroughut Test on Double (101 Filter taps)"+
+                           "\n==========================================");
+        System.out.println("Elapsed time = " + elapsed + " seconds");
+        long totalSamples = data.length * numIter;
+        System.out.println("Throughtput = " + (totalSamples / elapsed) +
+            " samples per second");
     }
 }

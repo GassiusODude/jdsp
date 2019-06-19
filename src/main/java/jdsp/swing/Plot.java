@@ -1,4 +1,6 @@
 package jdsp.swing;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -10,9 +12,12 @@ import java.security.InvalidParameterException;
 import java.lang.RuntimeException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.JComboBox;
 import jdsp.dataformat.DataObject;
+import javax.swing.JButton;
 
-public class Plot extends JPanel {
+public class Plot extends JPanel{
     public final static long serialVersionUID = 0;
     protected final Color colorBG = Color.WHITE;
     protected final Color colorFG = Color.BLACK;
@@ -25,7 +30,7 @@ public class Plot extends JPanel {
     protected String labelTitle = "Default Plot Title";
     public boolean displayGrid = true;
     public boolean displayLegend = true;
-    protected String lineType = "--";
+    protected String lineType = "-";
 
     protected float[] axes = {0.0f, 1.0f, 0.0f, 1.0f};
     protected int nGridLines = 8;
@@ -45,10 +50,32 @@ public class Plot extends JPanel {
     protected int lineWidth = 1;
     private FontMetrics _fontMetrics;
     private Rectangle2D _stringBounds;
-
+    private JToolBar toolBar;
     protected DataObject data;
+
     public Plot(){
         data = new DataObject("Default Plot Data");
+        toolBar = new JToolBar();
+        // --------------------------  marker comboBox  -----------------------
+        String[] markerTypes = {" ", "O", "X", "+", "*"};
+        JComboBox comboMarker = new JComboBox(markerTypes);
+        comboMarker.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                setMarker(comboMarker.getSelectedItem().toString());
+            }
+        });
+        toolBar.add(comboMarker);
+        // --------------------------  line comboBox  -----------------------
+        String[] lineTypes = {"-", "--", ":", ".-"};
+        JComboBox comboLines = new JComboBox(lineTypes);
+        comboLines.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                setLine(comboLines.getSelectedItem().toString());
+            }
+        });
+        toolBar.add(comboLines);
+
+        this.add(toolBar);
     }
 
     /**
@@ -67,6 +94,7 @@ public class Plot extends JPanel {
 
     public void setData(DataObject data){
         this.data = data;
+        this.updateUI();
     }
 
     /**
@@ -80,7 +108,10 @@ public class Plot extends JPanel {
         this.labelY = y;
         this.labelTitle = title;
     }
-
+    public void setLine(String newVal){
+        this.lineType = newVal;
+        this.updateUI();
+    }
     /**
      * Set the margins
      * @param marginX Set the horizontal margins
@@ -90,10 +121,25 @@ public class Plot extends JPanel {
         this.marginX = marginX;
         this.marginY = marginY;
     }
+    /**
+     * Set the marker
+     * @param marker The marker
+     */
+    public void setMarker(String marker){
+        this.marker = marker;
+        this.updateUI();
+    }
+    /**
+     * Set the marker
+     * @param marker The marker
+     * @param width Width of the marker
+     * @param height Height of the marker
+     */
     public void setMarker(String marker, int width, int height){
         this.marker = marker;
         this.markerWidth = width;
         this.markerHeight = height;
+        this.updateUI();
     }
 
     /**
@@ -242,9 +288,10 @@ public class Plot extends JPanel {
         }
         if (lineType != " ")
             g2.drawPolyline(datX, datY, aList.size());
+
         if (marker != " "){
             for (int ind0 = 0; ind0 < aList.size(); ind0++){
-                g2.drawString(marker, datX[ind0] - markerWidth / 2, datY[ind0]);
+                g2.drawString(marker, datX[ind0] - markerWidth / 2, datY[ind0] + markerHeight / 2);
             }
         }
     }
@@ -270,9 +317,10 @@ public class Plot extends JPanel {
         }
         if (lineType != " ")
             g2.drawPolyline(datX, datY, realSig.length);
+
         if (marker != " "){
             for (int ind0 = 0; ind0 < realSig.length; ind0++){
-                g2.drawString(marker, datX[ind0] - markerWidth / 2, datY[ind0]);
+                g2.drawString(marker, datX[ind0] - markerWidth / 2, datY[ind0]+ markerHeight / 2);
             }
         }
     }
@@ -349,6 +397,7 @@ public class Plot extends JPanel {
                     lineWidth, cap, join, miterlimit, dash, dashPhase);
                 break;
             case "-.":
+            case ".-":
                 dash = new float[4];
                 dash[0] = 5.0f;
                 dash[1] = 2.0f;
@@ -358,9 +407,8 @@ public class Plot extends JPanel {
                     lineWidth, cap, join, miterlimit, dash, dashPhase);
                 break;
             default:
-                throw new RuntimeException(
-                    "Line type is not supported (" + lineType + ")");
-
+                myStroke = new BasicStroke(lineWidth, cap, join, miterlimit);
+                break;
         }
         g.setStroke(myStroke);
     }
@@ -391,34 +439,5 @@ public class Plot extends JPanel {
         sideBottom = sideTop + plotHeight;
         updateAxesLoc();
     }
-    public static void main(String args[]){;
-        java.awt.EventQueue.invokeLater(() -> {
-            javax.swing.JFrame newFrame = new javax.swing.JFrame();
-            // ------------------------  setup plot  ----------------------------
-            Plot p = new Plot();
-            float[] newAxes = {-0.f, 1000f, -1f, 1.f};
-            p.setAxes(newAxes);
-            p.setMargin(60, 40);
-            p.setPlotSize(540, 340);
-            p.setLabels("Frequency", "Feat. 1", "Freq. vs Feature 1");
-            p.setMarker("o", 5, 10);
-            DataObject d = new DataObject("Cosine");
-            float[] cos = new float[1000];
-            float[] sin = new float[1000];
-            for (int ind0 = 0; ind0 < cos.length; ind0++){
-                cos[ind0] = (float) Math.cos(2 * Math.PI * 0.01 * ind0);
-                sin[ind0] = (float) Math.sin(2 * Math.PI * 0.01 * ind0);
-            }
-            //import jdsp.math.DTFT;
-            //float[] dtft = DTFT.discreteFourierTransform(cos, 128);
-            //float[] magnArray = DTFT.magnitude(dtft);
-            //d.addFeature(cos, "Real");
-            //d.addFeature(sin, "Imag");
-            //d.addFeature(magnArray, "MagnPSD");
-            p.setData(d);
-            newFrame.setSize(600,400);
-            newFrame.add(p);
-            newFrame.setVisible(true);
-        });
-    }
+
 }
