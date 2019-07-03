@@ -1,3 +1,10 @@
+/**
+ * This function contains a number of commonly used functions applied
+ * to a vector of numbers.
+ * 
+ * @author GassiusODude
+ * @since June 2019
+ */
 package jdsp.math;
 import java.util.Arrays;
 public class Vector{
@@ -130,6 +137,25 @@ public class Vector{
         }
     }
     
+    /**
+     * Return the minimum and maximum of the provided vector
+     * @param vec1 Input vector
+     * @return The [min, max] 
+     */
+    public static double[] getMinMax(double[] vec1){
+        double[] out = new double[2];
+        out[0] = Double.MAX_VALUE;
+        out[1] = Double.MIN_VALUE;
+        for (double elem : vec1){
+            if (elem < out[0])
+                out[0] = elem;
+            if (elem > out[1])
+                out[1] = elem;
+        }
+        return out;
+    }
+
+
     /**
      * Multiply the two vectors together
      * @param vec1 Input vector 1
@@ -410,6 +436,25 @@ public class Vector{
     }
     
     /**
+     * Return the minimum and maximum of the provided vector
+     * @param vec1 Input vector
+     * @return The [min, max] 
+     */
+    public static float[] getMinMax(float[] vec1){
+        float[] out = new float[2];
+        out[0] = Float.MAX_VALUE;
+        out[1] = Float.MIN_VALUE;
+        for (float elem : vec1){
+            if (elem < out[0])
+                out[0] = elem;
+            if (elem > out[1])
+                out[1] = elem;
+        }
+        return out;
+    }
+
+
+    /**
      * Multiply the two vectors together
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
@@ -562,6 +607,7 @@ public class Vector{
         }
         return out;       
     }
+
     //==============================  long support  =========================
     /**
      * Add two vectors together
@@ -689,6 +735,24 @@ public class Vector{
         for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
             vec1[ind0] /= scalar;
         }
+    }
+
+    /**
+     * Return the minimum and maximum of the provided vector
+     * @param vec1 Input vector
+     * @return The [min, max] 
+     */
+    public static long[] getMinMax(long[] vec1){
+        long[] out = new long[2];
+        out[0] = Long.MAX_VALUE;
+        out[1] = Long.MIN_VALUE;
+        for (long elem : vec1){
+            if (elem < out[0])
+                out[0] = elem;
+            if (elem > out[1])
+                out[1] = elem;
+        }
+        return out;
     }
     
     /**
@@ -968,7 +1032,24 @@ public class Vector{
             vec1[ind0] /= scalar;
         }
     }
-    
+    /**
+     * Return the minimum and maximum of the provided vector
+     * @param vec1 Input vector
+     * @return The [min, max] 
+     */
+    public static int[] getMinMax(int[] vec1){
+        int[] out = new int[2];
+        out[0] = Integer.MAX_VALUE;
+        out[1] = Integer.MIN_VALUE;
+        for (int elem : vec1){
+            if (elem < out[0])
+                out[0] = elem;
+            if (elem > out[1])
+                out[1] = elem;
+        }
+        return out;
+    }
+
     /**
      * Multiply the two vectors together
      * @param vec1 Input vector 1

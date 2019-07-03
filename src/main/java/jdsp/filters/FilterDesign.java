@@ -1,6 +1,4 @@
 package jdsp.filters;
-
-
 public class FilterDesign {
     /**
      * Design filter
@@ -89,7 +87,7 @@ public class FilterDesign {
         // multiply IIR and window in time == convolve idea 
         for (int ind0 = 0; ind0 < numTap; ind0++){
             output[ind0] *= win[ind0];
-            mySum += output[ind0];
+            mySum += Math.abs(output[ind0]);
         }
 
         // normalize filter
@@ -206,7 +204,7 @@ public class FilterDesign {
         // multiply IIR and window in time == convolve idea 
         for (int ind0 = 0; ind0 < numTap; ind0++){
             output[ind0] *= win[ind0];
-            mySum += output[ind0];
+            mySum += Math.abs(output[ind0]);
         }
 
         // normalize filter

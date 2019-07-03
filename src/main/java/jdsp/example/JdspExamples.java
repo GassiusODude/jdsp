@@ -5,6 +5,7 @@ import javax.swing.JTable;
 import jdsp.dataformat.DataObject;
 import javax.swing.JTabbedPane;
 import jdsp.swing.Plot;
+import jdsp.swing.TableUI;
 import jdsp.example.PanelFilterDesign;
 public class JdspExamples extends JTabbedPane{
     // Table 
@@ -46,7 +47,10 @@ public class JdspExamples extends JTabbedPane{
         this.add("Plot", p);
 
         PanelFilterDesign fd = new PanelFilterDesign();
-        this.add("Filter Designa", fd);
+        this.add("Filter Design", fd);
+
+        TableUI tui = new TableUI();
+        this.add("TableUI", tui);
 
     } 
   
