@@ -1,4 +1,6 @@
 package jdsp.example;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame; 
 import javax.swing.JScrollPane; 
 import javax.swing.JTable; 
@@ -6,6 +8,7 @@ import jdsp.dataformat.DataObject;
 import javax.swing.JTabbedPane;
 import jdsp.swing.Plot;
 import jdsp.swing.TableUI;
+import jdsp.swing.Spectrogram;
 import jdsp.example.PanelFilterDesign;
 public class JdspExamples extends JTabbedPane{
     // Table 
@@ -52,6 +55,16 @@ public class JdspExamples extends JTabbedPane{
         TableUI tui = new TableUI();
         this.add("TableUI", tui);
 
+        DataObject d2 = new DataObject("Cosine");
+        float[] cos2 = new float[2000];
+        for (int ind0 = 0; ind0 < cos2.length; ind0++){
+            cos2[ind0] = (float) Math.cos(2 * Math.PI * 0.15 * ind0);
+        }
+        d2.addFeature(cos2, "Cosine");
+        Spectrogram specgram = new Spectrogram();
+        this.add("Spectrogram", specgram);
+        specgram.setData(d2);
+
     } 
   
     // Driver  method 
@@ -61,7 +74,13 @@ public class JdspExamples extends JTabbedPane{
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
             public void run(){
                 javax.swing.JFrame newFrame = new javax.swing.JFrame("JdspExamples");
+                newFrame.addWindowListener(new WindowAdapter(){
+                    public void windowClosing(WindowEvent event){
+                      System.exit(0);
+                    }
+                });
                 JdspExamples examples = new JdspExamples();
+
                 newFrame.add(examples);
 
                 newFrame.setSize(600,400);
