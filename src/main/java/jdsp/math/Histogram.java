@@ -27,7 +27,7 @@ public class Histogram{
      * Calculate the histogram of the given vector
      * This function updates the histCounts, histEdges, minMax
      * @param vec1 Input vector
-     * @param numBins Number of bins (> 1)
+     * @param numBins Number of bins (should be positive and greater than 1)
      * @return The discovered histCounts.
      */
     public int[] histogram(double[] vec1, int numBins){

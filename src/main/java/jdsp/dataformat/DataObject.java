@@ -8,15 +8,19 @@ package jdsp.dataformat;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.lang.*;
 public class DataObject extends DefaultTableModel{
     private static final long serialVersionUID = 1L;
     private String name = "";
     private ArrayList<ArrayList> features;
     private ArrayList<String> featureNames;
+    private ArrayList<String> featureTypes;
     private int numObs = 0;
     private boolean tableEditable = false;
 
@@ -28,6 +32,68 @@ public class DataObject extends DefaultTableModel{
         this.name = name;
         features = new ArrayList<ArrayList>();
         featureNames = new ArrayList<String>();
+        featureTypes = new ArrayList<String>();
+    }
+
+    /**
+     * Constructor with specification of the feature names.  T
+     * his assumes a string data format.
+     * @param name Name of this DataObject
+     * @param featureNames List of feature names.
+     */
+    public DataObject(String name, String[] featureNames){
+        this.name = name;
+        features = new ArrayList<ArrayList>();
+        this.featureNames = new ArrayList<String>();
+        featureTypes = new ArrayList<String>();
+        setDataFormat(featureNames);
+    }
+
+    /**
+     * Set the data format of feature names
+     * @param featureNames List of names for the features.
+     */
+    public void setDataFormat(String[] featureNames){
+        for (String tmpName : featureNames){
+            addFeature(new String[0], tmpName);
+        }
+    }
+
+    /**
+     * Set the data format with feature names and types
+     * @param featureNames List of names of features
+     * @param featureTypes List of feature type.  Expecting (int, str, float, double, bool)
+     */
+    public void setDataFormat(String[] featureNames, String[] featureTypes){
+        String tmpName;
+        ArrayList myArray;
+        for (int ind0 = 0; ind0 < featureNames.length; ind0++){
+            // get feature name            
+            tmpName = featureNames[ind0];
+            
+            // get type
+            switch(featureTypes[ind0]){
+                case "int":
+                case "integer":
+                    myArray = new ArrayList<Integer>();
+                    break;
+                case "float":
+                    myArray = new ArrayList<Float>();
+                    break;
+                case "double":
+                    myArray = new ArrayList<Double>();
+                    break;
+                case "bool":
+                case "boolean":
+                    myArray = new ArrayList<Boolean>();
+                    break;
+                default:
+                    myArray = new ArrayList<String>();
+            }
+            
+            // update the feature with name and type.
+            addFeature(myArray, tmpName, featureTypes[ind0]);
+        }
     }
     // ========================== DefaultTableModel  ========================
     @Override
@@ -53,6 +119,7 @@ public class DataObject extends DefaultTableModel{
     public Class getColumnClass(int col){
         return features.get(col).get(0).getClass();
     }
+
     @Override
     public boolean isCellEditable(int row, int col){
         return tableEditable;
@@ -75,6 +142,7 @@ public class DataObject extends DefaultTableModel{
     public String getName(){
         return name;
     }
+
     /**
      * Get the number of features;
      * @return The number of features
@@ -109,11 +177,21 @@ public class DataObject extends DefaultTableModel{
 
     // ======================  manipulation of data  ========================
     /**
-     * Add a feature
+     * Add a feature with default assumption of string type
      * @param feature The ArrayList of the feature.
      * @param featureName The name of this feature
      */
     public void addFeature(ArrayList feature, String featureName){
+        addFeature(feature, featureName, "str");
+    }
+
+    /**
+     * Add a feature
+     * @param feature The ArrayList of the feature.
+     * @param featureName The name of this feature
+     * @param type Feature type from (int, float, double, str, bool)
+     */
+    public void addFeature(ArrayList feature, String featureName, String type){
         // ------------------------  error checkingg  -----------------------
         if (numObs > 0 && numObs != feature.size()){
             throw new IllegalArgumentException(
@@ -122,10 +200,11 @@ public class DataObject extends DefaultTableModel{
 
         features.add(feature);
         featureNames.add(featureName);
+        featureTypes.add(type);
         numObs = feature.size();
         this.fireTableStructureChanged();
     }
-
+    
     /**
      * Add a feature provided an array
      * @param floatData Feature in the form of a float[] vector
@@ -144,9 +223,34 @@ public class DataObject extends DefaultTableModel{
             myArray.add(floatData[ind0]);
         features.add(myArray);
         featureNames.add(featureName);
+        featureTypes.add("float");
         numObs = floatData.length;
         this.fireTableStructureChanged();
     }
+
+    /**
+     * Add a feature provided an array
+     * @param strData Feature in the form of a String[] vector
+     * @param featureName Name of the feature.
+     */
+    public void addFeature(String[] strData, String featureName){
+        // ------------------------  error checkingg  -----------------------
+        if (numObs > 0 && numObs != strData.length){
+            throw new IllegalArgumentException(
+                "Number of observations don't match");
+        }
+
+        // convert to ArrayList
+        ArrayList myArray = new ArrayList<String>(strData.length);
+        for (int ind0 = 0; ind0 < strData.length; ind0++)
+            myArray.add(strData[ind0]);
+        features.add(myArray);
+        featureNames.add(featureName);
+        featureTypes.add("str");
+        numObs = strData.length;
+        this.fireTableStructureChanged();
+    }
+
     /**
      * Add a feature provided an array
      * @param intData Feature in the form of a int[] vector
@@ -165,6 +269,7 @@ public class DataObject extends DefaultTableModel{
             myArray.add(intData[ind0]);
         features.add(myArray);
         featureNames.add(featureName);
+        featureTypes.add("int");
         numObs = intData.length;
         this.fireTableStructureChanged();
     }
@@ -187,6 +292,7 @@ public class DataObject extends DefaultTableModel{
             myArray.add(doubleData[ind0]);
         features.add(myArray);
         featureNames.add(featureName);
+        featureTypes.add("double");
         numObs = doubleData.length;
         this.fireTableStructureChanged();
     }
@@ -209,16 +315,79 @@ public class DataObject extends DefaultTableModel{
             myArray.add(boolData[ind0]);
         features.add(myArray);
         featureNames.add(featureName);
+        featureTypes.add("bool");
         numObs = boolData.length;
         this.fireTableStructureChanged();
     }
 
+    /**
+     * Add an observation
+     * @param input CSV string
+     * @param token Token representation separation.
+     */
+    public void addObservation(String input, String token){
+        String[] elements;
+        String featType, tmp, tmpNoSpace;
+        ArrayList aList = new ArrayList();;
+        
+        // --------------------------  parse the elements  ------------------
+        elements = input.split(token);
+        if (elements.length != this.features.size())
+            throw new RuntimeException("Number of features do not match");
+
+        // verify
+        try{
+            for (int ind = 0; ind < elements.length; ind++){
+                featType = featureTypes.get(ind);
+
+                // get current string
+                tmp = elements[ind];
+                tmpNoSpace = tmp.replaceAll("\\s+", ""); // remove spaces
+
+                switch (featType){
+                    case "int":
+                        aList.add(Integer.valueOf(tmpNoSpace));
+                        break;
+                    case "float":
+                        aList.add(Float.valueOf(tmpNoSpace));
+                        break;
+                    case "double":
+                        aList.add(Double.valueOf(tmpNoSpace));
+                        break;
+                    case "bool":
+                        aList.add(Boolean.valueOf(tmpNoSpace));
+                        break;
+                    default:
+                        // default as string
+                        aList.add(tmp);
+                }
+            }
+        }catch(Exception e){
+            return;
+        }
+        // ------------------------  update  --------------------------------
+        // passed check
+        for (int ind = 0; ind < elements.length; ind++){
+            features.get(ind).add(aList.get(ind));
+        }
+        this.numObs ++;
+        this.fireTableStructureChanged();
+    }
     /** Reset the data object */
     public void resetData(){
         numObs = 0;
         features.clear();
         featureNames.clear();
         fireTableStructureChanged();
+    }
+
+    /**
+     * Display the current state of the data object.
+     */
+    public void display(){
+        for (String feature : this.featureNames)
+            System.out.println("Features = " + feature);
+        System.out.println("Number observations = " + this.numObs);
     }
 
     /**
@@ -296,5 +465,29 @@ public class DataObject extends DefaultTableModel{
 
             }
         }
+    }
+    public final void saveCSV(File f, boolean firstRowHeader, String token){
+        try{
+            BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+
+            // ---------------------  write column names  -------------------
+            if (firstRowHeader){
+                for (String tmpS : featureNames){
+                    writer.write(tmpS + token);
+                }
+                writer.write("\n");
+            }
+
+            // ---------------------  write features  -----------------------
+            for (int obsInd=0; obsInd < this.numObs; obsInd++){
+                for (int featInd=0; featInd<features.size(); featInd++){
+                    writer.write(features.get(featInd).get(obsInd) + token);
+                }
+                writer.write("\n");
+            }
+            writer.close();
+        }
+        catch(java.io.FileNotFoundException fnfe){System.out.println("File not found.");}
+        catch(java.io.IOException ioe){System.out.println("IO Exception");}
     }
 }
