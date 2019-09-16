@@ -53,6 +53,7 @@ public class TableUI extends JPanel{
                 int retVal = jfc.showOpenDialog(null);
                 if (retVal == 0){
                     File f = jfc.getSelectedFile();
+                    dObj.resetData();
                     dObj.loadCSV(f, checkboxFRH.isSelected(),
                         TOKENS[comboToken.getSelectedIndex()]);
                 }

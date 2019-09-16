@@ -19,6 +19,14 @@ public class TableFrame extends JFrame{
         setSize(500,500);
         setVisible(true);
     }
+    public TableFrame(String name){
+        super(name);
+        table = new TableUI();
+
+        this.add(table);
+        setSize(500,500);
+        setVisible(true);
+    }
 
     /**
      * Set the data format of the table, specifying column names and assuming string format.
