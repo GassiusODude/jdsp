@@ -80,6 +80,7 @@ public class TableUI extends JPanel{
         this.add(topPanel, BorderLayout.NORTH);
         this.add(midPanel, BorderLayout.CENTER);
     }
+
     /**
      * Set the data format with just the columns, assuming String format
      * @param columnNames The list of column names

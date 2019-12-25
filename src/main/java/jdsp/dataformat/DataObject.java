@@ -2,7 +2,7 @@
  * The DataObject is intended to be used to help track information and
  * load in data.  It is used with Plots/Tables.
  * @author GassiusODude
- * @since June 2019  
+ * @since June 2019
  */
 package jdsp.dataformat;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class DataObject extends DefaultTableModel{
         for (int ind0 = 0; ind0 < featureNames.length; ind0++){
             // get feature name            
             tmpName = featureNames[ind0];
-            
+
             // get type
             switch(featureTypes[ind0]){
                 case "int":
@@ -90,7 +90,7 @@ public class DataObject extends DefaultTableModel{
                 default:
                     myArray = new ArrayList<String>();
             }
-            
+
             // update the feature with name and type.
             addFeature(myArray, tmpName, featureTypes[ind0]);
         }
@@ -100,6 +100,7 @@ public class DataObject extends DefaultTableModel{
     public int getColumnCount(){
         return this.getNumFeatures();
     }
+
     @Override
     public int getRowCount(){
         return numObs;
@@ -135,6 +136,7 @@ public class DataObject extends DefaultTableModel{
     public void setEditable(boolean newVal){
         this.tableEditable = newVal;
     }
+
     /**
      * Return the name of the dataset
      * @return Name of the dataset
@@ -204,7 +206,7 @@ public class DataObject extends DefaultTableModel{
         numObs = feature.size();
         this.fireTableStructureChanged();
     }
-    
+
     /**
      * Add a feature provided an array
      * @param floatData Feature in the form of a float[] vector
@@ -329,7 +331,7 @@ public class DataObject extends DefaultTableModel{
         String[] elements;
         String featType, tmp, tmpNoSpace;
         ArrayList aList = new ArrayList();;
-        
+
         // --------------------------  parse the elements  ------------------
         elements = input.split(token);
         if (elements.length != this.features.size())
@@ -418,7 +420,7 @@ public class DataObject extends DefaultTableModel{
 
                 if (numFeatures == 0){
                     // if not initialized, set the number of features based on 
-                    //first line
+                    // first line
                     numFeatures = elements.length;
                     featureNames = new String[numFeatures];
 
@@ -430,7 +432,6 @@ public class DataObject extends DefaultTableModel{
                         else
                             featureNames[ind0] = "feature " + ind0;
                     }
-                    
                     if (firstRowHeader)
                         // recorded as header, do not add as a data point.
                         continue;
