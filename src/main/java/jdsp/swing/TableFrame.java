@@ -19,6 +19,11 @@ public class TableFrame extends JFrame{
         setSize(500,500);
         setVisible(true);
     }
+
+    /**
+     * Constructor
+     * @param name Specify the name of the table
+     */
     public TableFrame(String name){
         super(name);
         table = new TableUI();

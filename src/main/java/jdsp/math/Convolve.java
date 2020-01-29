@@ -1,7 +1,8 @@
+/**
+ * Convolution package
+ * @author Keith Chow
+ */
 package jdsp.math;
-
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-
 public class Convolve{
     public final static long serialVersionUID = 0;
     /**
@@ -21,17 +22,16 @@ public class Convolve{
         // allocate output
         int[] output = new int[len3];
 
-
         if (len2 >= len1){
             for (int ind0 = 0; ind0 < len1; ind0++){
-                for (int ind1 = 0; ind1 < ind0+1; ind1++){
+                for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0] += input1[ind0 - ind1] * input2[ind1];
                 }
             }
             for (int ind0 = len1; ind0 < len3; ind0++){
-                start = (ind0-len2+1<0) ? 0 : ind0 - len2 + 1;
+                start = (ind0 - len2 + 1 < 0) ? 0 : ind0 - len2 + 1;
                 for (int ind1=start; ind1 < len1; ind1++){
-                    int tmp = input2[ind0-ind1];
+                    int tmp = input2[ind0 - ind1];
                     output[ind0] += input1[ind1] * tmp;
                 }
             }
@@ -45,7 +45,7 @@ public class Convolve{
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
                 for (int ind1=start; ind1 < len2; ind1++){
-                    int tmp = input1[ind0-ind1];
+                    int tmp = input1[ind0 - ind1];
                     output[ind0] += input2[ind1] * tmp;
                 }
             }
@@ -69,17 +69,16 @@ public class Convolve{
         int start;
         float[] output = new float[len3];
 
-
         if (len2 >= len1){
             for (int ind0 = 0; ind0 < len1; ind0++){
-                for (int ind1 = 0; ind1 < ind0+1; ind1++){
+                for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0] += input1[ind0 - ind1] * input2[ind1];
                 }
             }
             for (int ind0 = len1; ind0 < len3; ind0++){
-                start = (ind0-len2+1<0) ? 0 : ind0 - len2 + 1;
+                start = (ind0 - len2 + 1 < 0) ? 0 : ind0 - len2 + 1;
                 for (int ind1=start; ind1 < len1; ind1++){
-                    float tmp = input2[ind0-ind1];
+                    float tmp = input2[ind0 - ind1];
                     output[ind0] += input1[ind1] * tmp;
                 }
             }
@@ -93,7 +92,7 @@ public class Convolve{
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
                 for (int ind1=start; ind1 < len2; ind1++){
-                    float tmp = input1[ind0-ind1];
+                    float tmp = input1[ind0 - ind1];
                     output[ind0] += input2[ind1] * tmp;
                 }
             }
@@ -117,7 +116,6 @@ public class Convolve{
         int start;
         double[] output = new double[len3];
 
-
         if (len2 >= len1){
             for (int ind0 = 0; ind0 < len1; ind0++){
                 for (int ind1 = 0; ind1 < ind0+1; ind1++){
@@ -127,7 +125,7 @@ public class Convolve{
             for (int ind0 = len1; ind0 < len3; ind0++){
                 start = (ind0-len2+1<0) ? 0 : ind0 - len2 + 1;
                 for (int ind1=start; ind1 < len1; ind1++){
-                    double tmp = input2[ind0-ind1];
+                    double tmp = input2[ind0 - ind1];
                     output[ind0] += input1[ind1] * tmp;
                 }
             }
@@ -141,7 +139,7 @@ public class Convolve{
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
                 for (int ind1=start; ind1 < len2; ind1++){
-                    double tmp = input1[ind0-ind1];
+                    double tmp = input1[ind0 - ind1];
                     output[ind0] += input2[ind1] * tmp;
                 }
             }
@@ -149,7 +147,8 @@ public class Convolve{
 
         return output;
     }
-        /**
+
+    /**
      * Convolve 2 vectors together.
      *
      * @param input1 First vector (length N)
@@ -160,7 +159,8 @@ public class Convolve{
         // ---------------------  error checking  ---------------------------
         // expecting complex interleaved should be even.
         if (input2.length % 2 == 1)
-            throw new ValueException("Expecing interleaved complex, should be even number");
+            throw new IllegalArgumentException(
+                "Expecting interleaved complex, should be even number");
 
         // ----------------  setup local variables  -------------------------
         int len1 = input1.length;
@@ -191,15 +191,14 @@ public class Convolve{
                 for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0 * 2] += input2[2*(ind0 - ind1)] * input1[ind1];
                     output[ind0 * 2 + 1] += input2[2*(ind0 - ind1) + 1] * input1[ind1];
-
                 }
             }
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
                 for (int ind1=start; ind1 < len2; ind1++){
-                    double tmp = input1[ind0-ind1];
+                    double tmp = input1[ind0 - ind1];
                     output[2 * ind0] += input2[2 * ind1] * input1[ind0-ind1];
-                    output[2 * ind0 + 1] += input2[2 * ind1 + 1] * input1[ind0-ind1];
+                    output[2 * ind0 + 1] += input2[2 * ind1 + 1] * input1[ind0 - ind1];
                 }
             }
         }

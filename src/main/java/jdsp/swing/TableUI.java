@@ -2,7 +2,8 @@
  * This TableUI will allow for the manipulation of data
  *      * Loading
  *      * Editing
- *      * Saving.
+ *      * Saving
+ * 
  * @author GassiusODude
  * @since June 20, 2019
  */

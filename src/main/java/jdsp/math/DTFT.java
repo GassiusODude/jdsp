@@ -1,5 +1,6 @@
 /**
- *
+ * The discrete time fourier transform.
+ * 
  * @author GassiusODude
  * @since June 2019
  */

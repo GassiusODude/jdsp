@@ -1,3 +1,6 @@
+/**
+ * @author Keith Chow
+ */
 package jdsp.swing;
 import java.util.ArrayList;
 import java.awt.Graphics2D;
@@ -6,17 +9,15 @@ import jdsp.math.ComplexInterleaved;
 
 public class PowerSpectralDensity extends Plot{
     public final static long serialVersionUID = 0;
-    private int numFreq = 128;
+    private int nfft = 128;
 
     /**
      * Set the number of frequency points to create.
      * @param nFreq The number of frequency points.
      */
-    public void setNumFreq(int nFreq){
-        if (nFreq <= 0)
-            throw new IllegalArgumentException(
-                "Expecting a positive integer");
-        numFreq = nFreq;
+    public void setNfft(int nFreq){
+        assert nFreq <= 0 : "Expecting a positive integer";
+        nfft = nFreq;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class PowerSpectralDensity extends Plot{
         for (int ind0=0; ind0<fArray.length; ind0++){
             fArray[ind0] = (float) aList.get(ind0);
         }
-        float[] dtft = DTFT.discreteFourierTransform(fArray, numFreq);
+        float[] dtft = DTFT.discreteFourierTransform(fArray, nfft);
         float[] magnArray = ComplexInterleaved.magnitude(dtft);
         super.draw(g2, magnArray);
     }

@@ -46,7 +46,7 @@ public class Matrix{
             throw new IllegalArgumentException(
                 "Size of input and output should be the same");
         }
-        
+
         // Perform function to get matrix inverse.
         double[][] temp = new double[matrix.length][matrix[0].length];
         for (int ind0 = 0; ind0 < matrix.length; ind0++){
@@ -83,6 +83,7 @@ public class Matrix{
             }
         }
     }
+
     /**
      * Perform row swap
      * 
@@ -115,7 +116,7 @@ public class Matrix{
             for (int ind0 = 0; ind0 < matrix[i].length; ind0++){
                 matrix[i][ind0] -= scale * matrix[j][ind0];
             }
-        }            
+        }
         else{
             throw new IllegalArgumentException(
                 "Indices must be within number rows of matrix");
@@ -129,9 +130,8 @@ public class Matrix{
      */
     public static void rowScale(final double[][] matrix, int i, double scale){
        if (matrix.length > 0 && i >= 0 && i < matrix.length){
+           // scale and store in initial vector
            Vector.multiplyMe(matrix[i], scale);
-           //for (int ind0 = 0; ind0 < matrix[i].length; ind0++)
-           //    matrix[i][ind0] *= scale;
        } 
        else{
            throw new IllegalArgumentException("index must be within length of matrix");
@@ -165,7 +165,7 @@ public class Matrix{
                     out[ind0][ind1] += mat1[ind0][ind2] * mat2[ind2][ind1];
             }
     }
-    
+
     /**
      * Calculate the determinant of the given matrix
      * @param matrix The input matrix
@@ -178,8 +178,7 @@ public class Matrix{
         }
         switch (matrix.length) {
             case 2:
-                return (matrix[0][0] * matrix[1][1] - 
-                    matrix[1][0] * matrix[0][1]);
+                return (matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]);
             case 1:
                 return matrix[0][0];
             default:
@@ -192,7 +191,7 @@ public class Matrix{
                         if (ind1 != ind0)
                             System.arraycopy(matrix[ind1], 1, 
                                 temp[i++], 0, temp.length);
-                    
+
                     sum += mult * matrix[ind0][0] * determinant(temp);
                     mult = mult * -1;
                 }   return sum;
@@ -222,17 +221,17 @@ public class Matrix{
         for (int ind0 = 0; ind0 < vector.length; ind0++)
             System.out.print("\t" + vector[ind0]);
         System.out.println();
-                    
     }
+
     /**
      * Calculate the cumulative product of every element in the matrix.
      * @param matrix The input matrix
      * @return The cumulative product of all elements of the matrix
      */
     public static double elementwiseProduct(final double[][] matrix){
-        
         if (matrix.length ==0 || matrix[0].length == 0)
             return 0; //Empty matrix.
+
         double out = 1;
         for (double[] matrix1 : matrix) {
             for (int ind1 = 0; ind1 < matrix1.length; ind1++) {
@@ -241,7 +240,7 @@ public class Matrix{
         }
         return out;
     }
-    
+
     /**
      * Calculate the cumulative product of every element in a row vector.
      * @param vector Input vector
@@ -256,6 +255,5 @@ public class Matrix{
                 out*= vector[ind0];
             return out;
         }
-            
     }
 }

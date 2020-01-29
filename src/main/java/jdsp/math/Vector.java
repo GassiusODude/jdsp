@@ -198,10 +198,7 @@ public class Vector{
      */
     public static void multiplyMe(double[] vec1, final double[] vec2){
         // ---------------------  error checking  ---------------------------
-        if (vec1.length != vec2.length){
-            throw new IllegalArgumentException(
-                "array lengths need to match");
-        }
+        assert vec1.length != vec2.length : "array lengths need to match";
 
         // ---------------------  perform operation  ------------------------
         for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
@@ -296,7 +293,7 @@ public class Vector{
             vec1[ind0] -= scalar;
         }
     }
- 
+
     /**
      * Sum up the elements of the vector
      * @param vec1 Input vector 1
@@ -453,7 +450,6 @@ public class Vector{
         return out;
     }
 
-
     /**
      * Multiply the two vectors together
      * @param vec1 Input vector 1
@@ -605,7 +601,7 @@ public class Vector{
         for (int ind0 = 0; ind0 < vec1.length; ind0++){
             out += vec1[ind0];
         }
-        return out;       
+        return out;
     }
 
     //==============================  long support  =========================
