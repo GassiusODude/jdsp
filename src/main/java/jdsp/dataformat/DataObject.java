@@ -278,6 +278,29 @@ public class DataObject extends DefaultTableModel{
 
     /**
      * Add a feature provided an array
+     * @param shortData Feature in the form of a int[] vector
+     * @param featureName Name of the feature.
+     */
+    public void addFeature(short[] shortData, String featureName){
+        // ------------------------  error checkingg  -----------------------
+        if (numObs > 0 && numObs != shortData.length){
+            throw new IllegalArgumentException(
+                "Number of observations don't match");
+        }
+
+        // convert to ArrayList
+        ArrayList myArray = new ArrayList<Short>(shortData.length);
+        for (int ind0 = 0; ind0 < shortData.length; ind0++)
+            myArray.add(shortData[ind0]);
+        features.add(myArray);
+        featureNames.add(featureName);
+        featureTypes.add("short");
+        numObs = shortData.length;
+        this.fireTableStructureChanged();
+    }
+
+    /**
+     * Add a feature provided an array
      * @param doubleData Feature in the form of a double[] vector
      * @param featureName Name of the feature.
      */
