@@ -299,8 +299,7 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    /**
-     * Add a feature provided an array
+    /** Add a feature provided an array
      * @param doubleData Feature in the form of a double[] vector
      * @param featureName Name of the feature.
      */
@@ -322,8 +321,7 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    /**
-     * Add a feature provided an array
+    /** Add a feature provided an array
      * @param boolData Feature in the form of a boolean[] vector
      * @param featureName Name of the feature.
      */
@@ -345,8 +343,8 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    /**
-     * Add an observation
+    
+    /** Add an observation
      * @param input CSV string
      * @param token Token representation separation.
      */
@@ -398,6 +396,7 @@ public class DataObject extends DefaultTableModel{
         this.numObs ++;
         this.fireTableStructureChanged();
     }
+
     /** Reset the data object */
     public void resetData(){
         numObs = 0;
@@ -406,17 +405,14 @@ public class DataObject extends DefaultTableModel{
         fireTableStructureChanged();
     }
 
-    /**
-     * Display the current state of the data object.
-     */
+    /** Display the current state of the data object.*/
     public void display(){
         for (String feature : this.featureNames)
             System.out.println("Features = " + feature);
         System.out.println("Number observations = " + this.numObs);
     }
 
-    /**
-     * Load a CSV file.  Assumes strings for each field.
+    /** Load a CSV file.  Assumes strings for each field.
      * @param f The file object to the CSV file.
      * @param firstRowHeader If true, will use first row as header.
      *      Otherwise label as "feature 1"
@@ -490,6 +486,12 @@ public class DataObject extends DefaultTableModel{
             }
         }
     }
+
+    /** Save data to a CSV file
+     * @param f File to save to
+     * @param firstRowHeader Whether first row is the name of features
+     * @param token Token to use to separate values.
+     */
     public final void saveCSV(File f, boolean firstRowHeader, String token){
         try{
             BufferedWriter writer = new BufferedWriter(new FileWriter(f));

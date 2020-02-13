@@ -3,7 +3,6 @@
  * complex interleaved data.
  * 
  * @author GassiusODude
- * @since June 2019
  */
 package jdsp.math;
 public class ComplexInterleaved {
@@ -75,6 +74,7 @@ public class ComplexInterleaved {
         if (normFreq > 1 || normFreq < -1)
             throw new IllegalArgumentException(
                 "norm frequency should be in range (-1,1)");
+
         // --------------------  perform translate  -------------------------
         double pi = Math.PI*0.5;
         double[] output = new double[inSig.length];
@@ -92,8 +92,9 @@ public class ComplexInterleaved {
 
 
     // --------------------------  float support  --------------------------
-    /**
-     * Calculate the phase of the complex signal
+
+    /** Calculate the phase of the complex signal
+     * 
      * @param complexSig The input complex signal
      * @return The real valued angle (with values in range -pi to pi)
      */
@@ -106,8 +107,8 @@ public class ComplexInterleaved {
         return output;
     }
 
-    /**
-     * Calculate the magnitude of each element in the array
+    /** Calculate the magnitude of each element in the array
+     * 
      * Assumes complex, interleaved samples.
      *      Sample[0] = complexSig[0] + j * complexSig[1]
      *      Sample[1] = complexSig[2] + j * complexSig[3]
@@ -126,4 +127,70 @@ public class ComplexInterleaved {
         }
         return output;
     }
+
+    /** Get the real and imaginary vectors
+     * 
+     * @param complexIn Complex interleaved input
+     * @return real and imaginary array
+     */
+    public static float[][] getRealImag(float[] complexIn){
+        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        int numOut = complexIn.length / 2;
+        float[][] out = new float[2][numOut];
+        for (int ind0 = 0; ind0 < numOut; ind0++){
+            out[0][ind0] = complexIn[ind0 * 2];
+            out[1][ind0] = complexIn[ind0 * 2 + 1];
+        }
+        return out;
+    }
+
+    /** Get the real and imaginary vectors
+     * 
+     * @param complexIn Complex interleaved input
+     * @return real and imaginary array
+     */
+    public static double[][] getRealImag(double[] complexIn){
+        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        int numOut = complexIn.length / 2;
+        double[][] out = new double[2][numOut];
+        for (int ind0 = 0; ind0 < numOut; ind0++){
+            out[0][ind0] = complexIn[ind0 * 2];
+            out[1][ind0] = complexIn[ind0 * 2 + 1];
+        }
+        return out;
+    }
+
+    /** Get the real and imaginary vectors
+     * 
+     * @param complexIn Complex interleaved input
+     * @return real and imaginary array
+     */
+    public static int[][] getRealImag(int[] complexIn){
+        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        int numOut = complexIn.length / 2;
+        int[][] out = new int[2][numOut];
+        for (int ind0 = 0; ind0 < numOut; ind0++){
+            out[0][ind0] = complexIn[ind0 * 2];
+            out[1][ind0] = complexIn[ind0 * 2 + 1];
+        }
+        return out;
+    }
+
+    /** Get the real and imaginary vectors
+     * 
+     * @param complexIn Complex interleaved input
+     * @return real and imaginary array
+     */
+    public static short[][] getRealImag(short[] complexIn){
+        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        int numOut = complexIn.length / 2;
+        short[][] out = new short[2][numOut];
+        for (int ind0 = 0; ind0 < numOut; ind0++){
+            out[0][ind0] = complexIn[ind0 * 2];
+            out[1][ind0] = complexIn[ind0 * 2 + 1];
+        }
+        return out;
+    }
+
+    
 }
