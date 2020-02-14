@@ -2,7 +2,6 @@
  * The DataObject is intended to be used to help track information and
  * load in data.  It is used with Plots/Tables.
  * @author GassiusODude
- * @since June 2019
  */
 package jdsp.dataformat;
 import java.util.ArrayList;

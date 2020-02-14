@@ -1,8 +1,7 @@
 /**
  * The JFrame to show the TableUI.
  * @author GassiusODude
- * @since Sept 2019
- */
+  */
 package jdsp.swing;
 import javax.swing.JFrame;
 import jdsp.swing.TableUI;

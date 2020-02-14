@@ -3,6 +3,7 @@
  * 
  */
 package jdsp.swing;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +13,7 @@ import jdsp.math.Vector;
 import jdsp.math.ComplexInterleaved;
 public class Spectrogram extends Plot{
     private BufferedImage bImage;
-    protected int window = 256;
+    protected int window = 1024;
     protected int nfft = 256;
 
     /** minMax value to scale spectrogram by */
@@ -54,6 +55,28 @@ public class Spectrogram extends Plot{
         assert newVal > 2 : "nfft should be > 2";
         nfft = newVal;
     }
+    @Override
+    public void drawData(final Graphics g) {
+        final Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        loadLineType(g2);
+        g2.setColor(COLOR_MAP[0 % COLOR_MAP.length]);
+
+        if (data.getNumFeatures() == 1)
+            draw(g2, data.getFeature(0));
+        else if (data.getNumFeatures() > 1) {
+            int n = data.getRowCount();
+            ArrayList a = new ArrayList(2 * n);
+            ArrayList d1 = data.getFeature(0);
+            ArrayList d2 = data.getFeature(1);
+
+            for (int ind0 = 0; ind0 < n; ind0++){
+                a.add(d1.get(ind0));
+                a.add(d2.get(ind0));
+            }
+            draw(g2, a);
+        }
+    }
 
     @Override
     public void draw(Graphics2D g2, ArrayList aList){
@@ -86,8 +109,10 @@ public class Spectrogram extends Plot{
                 }
 
                 // -----------------  calculate magn spectrum  --------------
-                fftOut = DTFT.discreteFourierTransform(
-                    currWindow, nfft);
+                if (data.getNumFeatures() == 1)
+                    fftOut = DTFT.discreteFourierTransform(currWindow, nfft);
+                else
+                    fftOut = DTFT.discreteFourierTransformComplex(currWindow, nfft);
                 currMagn = ComplexInterleaved.magnitude(fftOut);
 
                 // ---------------------  plot 
