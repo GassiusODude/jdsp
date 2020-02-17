@@ -1,14 +1,15 @@
+/**
+ * @author Keith Chow
+ */
 package jdsp.filters;
 public class FilterDesign {
-    /**
-     * Design filter
+    /** Design filter based on windowing technique
      * 
      * @param window Window Type from {"BARTLETT", "HAMMING", "HANN"}
      * @param x The x range to design the filter
      * @return The designed window function
      */
-    public static float[] designWindowF(String window, float[] x)
-        throws IllegalArgumentException{
+    public static float[] designWindowF(String window, float[] x){
         // ---------------------------  prepare output  ---------------------
         float[] output = new float[x.length];
         float pi = (float)Math.PI;
@@ -30,12 +31,12 @@ public class FilterDesign {
                 break;
 
             default:
-                throw new IllegalArgumentException("Unsupported window type");
+                assert false: "Unsupported window type: " + window;
         }
         return output;
     }
-    /**
-     * Design an FIR filter with the WindowDesigen Method.
+    /** Design an FIR filter with the WindowDesign Method.
+     * 
      * This first designs an ideal IIR filter of the specified bandwidth.
      * This is multipled in time with the desired window.
      * @param numTap Number of elements of the filter
@@ -44,7 +45,7 @@ public class FilterDesign {
      * @return The designed filter
      */
     public static float[] firWindowDesignF(int numTap, String window,
-            float normalizeBandwidth) throws IllegalArgumentException{
+            float normalizeBandwidth){
         // ---------------------  prepare variables  ------------------------
         // prepare output
         float [] output = new float[numTap];
@@ -96,17 +97,14 @@ public class FilterDesign {
         }
         return output;
     }
-    /**
-     * Design a moving average filter.
+    /** Design a moving average filter.
      * @param numNum Number of elements of the filter.
      * @return The designed filter
      */
-    public static float[] designMovingAverageF(int numNum)
-        throws IllegalArgumentException {
+    public static float[] designMovingAverageF(int numNum){
         // -------------------------  error checking  -----------------------
-        if (numNum < 1)
-           throw new IllegalArgumentException(
-                "Number Numerator Coefficients should be >= 1");
+        assert numNum >= 1 :
+            "Number Numerator Coefficients should be >= 1";
 
         // initialize to moving average filter
         float[] numerator = new float[numNum];
@@ -117,8 +115,8 @@ public class FilterDesign {
     // ======================================================================
     // -------------------  double version  ---------------------------------
     // ======================================================================
-    /**
-     * Design filter
+
+    /** Design filter
      * 
      * @param window Window Type from {"BARTLETT", "HAMMING", "HANN"}
      * @param x The x range to design the filter
@@ -147,12 +145,11 @@ public class FilterDesign {
                 break;
 
             default:
-                throw new IllegalArgumentException("Unsupported window type");
+                assert false: "Unsupported window type: "+ window;
         }
         return output;
     }
-    /**
-     * Design an FIR filter with the WindowDesigen Method.
+    /**Design an FIR filter with the WindowDesigen Method.
      * This first designs an ideal IIR filter of the specified bandwidth.
      * This is multipled in time with the desired window.
      * @param numTap Number of elements of the filter
@@ -161,7 +158,7 @@ public class FilterDesign {
      * @return The designed filter
      */
     public static double[] firWindowDesignD(int numTap, String window,
-            double normalizeBandwidth) throws IllegalArgumentException{
+            double normalizeBandwidth){
         // ---------------------  prepare variables  ------------------------
         // prepare output
         double [] output = new double[numTap];
@@ -213,17 +210,14 @@ public class FilterDesign {
         }
         return output;
     }
-    /**
-     * Design a moving average filter.
+    /** Design a moving average filter.
      * @param numNum Number of elements of the filter.
      * @return The designed filter
      */
-    public static double[] designMovingAverageD(int numNum)
-        throws IllegalArgumentException {
+    public static double[] designMovingAverageD(int numNum){
         // -------------------------  error checking  -----------------------
-        if (numNum < 1)
-           throw new IllegalArgumentException(
-                "Number Numerator Coefficients should be >= 1");
+        assert numNum >= 1:
+            "Number Numerator Coefficients should be >= 1";
 
         // initialize to moving average filter
         double[] numerator = new double[numNum];
@@ -232,8 +226,7 @@ public class FilterDesign {
         return numerator;
     }
 
-    /**
-     * Design a square-root raised cosine filter
+    /** Design a square-root raised cosine filter
      * 
      * @param numNum The number of taps for the FIR filter
      * @param sampleRate The sampling rate to design filter against
@@ -263,10 +256,7 @@ public class FilterDesign {
                     _4b * time * baud * Math.cos(pi * time * baud * (1 + rolloff)))
                     / (pi * time * baud * (1 - Math.pow(_4b * time * baud, 2)));
             }
-
-        }
-
-        // ---------------------  design filter  ----------------------------
+       }
 
         return filter;
     }

@@ -85,4 +85,18 @@ public class DTFT {
         }
         return output;
     }
+
+    /**
+     * Shift the FFT by half.
+     * @param input Input signal
+     * @return Shifted array
+     */
+    public static float[] fftShift(float[] input){
+        int mid = input.length / 2;
+        float[] output = new float[input.length];
+        System.arraycopy(input, 0, output, output.length - mid, mid);
+        System.arraycopy(input, input.length - mid,
+                         output, 0, input.length - mid);
+        return output;
+    }
  }

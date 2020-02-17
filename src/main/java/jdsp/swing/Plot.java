@@ -100,9 +100,7 @@ public class Plot extends JPanel{
     /** The data object of the plot */
     protected DataObject data;
 
-    /**
-     * Constructor for the plot
-     */
+    /** Constructor for the plot */
     public Plot() {
         data = new DataObject("Default Plot Data");
         toolBar = new JToolBar();
@@ -117,7 +115,7 @@ public class Plot extends JPanel{
         });
         toolBar.add(comboMarker);
 
-        // -------------------------- line comboBox -----------------------
+        // --------------------------  line comboBox  -----------------------
         final String[] LINE_TYPES = { "-", "--", ":", ".-" };
         final JComboBox comboLines = new JComboBox(LINE_TYPES);
         comboLines.addActionListener(new ActionListener() {
@@ -130,13 +128,12 @@ public class Plot extends JPanel{
         this.add(toolBar);
     }
 
-    /**
-     * Set the new axes
+    /** Set the new axes
      * 
      * @param newAxes The new axes (min x, max x, min y, max y)
      */
     public void setAxes(final float[] newAxes) {
-        // -------------------------- error checking -----------------------
+        // -------------------------- error checking ------------------------
         assert newAxes.length != 4 : "Axes should be 4 element";
 
         // update axes
@@ -144,8 +141,7 @@ public class Plot extends JPanel{
         updateAxesLoc();
     }
 
-    /**
-     * Set the data object
+    /** Set the data object
      * @param data The data object
      */
     public void setData(final DataObject data){
@@ -156,8 +152,7 @@ public class Plot extends JPanel{
         this.updateUI();
     }
 
-    /**
-     * Set the labels
+    /** Set the labels
      * 
      * @param x     The x-label (horizontal)
      * @param y     The y-label (vertical)
@@ -169,8 +164,7 @@ public class Plot extends JPanel{
         this.labelTitle = title;
     }
 
-    /**
-     * Set the line type
+    /** Set the line type
      * 
      * @param newVal The new line type
      */
@@ -179,8 +173,7 @@ public class Plot extends JPanel{
         this.updateUI();
     }
 
-    /**
-     * Set the margins
+    /** Set the margins
      * 
      * @param marginX Set the horizontal margins
      * @param marginY Set the vertical margins
@@ -190,9 +183,10 @@ public class Plot extends JPanel{
         this.marginY = marginY;
     }
 
-    /**
-     * Set the marker
+    /** Set the marker
      * 
+     * Adding a marker indicates more clearly where the data points
+     * are, rather than just the interpolated line.
      * @param marker The marker
      */
     public void setMarker(final String marker) {
@@ -200,8 +194,7 @@ public class Plot extends JPanel{
         this.updateUI();
     }
 
-    /**
-     * Set the marker
+    /** Set the marker
      * 
      * @param marker The marker
      * @param width  Width of the marker
@@ -214,8 +207,7 @@ public class Plot extends JPanel{
         this.updateUI();
     }
 
-    /**
-     * Set the size of the plot
+    /** Set the size of the plot
      * 
      * @param width  New width
      * @param height New height
@@ -225,8 +217,7 @@ public class Plot extends JPanel{
         this.plotHeight = height;
     }
 
-    /**
-     * paintComponent handles the drawing of the plot.
+    /** paintComponent handles the drawing of the plot.
      * @param g Graphics object
      */
     @Override
@@ -251,9 +242,13 @@ public class Plot extends JPanel{
         drawLabels(g);
     }
 
-    /**
-     * Draw the background. This includes: 1) Background 2) Draw grid 3) Draw ticks
-     * on the axis. 4) Draw labels and title.
+    /** Draw the background.
+     * 
+     * This includes: 
+     *      1) Background
+     *      2) Draw grid
+     *      3) Draw ticks on the axis.
+     *      4) Draw labels and title.
      * 
      * @param g Graphics object
      */
@@ -317,8 +312,7 @@ public class Plot extends JPanel{
         g2.drawLine(locYAxis, sideTop, locYAxis, sideBottom);
     }
 
-    /**
-     * Performs a line plot.
+    /** Performs a line plot.
      * 
      * @param g Graphics object
      */
@@ -332,8 +326,7 @@ public class Plot extends JPanel{
         }
     }
 
-    /**
-     * Draw a line based on ArrayList vector
+    /** Draw a line based on ArrayList vector
      * 
      * @param g2    The Graphics2D object.
      * @param aList The input signal (real)
@@ -358,13 +351,14 @@ public class Plot extends JPanel{
 
         if (marker != " ") {
             for (int ind0 = 0; ind0 < aList.size(); ind0++) {
-                g2.drawString(marker, datX[ind0] - markerWidth / 2, datY[ind0] + markerHeight / 2);
+                g2.drawString(marker,
+                    datX[ind0] - markerWidth / 2,
+                    datY[ind0] + markerHeight / 2);
             }
         }
     }
 
-    /**
-     * Draw a line based on ArrayList vector given a float array
+    /** Draw a line based on ArrayList vector given a float array
      * 
      * @param g2      The Graphics2D object.
      * @param realSig The real signal
@@ -398,8 +392,7 @@ public class Plot extends JPanel{
         }
     }
 
-    /**
-     * Draw the labels (x-label, y-label, title, legend)
+    /** Draw the labels (x-label, y-label, title, legend)
      * 
      * @param g Graphics object
      */
@@ -446,8 +439,7 @@ public class Plot extends JPanel{
         }
     }
 
-    /**
-     * Load the type of stroke to use.
+    /** Load the type of stroke to use.
      * 
      * @param g Graphics object
      */
@@ -490,9 +482,7 @@ public class Plot extends JPanel{
         g.setStroke(myStroke);
     }
 
-    /**
-     * Update the axes location.
-     */
+    /** Update the axes location. */
     protected final void updateAxesLoc() {
         final float scaleX = axes[1] - axes[0];
         final float scaleY = axes[3] - axes[2];
@@ -503,16 +493,15 @@ public class Plot extends JPanel{
         locXAxis = (int) (sideBottom - plotHeight * normY);
     }
 
-    /**
-     * Update marker detail.
+    /** Update marker detail.
      * 
      * @param g Graphics object
      */
-    protected final void updateMarkerDetail(final Graphics g) {
-    }
+    protected final void updateMarkerDetail(final Graphics g) {}
 
-    /**
-     * Update the plot location
+    /** Update the plot location
+     * 
+     * Specify spacing and margins for the plot
      */
     protected final void updatePlotLocations(){
         // update plot dimensions (if panel has been resized)

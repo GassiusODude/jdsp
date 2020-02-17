@@ -1,7 +1,7 @@
 /**
  * The DataObject is intended to be used to help track information and
  * load in data.  It is used with Plots/Tables.
- * @author GassiusODude
+ * @author Keith Chow
  */
 package jdsp.dataformat;
 import java.util.ArrayList;
@@ -23,8 +23,7 @@ public class DataObject extends DefaultTableModel{
     private int numObs = 0;
     private boolean tableEditable = false;
 
-    /**
-     * Constructor for the DataObject
+    /** Constructor for the DataObject
      * @param name The name of this DataObject
      */
     public DataObject(String name){
@@ -34,9 +33,9 @@ public class DataObject extends DefaultTableModel{
         featureTypes = new ArrayList<String>();
     }
 
-    /**
-     * Constructor with specification of the feature names.  T
-     * his assumes a string data format.
+    /** Constructor with specification of the feature names.
+     *
+     * This assumes a string data format.
      * @param name Name of this DataObject
      * @param featureNames List of feature names.
      */
@@ -48,8 +47,7 @@ public class DataObject extends DefaultTableModel{
         setDataFormat(featureNames);
     }
 
-    /**
-     * Set the data format of feature names
+    /** Set the data format of feature names
      * @param featureNames List of names for the features.
      */
     public void setDataFormat(String[] featureNames){
@@ -58,8 +56,7 @@ public class DataObject extends DefaultTableModel{
         }
     }
 
-    /**
-     * Set the data format with feature names and types
+    /** Set the data format with feature names and types
      * @param featureNames List of names of features
      * @param featureTypes List of feature type.  Expecting (int, str, float, double, bool)
      */
@@ -94,6 +91,7 @@ public class DataObject extends DefaultTableModel{
             addFeature(myArray, tmpName, featureTypes[ind0]);
         }
     }
+
     // ========================== DefaultTableModel  ========================
     @Override
     public int getColumnCount(){
@@ -127,33 +125,30 @@ public class DataObject extends DefaultTableModel{
 
     // =============================  set/get  ==============================
 
-    /**
-     * Specify that this model is editable.  This is intended for use
-     * with JTables.
+    /** Specify that this model is editable.
+     * 
+     * This is intended for use with JTables.
      * @param newVal The new value.
      */
     public void setEditable(boolean newVal){
         this.tableEditable = newVal;
     }
 
-    /**
-     * Return the name of the dataset
+    /** Return the name of the dataset
      * @return Name of the dataset
      */
     public String getName(){
         return name;
     }
 
-    /**
-     * Get the number of features;
+    /** Get the number of features;
      * @return The number of features
      */
     public int getNumFeatures(){
         return features.size();
     }
 
-    /**
-     * Get a particula feature based on index
+    /** Get a particular feature based on index
      * @param index Index of the features of interest
      * @return The ArrayList of the feature of interest.
      */
@@ -164,8 +159,7 @@ public class DataObject extends DefaultTableModel{
         return null;
     }
 
-    /**
-     * Get the name of the feature given the index
+    /** Get the name of the feature given the index
      * @param index Index of feature
      * @return The name of the feature
      */
@@ -177,8 +171,7 @@ public class DataObject extends DefaultTableModel{
     }
 
     // ======================  manipulation of data  ========================
-    /**
-     * Add a feature with default assumption of string type
+    /** Add a feature with default assumption of string type
      * @param feature The ArrayList of the feature.
      * @param featureName The name of this feature
      */
@@ -186,8 +179,7 @@ public class DataObject extends DefaultTableModel{
         addFeature(feature, featureName, "str");
     }
 
-    /**
-     * Add a feature
+    /** Add a feature
      * @param feature The ArrayList of the feature.
      * @param featureName The name of this feature
      * @param type Feature type from (int, float, double, str, bool)
@@ -206,8 +198,7 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    /**
-     * Add a feature provided an array
+    /** Add a feature provided an array
      * @param floatData Feature in the form of a float[] vector
      * @param featureName Name of the feature.
      */
@@ -229,8 +220,7 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    /**
-     * Add a feature provided an array
+    /** Add a feature provided an array
      * @param strData Feature in the form of a String[] vector
      * @param featureName Name of the feature.
      */
@@ -252,8 +242,7 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    /**
-     * Add a feature provided an array
+    /** Add a feature provided an array
      * @param intData Feature in the form of a int[] vector
      * @param featureName Name of the feature.
      */
@@ -275,8 +264,7 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    /**
-     * Add a feature provided an array
+    /** Add a feature provided an array
      * @param shortData Feature in the form of a int[] vector
      * @param featureName Name of the feature.
      */
@@ -342,7 +330,6 @@ public class DataObject extends DefaultTableModel{
         this.fireTableStructureChanged();
     }
 
-    
     /** Add an observation
      * @param input CSV string
      * @param token Token representation separation.

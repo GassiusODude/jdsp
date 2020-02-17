@@ -1,34 +1,33 @@
+/**
+ *
+ * @author GassiusODude
+ * @version 0.0
+ */
 package jdsp.filters;
 import jdsp.math.Convolve;
 import jdsp.filters.FilterDesign;
-import java.security.InvalidParameterException;
-/**
- * The FilterD class will implement the following static methods:
- *
- * @author GassiusODude
- * @since May 27, 2019
- * @version 0.0
- */
+
 public class FilterD{
+    /** Serial Version UID for this class */
     public final static long serialVersionUID = 0;
+
     /** Numerator of filter */
     private double[] coefNumerator;
+
     /** Denominator of filter */
     private double[] coefDenominator;
 
     /** State of the filter */
     private double[] filterState;
 
-    /**
-     * Constructor
+    /** Constructor
      *
      * @param numNumerator Number of numerator elements.
      */
-    public FilterD(int numNumerator) throws InvalidParameterException {
+    public FilterD(int numNumerator){
         // -------------------------  error checking  -----------------------
-        if (numNumerator < 1)
-            throw new InvalidParameterException(
-                "Number Numerator Coefficients should be >= 1");
+        assert numNumerator >= 1 :
+            "Number numerator coefficients should be >= 1";
 
         // initialize to moving average filter
         coefNumerator = FilterDesign.designMovingAverageD(numNumerator);
@@ -45,14 +44,12 @@ public class FilterD{
      * @param bandwidth Normalized bandwidth. (0.5 = half the sampling rate)
      */
     public void designFilter(int numNum, int numDen, String design, 
-            double bandwidth) throws InvalidParameterException{
+            double bandwidth){
         // -------------------------  error checking  -----------------------
-        if (numNum < 1)
-            throw new InvalidParameterException(
-                "Number Numerator Coefficients should be >= 1");
-        if (numDen < 0)
-            throw new InvalidParameterException(
-                "Number Denominator Coefficients should be > 0");
+        assert numNum >= 1 :
+            "Number numerator coefficients should be >= 1";
+        assert numDen >= 0 :
+            "Number Denominator Coefficients should be > 0";
 
         // -------------------------  design filter  ------------------------
         switch (design){
@@ -69,30 +66,27 @@ public class FilterD{
                 coefNumerator = FilterDesign.firWindowDesignD(
                     numNum, design, bandwidth);
                 coefDenominator = new double[0];
-                filterState = new double[numNum - 1];    
+                filterState = new double[numNum - 1];
                 break;
 
             // no matches...design not supported
             default:
-                throw new InvalidParameterException(
-                    "Design (" + design + ") not supported.");
+                assert false :
+                    "Design (" + design + ") not supported.";
         }
         // TODO: update size of internal state
     }
 
-    /**
-     * Apply the filter to the input signal
-     * @param input Signal
+    /** Apply the filter to the input signal
+     * @param input Input signal
      * @return Filtered output
      */
     public double[] applyFilter(double[] input){
-
         // ------------------------  load filter state  ---------------------
         double[] tmp = new double[input.length + filterState.length];
         System.arraycopy(filterState, 0, tmp, 0, filterState.length);
         System.arraycopy(input, 0, tmp, filterState.length, input.length);
         double[] output = Convolve.convolve(tmp, coefNumerator);
-
 
         // update filterState
         System.arraycopy(tmp, tmp.length - filterState.length, 
@@ -106,5 +100,4 @@ public class FilterD{
     }
 
     // =====================  static methods  ===============================
-    
 }

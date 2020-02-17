@@ -31,9 +31,7 @@ public class TableUI extends JPanel{
     private JScrollPane midPanel;
     private DataObject dObj = new DataObject("My Data");
 
-    /**
-     * Constructor.  Setup and layout panel.
-     */
+    /** Constructor.  Setup and layout panel. */
     public TableUI(){
         super();
 

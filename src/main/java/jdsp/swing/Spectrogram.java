@@ -1,6 +1,7 @@
 /**
  * Spectrogram
  * 
+ * @author Keith Chow
  */
 package jdsp.swing;
 import java.awt.*;
@@ -15,12 +16,15 @@ public class Spectrogram extends Plot{
     private BufferedImage bImage;
     protected int window = 1024;
     protected int nfft = 256;
-
+    private float sampleRate = 1.0f;
+    private float centerFrequency = 0;
+    private float timeOffset = 0;
     /** minMax value to scale spectrogram by */
     private float[] minMax = {-30.0f, 25.0f};
     private int COLOR_MAX_VALUE = 255*255;
     private int COLOR_MIN_VALUE = 0;
 
+    /** Constructor */
     public Spectrogram(){
         setLabels("Time", "Freq", "Spectrogram");
         this.displayGrid = false;
@@ -38,8 +42,7 @@ public class Spectrogram extends Plot{
         minMax[1] = maxValue;
     }
 
-    /**
-     * Set the window size to calculate the spectrum.
+    /** Set the window size to calculate the spectrum.
      * Reduce value to increase time resolution.
      * @param window Number of samples for single time slice
      */
@@ -47,14 +50,34 @@ public class Spectrogram extends Plot{
         assert window > 1 : "Expecting a positive integer";
         this.window = window;
     }
-    /**
-     * Set the number of FFT points to use.
+    /** Set the number of FFT points to use.
      * @param newVal Number of FFT points to calculate spectrum
      */
     public void setNfft(int newVal){
         assert newVal > 2 : "nfft should be > 2";
         nfft = newVal;
     }
+
+    /** Set signal information
+     * 
+     * These contribute to the displayed axis for time and frequency
+     * 
+     * @param sampleRate Sample rate of the signal
+     * @param centerFrequency Tuned frequency of the signal
+     * @param timeOffset The time offset from the start of file
+     */
+    public void setSignalInfo(float sampleRate, float centerFrequency,
+        float timeOffset){
+        // ---------------------  error checking  ---------------------------
+        assert sampleRate > 0 : "Sample Rate should be > 0";
+        assert centerFrequency >= 0 : "Center Frequency should be >= 0";
+
+        // --------------------  update properties  -------------------------
+        this.sampleRate = sampleRate;
+        this.centerFrequency = centerFrequency;
+        this.timeOffset = timeOffset;
+    }
+
     @Override
     public void drawData(final Graphics g) {
         final Graphics2D g2 = (Graphics2D) g;
@@ -63,8 +86,11 @@ public class Spectrogram extends Plot{
         g2.setColor(COLOR_MAP[0 % COLOR_MAP.length]);
 
         if (data.getNumFeatures() == 1)
+            // ---------------  send real signal to draw  -------------------
             draw(g2, data.getFeature(0));
+
         else if (data.getNumFeatures() > 1) {
+            // -----------  interleave real/imaginary together  -------------
             int n = data.getRowCount();
             ArrayList a = new ArrayList(2 * n);
             ArrayList d1 = data.getFeature(0);
@@ -74,17 +100,19 @@ public class Spectrogram extends Plot{
                 a.add(d1.get(ind0));
                 a.add(d2.get(ind0));
             }
+
+            // ---------------------  send to draw  -------------------------
             draw(g2, a);
         }
     }
 
     @Override
     public void draw(Graphics2D g2, ArrayList aList){
-        // specify the width, height, and color scheme
+        // -------------------  initialize image  ---------------------------
         bImage = new BufferedImage(plotWidth, plotHeight,
-            //BufferedImage.TYPE_3BYTE_BGR);
             BufferedImage.TYPE_BYTE_GRAY);
 
+        // ------------------ get number of windows  ------------------------
         int numWindows = aList.size() / window;
         if (numWindows == 0){
             // ----------- draw something since no windows  -----------------
@@ -93,52 +121,71 @@ public class Spectrogram extends Plot{
                     bImage.setRGB(ind0, ind1, (ind0 + ind1)%COLOR_MAX_VALUE);
                 }
             }
+            g2.drawImage(bImage, marginX, marginY, null);
         }
-        else{
-            float[] currWindow = new float[window];
-            float[] currMagn, fftOut;
-            float valF;
-            int val, colLoc;
-            String tmpStr;
 
-            for (int winIndex = 0; winIndex < numWindows; winIndex++){
-                // -------------------  load current window  ----------------
-                for (int sampleIndex = 0; sampleIndex < window; sampleIndex++){
-                    tmpStr = aList.get(winIndex * window + sampleIndex).toString();
-                    currWindow[sampleIndex] = Float.parseFloat(tmpStr);
+        // ---------------------- available windows  ------------------------
+        float[] currWindow = new float[window];
+        float[] currMagn, fftOut;
+        float valF;
+        int val, colLoc;
+        String tmpStr;
+        boolean isComplex = data.getNumFeatures() > 1;
+        for (int winIndex = 0; winIndex < numWindows; winIndex++){
+            // -------------------  load current window  ----------------
+            for (int sampleIndex = 0; sampleIndex < window; sampleIndex++){
+                tmpStr = aList.get(winIndex * window + sampleIndex).toString();
+                currWindow[sampleIndex] = Float.parseFloat(tmpStr);
+            }
+
+            // -----------------  calculate magn spectrum  --------------
+            if (!isComplex)
+                fftOut = DTFT.discreteFourierTransform(currWindow, nfft);
+            else
+                fftOut = DTFT.discreteFourierTransformComplex(currWindow, nfft);
+            currMagn = ComplexInterleaved.magnitude(fftOut);
+            currMagn = DTFT.fftShift(currMagn);
+
+            // ---------------------  update image  ---------------------
+            for (int row = 0; row < plotHeight; row++)
+                for (int col = 0; col < plotWidth / numWindows; col++){
+                    // calculate current column location
+                    colLoc = plotWidth * winIndex / numWindows + col;
+
+                    // get value for specified location in spectrogram
+                    valF = (float)(10.0 * Math.log10(currMagn[
+                        (int)(row * 1.0 / plotHeight * nfft)]));
+
+                    // ----------  scale value to select color  -------------
+                    if (valF < minMax[0])
+                        val = COLOR_MIN_VALUE;
+                    else if (valF > minMax[1])
+                        val = (int) COLOR_MAX_VALUE;
+                    else
+                        // normalize value in range and scale color
+                        val = (int)((valF - minMax[0]) / 
+                            (minMax[1] - minMax[0]) * COLOR_MAX_VALUE);
+
+                    // set the color of the current pixel
+                    bImage.setRGB(colLoc, row, (int) val);
                 }
 
-                // -----------------  calculate magn spectrum  --------------
-                if (data.getNumFeatures() == 1)
-                    fftOut = DTFT.discreteFourierTransform(currWindow, nfft);
-                else
-                    fftOut = DTFT.discreteFourierTransformComplex(currWindow, nfft);
-                currMagn = ComplexInterleaved.magnitude(fftOut);
-
-                // ---------------------  plot 
-                for (int row = 0; row < plotHeight; row++)
-                    for (int col = 0; col < plotWidth / numWindows; col++){
-                        // calculate current column location
-                        colLoc = plotWidth * winIndex / numWindows + col;
-
-                        // get value for specified location in spectrogram
-                        valF = (float)(10.0 * Math.log10(currMagn[
-                            (int)(row * 1.0 / plotHeight * nfft)]));
-
-                        // ---------  scale value to select color  ----------
-                        if (valF < minMax[0])
-                            val = COLOR_MIN_VALUE;
-                        else if (valF > minMax[1])
-                            val = (int) COLOR_MAX_VALUE;
-                        else
-                            // normalize value in range and scale color
-                            val = (int)((valF - minMax[0]) / 
-                                (minMax[1] - minMax[0]) * COLOR_MAX_VALUE);
-
-                        // set the color of the current pixel
-                        bImage.setRGB(colLoc, row, (int) val);
-                    }
+            // ---------------------  update axis  --------------------------
+            float[] newAxes = new float[4];
+            if (isComplex){
+                newAxes[0] = timeOffset;
+                newAxes[1] = timeOffset + 0.5f * aList.size() / sampleRate;
+                newAxes[2] = centerFrequency - sampleRate / 2;
+                newAxes[3] = centerFrequency + sampleRate / 2;
             }
+            else{
+                newAxes[0] = timeOffset;
+                newAxes[1] = timeOffset + aList.size() / sampleRate;
+                newAxes[2] = 0;
+                newAxes[3] = centerFrequency + sampleRate / 2;
+            }
+
+            setAxes(newAxes);
         }
 
         // ---------------------   draw image  ------------------------------

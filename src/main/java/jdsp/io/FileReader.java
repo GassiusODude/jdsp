@@ -1,3 +1,10 @@
+/**
+ * The FileReader will support providing I/O to reading in
+ * raw data format as short/float and complex interleaved
+ * formats.
+ * 
+ * @author Keith Chow
+ */
 package jdsp.io;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
@@ -21,11 +28,11 @@ public class FileReader{
     /** Multiplier if complex */
     public final static int[] MULTIPLIER = {1, 2, 1, 2};
 
-    public String filepath;
-    public final RandomAccessFile myFile;
-    public boolean bigEndian = false;
-    public int dType = 0;
-    public ByteBuffer myBuffer;
+    private String filepath;
+    private final RandomAccessFile myFile;
+    private boolean bigEndian = false;
+    private int dType = 0;
+
 
     /** Construct a FileReader.  
      * This creates a RandomAccessFile to the specified filepath.
@@ -45,7 +52,8 @@ public class FileReader{
     }
 
     /** Load Signal
-     * Load the signal
+     * 
+     * Load the signal at the specified sample offset
      * @param sampleOffset Offset in samples from start of file
      * @param numSamples Number of samples to extract
      * @return DataObject to store the recovered samples
@@ -54,11 +62,11 @@ public class FileReader{
         // ------------------------  prepare variables  ---------------------
         // initialize output
         DataObject out = new DataObject(filepath);
-        
+
         // number of bytes to load
         int numBytes = numSamples * 
             BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType];
-        
+
         // number of values to use
         int numVals;
 
@@ -136,7 +144,7 @@ public class FileReader{
     }
 
     /** Bytes to float
-     * 
+     *
      * Handles conversion of bytes to float
      * @param byteArray The array of bytes
      * @param floatArray The output float array
@@ -173,4 +181,25 @@ public class FileReader{
         return numOut;
 
     }
+
+    /** Get the specified file path
+     * 
+     * @return File path to load from.
+     */
+    public String getFilePath(){return filepath;}
+
+    /** Get whether the file is big endian.
+     * @return Big Endianess check.
+     */
+    public boolean getBigEndian(){ return bigEndian;}
+
+    /** Get the index of the data type
+     * @return Get the index to DATA_TYPE that represents the current type.
+     */
+    public int getDataTypeIndex(){return dType;}
+
+    /** Get string description of data type
+     * @return Get the string name of the selected data type
+     */
+    public String getDataType(){return DATA_TYPE[dType];}
 }

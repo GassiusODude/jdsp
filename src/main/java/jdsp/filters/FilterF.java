@@ -6,28 +6,26 @@ import java.security.InvalidParameterException;
  * The FilterF class will implement the following static methods:
  *
  * @author GassiusODude
- * @since May 27, 2019
  * @version 0.0
  */
 public class FilterF{
     /** Numerator of filter */
     private float[] coefNumerator;
+
     /** Denominator of filter */
     private float[] coefDenominator;
 
     /** State of the filter */
     private float[] filterState;
 
-    /**
-     * Constructor
+    /**Constructor
      *
      * @param numNumerator Number of numerator elements.
      */
-    public FilterF(int numNumerator) throws InvalidParameterException {
+    public FilterF(int numNumerator){
         // -------------------------  error checking  -----------------------
-        if (numNumerator < 1)
-            throw new InvalidParameterException(
-                "Number Numerator Coefficients should be >= 1");
+        assert numNumerator >= 1 :
+            "Number Numerator Coefficients should be >= 1";
 
         // initialize to moving average filter
         coefNumerator = FilterDesign.designMovingAverageF(numNumerator);
@@ -46,12 +44,10 @@ public class FilterF{
     public void designFilter(int numNum, int numDen, String design, 
             float bandwidth) throws InvalidParameterException{
         // -------------------------  error checking  -----------------------
-        if (numNum < 1)
-            throw new InvalidParameterException(
-                "Number Numerator Coefficients should be >= 1");
-        if (numDen < 0)
-            throw new InvalidParameterException(
-                "Number Denominator Coefficients should be > 0");
+        assert numNum >= 1:
+            "Number Numerator Coefficients should be >= 1";
+        assert numDen >= 0:
+            "Number Denominator Coefficients should be > 0";
 
         // -------------------------  design filter  ------------------------
         switch (design){

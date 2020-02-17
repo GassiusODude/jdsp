@@ -1,5 +1,6 @@
-/**
- * File information
+/** File information
+ * This is intended to extract useful information from files.
+ * 
  * @author Keith Chow
  */
 package jdsp.io;
@@ -15,8 +16,7 @@ public class FileInfo{
     /** The size of the file in bytes */
     protected long fileSize = 0L;
 
-    /**
-    * Constructor
+    /** Constructor
     * @param filepath The path to the desired file.
     * @throws IOException IO Exception for file not found
     */
@@ -31,9 +31,13 @@ public class FileInfo{
         fileSize = Files.size(tmpPath);
     }
 
-    /** 
-     * Get the file path
+    /** Get the file path
      * @return The file path.
      */
     public String getFilePath(){return filepath;}
+
+    /** Get the size of the current file
+     * @return Get filesize in number of bytes.
+     */
+    public long getFileSize(){ return fileSize; }
 }
