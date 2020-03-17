@@ -14,8 +14,9 @@ package jdsp.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import java.awt.Container;
-import java.awt.BorderLayout;
+import java.awt.*;
+//import java.awt.Container;
+//import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ import jdsp.io.FileReader;
 import jdsp.dataformat.DataObject;
 
 import jdsp.io.FileInfo;
-public class SpectrogramFrame extends JFrame implements ChangeListener {
+public class SpectrogramFrame extends JFrame{
     JMenuBar menuBar = new JMenuBar();
     JMenu menu = new JMenu("File");
     JMenuItem menuItemLoad = new JMenuItem("Load Signal");
@@ -43,6 +44,8 @@ public class SpectrogramFrame extends JFrame implements ChangeListener {
     JFileChooser jfc = new JFileChooser();
     Spectrogram specgram = new Spectrogram();
     JSlider slPosition = new JSlider();
+    JSlider slNfft = new JSlider(JSlider.HORIZONTAL, 256, 8192, 256);
+    JSlider slWindow = new JSlider(JSlider.HORIZONTAL, 1024, 32 * 1024, 1024);
 
     // ----------------------  spectrogram settings  ------------------------
     int window = 1024;
@@ -66,10 +69,37 @@ public class SpectrogramFrame extends JFrame implements ChangeListener {
 
         // add spectrogram
         p.add(specgram, BorderLayout.CENTER);
-
+        JPanel slidePanel = new JPanel();
+        slidePanel.setLayout(new GridLayout(3,2));
         // add slider to configure position
         slPosition.setOrientation(SwingConstants.HORIZONTAL);
-        p.add(slPosition, BorderLayout.SOUTH);
+        slPosition.setSnapToTicks(true);
+        Dimension dim = new Dimension(30, 10);
+        slNfft.setPaintTicks(true);
+        slNfft.setMajorTickSpacing(256*8);
+        slNfft.setMinorTickSpacing(256);
+        slNfft.setPaintLabels(true);
+        slNfft.setSnapToTicks(true);
+        slWindow.setPaintTicks(true);
+        slWindow.setMajorTickSpacing(256*32);
+        slWindow.setMinorTickSpacing(1024);
+        slWindow.setPaintLabels(true);
+        slWindow.setSnapToTicks(true);
+
+        JLabel labNfft = new JLabel("NFFT");
+        labNfft.setPreferredSize(dim);
+        JLabel labWin = new JLabel("Window");
+        labWin.setPreferredSize(dim);
+        JLabel labPos = new JLabel("Position");
+        labPos.setPreferredSize(dim);
+        slidePanel.add(labNfft);
+        slidePanel.add(slNfft);
+        slidePanel.add(labWin);
+        slidePanel.add(slWindow);
+        slidePanel.add(labPos);
+        slidePanel.add(slPosition);
+        
+        p.add(slidePanel, BorderLayout.SOUTH);
 
         add(p);
 
@@ -87,8 +117,46 @@ public class SpectrogramFrame extends JFrame implements ChangeListener {
         jfc.addChoosableFileFilter(
             new FileNameExtensionFilter("Real Float", "32f"));
         jfc.setAcceptAllFileFilterUsed(true);
-        slPosition.addChangeListener(this);
+        slPosition.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e){
+                
+                JSlider source = (JSlider) e.getSource();
+                if (fr != null){
+                    // try updating the data with the new position
+                    data = fr.loadSignal(slPosition.getValue() * bufferSize, bufferSize);
+                    specgram.setData(data);
 
+                    // update the time offset of the spectrogram
+                    timeOffset = slPosition.getValue() * bufferSize / sampleRate;
+                    specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
+                }
+            }
+        });
+        slNfft.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e){
+                JSlider source = (JSlider) e.getSource();
+                nfft = slNfft.getValue();
+                specgram.setNfft(nfft);
+
+                // update the time offset of the spectrogram
+                timeOffset = slPosition.getValue() * bufferSize / sampleRate;
+                specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
+
+            }
+        });
+        slWindow.addChangeListener(new ChangeListener(){
+            public void stateChanged(ChangeEvent e){
+                JSlider source = (JSlider) e.getSource();
+                window = source.getValue();
+                specgram.setWindow(window);
+
+                // update the time offset of the spectrogram
+                timeOffset = slPosition.getValue() * bufferSize / sampleRate;
+                specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
+
+            }
+        });
+        
         // ----------------------------  Setup menu  ------------------------
         menu.add(menuItemLoad);
         menuItemLoad.addActionListener(new ActionListener(){
@@ -171,24 +239,7 @@ public class SpectrogramFrame extends JFrame implements ChangeListener {
         setVisible(true);
     }
 
-    /**
-     * Handle the property change of the slider
-     */
-    public void stateChanged(ChangeEvent e){
-        JSlider source = (JSlider) e.getSource();
-        if (fr != null){
-            // try updating the data with the new position
-            data = fr.loadSignal(slPosition.getValue() * bufferSize, bufferSize);
-            specgram.setData(data);
 
-            // update the time offset of the spectrogram
-            timeOffset = slPosition.getValue() * bufferSize / sampleRate;
-            specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
-
-            // repaint
-            this.repaint();
-        }
-    }
 
     public static void main(String[] args){ 
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
