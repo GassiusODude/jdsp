@@ -11,7 +11,7 @@ import java.io.IOException;
 import javax.sound.sampled.*;
 import javax.sound.sampled.AudioFormat.Encoding;
 import jdsp.dataformat.DataObject;
-
+import jdsp.io.FileReader;
 public class Audio{
     public final static int MAX_BUFFER_SIZE = 10000;
     public static short[] extractSignal(String audioFile, DataObject dObj){
@@ -35,7 +35,7 @@ public class Audio{
             int bufferSize = maxNumFrames * frameSizeInBytes;
 
             byte[] byteBuffer = new byte[bufferSize];
-
+            short[] shortBuffer = new short[bufferSize / 2];
             switch(enc.toString()){
                 case "ALAW":
                     break;
@@ -52,13 +52,20 @@ public class Audio{
             // -----------------------  read from file  ---------------------
             short[][] tmp = new short[numChannels][numSamples];
             AudioInputStream ais = AudioSystem.getAudioInputStream(f);
-
+            int indexSample = 0, indexChan = 0;
             while(ais.available() > 0){
                 // read in next block of data
                 ais.read(byteBuffer, 0, byteBuffer.length);
 
-                // TODO: convert bytes to short value
-
+                // convert bytes to short value
+                int numOut = FileReader.bytesToShort(
+                    byteBuffer, shortBuffer, bigEndian);
+                for (int ind0 = 0; ind0 < numOut; ind0++){
+                    tmp[indexChan][indexSample] = shortBuffer[ind0];
+                    indexChan  = (indexChan + 1) % numChannels;
+                    if (indexChan == 0)
+                        indexSample += 1;
+                }
             }
 
             // add to data object

@@ -12,12 +12,12 @@ public class TestFileReader{
         short[] expectedLittle = {513, 1027, 1541, 2055};
 
         // --------------------  test big endian  ---------------------------
-        FileReader.bytes_to_short(bytes, sList, true);
+        FileReader.bytesToShort(bytes, sList, true);
         assertArrayEquals("Byte to Short (big endian) failed",
             expectedBig, sList);
 
         // -----------------  test little endian  ---------------------------
-        FileReader.bytes_to_short(bytes, sList, false);
+        FileReader.bytesToShort(bytes, sList, false);
         assertArrayEquals("Byte to Short (big endian) failed",
             expectedLittle, sList);
     }

@@ -83,13 +83,13 @@ public class FileReader{
             switch(DATA_TYPE[dType]){
                 case "INT16":
                     sArray = new short[numSamples];
-                    numVals = bytes_to_short(tmp, sArray, bigEndian);
+                    numVals = bytesToShort(tmp, sArray, bigEndian);
 
                     out.addFeature(sArray, "Real");
                     break;
                 case "COMPLEX INT16":
                     sArray = new short[numSamples];
-                    numVals = bytes_to_short(tmp, sArray, bigEndian);
+                    numVals = bytesToShort(tmp, sArray, bigEndian);
                         
                     short[][] sRealImag = ComplexInterleaved.getRealImag(sArray);
                     out.addFeature(sRealImag[0], "Real");
@@ -124,7 +124,7 @@ public class FileReader{
      * @param bigEndian Whether bytes are stored in big Endian format.
      * @return The number of shorts updated in shortArray.
      */
-    public static int bytes_to_short(final byte[] byteArray, 
+    public static int bytesToShort(final byte[] byteArray, 
             final short[] shortArray, final boolean bigEndian) {
         int numOut = 0;
         final int nBytes = byteArray.length;
