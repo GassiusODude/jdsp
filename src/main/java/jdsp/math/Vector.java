@@ -9,8 +9,7 @@ package jdsp.math;
 import java.util.Arrays;
 public class Vector{
     // ===========================  double support  =========================
-    /**
-     * Add two vectors together
+    /**Add two vectors together
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      * @return Elementwisee sum of the two arrays
@@ -30,8 +29,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add a scalar to each element of the vector
+    /**Add a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The updated vector
@@ -44,8 +42,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add two vectors together and store result in vector 1
+    /**Add two vectors together and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -62,8 +59,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Add scalar to the vector (without creating a new vector)
+    /**Add scalar to the vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to add
      */
@@ -73,8 +69,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide elements of vec1 by the vec2
+    /**Divide elements of vec1 by the vec2
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The quotient of the division operation
@@ -94,8 +89,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Divide a scalar to each element of the vector
+    /**Divide a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The quotient vector
@@ -108,8 +102,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise divide and store result in vector 1
+    /**Element-wise divide and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -126,8 +119,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide scalar from vector (without creating a new vector)
+    /**Divide scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -137,8 +129,7 @@ public class Vector{
         }
     }
     
-    /**
-     * Return the minimum and maximum of the provided vector
+    /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
      * @return The [min, max] 
      */
@@ -155,9 +146,7 @@ public class Vector{
         return out;
     }
 
-
-    /**
-     * Multiply the two vectors together
+    /**Multiply the two vectors together
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The element-wise product of the 2 vectors
@@ -177,8 +166,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Multiply a scalar to each element of the vector
+    /**Multiply a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The product vector
@@ -191,8 +179,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise multiply and store result in vector 1
+    /**Element-wise multiply and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -206,8 +193,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply scalar with vector (without creating a new vector)
+    /**Multiply scalar with vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -217,8 +203,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply all the elements of the vector
+    /**Multiply all the elements of the vector
      * @param vec1 Input vector 1
      * @return Product of all the elements.
      */
@@ -230,8 +215,7 @@ public class Vector{
         return out;
     }
 
-    /**
-     * Subtract vector 2 from vector 1
+    /**Subtract vector 2 from vector 1
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The output of the subtraction operation
@@ -251,8 +235,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Subtract a scalar from each element of the vector
+    /**Subtract a scalar from each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The subtraaction vector
@@ -265,8 +248,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise subtract and store result in vector 1
+    /**Element-wise subtract and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -283,8 +265,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Subtract scalar from vector (without creating a new vector)
+    /**Subtract scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -294,8 +275,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Sum up the elements of the vector
+    /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.
      */
@@ -304,8 +284,7 @@ public class Vector{
     }
 
     // ==============================  Float  ===============================
-    /**
-     * Add two vectors together
+    /**Add two vectors together
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      * @return Elementwisee sum of the two arrays
@@ -325,8 +304,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add a scalar to each element of the vector
+    /**Add a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The updated vector
@@ -339,8 +317,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add two vectors together and store result in vector 1
+    /**Add two vectors together and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -357,8 +334,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Add scalar to the vector (without creating a new vector)
+    /**Add scalar to the vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to add
      */
@@ -368,8 +344,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide elements of vec1 by the vec2
+    /**Divide elements of vec1 by the vec2
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The quotient of the division operation
@@ -389,8 +364,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Divide a scalar to each element of the vector
+    /**Divide a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The quotient vector
@@ -403,8 +377,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise divide and store result in vector 1
+    /**Element-wise divide and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -421,8 +394,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide scalar from vector (without creating a new vector)
+    /**Divide scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -432,8 +404,7 @@ public class Vector{
         }
     }
     
-    /**
-     * Return the minimum and maximum of the provided vector
+    /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
      * @return The [min, max] 
      */
@@ -450,8 +421,7 @@ public class Vector{
         return out;
     }
 
-    /**
-     * Multiply the two vectors together
+    /**Multiply the two vectors together
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The element-wise product of the 2 vectors
@@ -471,8 +441,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Multiply a scalar to each element of the vector
+    /**Multiply a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The product vector
@@ -485,8 +454,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise multiply and store result in vector 1
+    /**Element-wise multiply and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -503,8 +471,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply scalar with vector (without creating a new vector)
+    /**Multiply scalar with vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -514,8 +481,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply all the elements of the vector
+    /**Multiply all the elements of the vector
      * @param vec1 Input vector 1
      * @return Product of all the elements.
      */
@@ -527,8 +493,7 @@ public class Vector{
         return out;
     }
 
-    /**
-     * Subtract vector 2 from vector 1
+    /**Subtract vector 2 from vector 1
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The output of the subtraction operation
@@ -548,8 +513,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Subtract a scalar from each element of the vector
+    /**Subtract a scalar from each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The subtraaction vector
@@ -562,8 +526,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise subtract and store result in vector 1
+    /**Element-wise subtract and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -580,8 +543,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Subtract scalar from vector (without creating a new vector)
+    /**Subtract scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -591,8 +553,7 @@ public class Vector{
         }
     }
  
-    /**
-     * Sum up the elements of the vector
+    /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.
      */
@@ -605,8 +566,7 @@ public class Vector{
     }
 
     //==============================  long support  =========================
-    /**
-     * Add two vectors together
+    /**Add two vectors together
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      * @return Elementwisee sum of the two arrays
@@ -626,8 +586,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add a scalar to each element of the vector
+    /**Add a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The updated vector
@@ -640,8 +599,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add two vectors together and store result in vector 1
+    /**Add two vectors together and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -658,8 +616,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Add scalar to the vector (without creating a new vector)
+    /**Add scalar to the vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to add
      */
@@ -669,8 +626,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide elements of vec1 by the vec2
+    /**Divide elements of vec1 by the vec2
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The quotient of the division operation
@@ -690,8 +646,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Divide a scalar to each element of the vector
+    /**Divide a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The quotient vector
@@ -704,8 +659,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise divide and store result in vector 1
+    /**Element-wise divide and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -722,8 +676,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide scalar from vector (without creating a new vector)
+    /**Divide scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -733,8 +686,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Return the minimum and maximum of the provided vector
+    /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
      * @return The [min, max] 
      */
@@ -751,8 +703,7 @@ public class Vector{
         return out;
     }
     
-    /**
-     * Multiply the two vectors together
+    /**Multiply the two vectors together
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The element-wise product of the 2 vectors
@@ -772,8 +723,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Multiply a scalar to each element of the vector
+    /**Multiply a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The product vector
@@ -786,8 +736,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise multiply and store result in vector 1
+    /**Element-wise multiply and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -804,8 +753,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply scalar with vector (without creating a new vector)
+    /**Multiply scalar with vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -815,8 +763,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply all the elements of the vector
+    /**Multiply all the elements of the vector
      * @param vec1 Input vector 1
      * @return Product of all the elements.
      */
@@ -828,8 +775,7 @@ public class Vector{
         return out;
     }
 
-    /**
-     * Subtract vector 2 from vector 1
+    /**Subtract vector 2 from vector 1
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The output of the subtraction operation
@@ -849,8 +795,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Subtract a scalar from each element of the vector
+    /**Subtract a scalar from each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The subtraaction vector
@@ -863,8 +808,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise subtract and store result in vector 1
+    /**Element-wise subtract and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -881,8 +825,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Subtract scalar from vector (without creating a new vector)
+    /**Subtract scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -892,8 +835,7 @@ public class Vector{
         }
     }
  
-    /**
-     * Sum up the elements of the vector
+    /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.
      */
@@ -901,8 +843,7 @@ public class Vector{
         return Arrays.stream(vec1).sum();        
     }
     //============================ support int  =============================
-    /**
-     * Add two vectors together
+    /**Add two vectors together
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      * @return Elementwisee sum of the two arrays
@@ -922,8 +863,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add a scalar to each element of the vector
+    /**Add a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The updated vector
@@ -936,8 +876,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Add two vectors together and store result in vector 1
+    /**Add two vectors together and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -954,8 +893,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Add scalar to the vector (without creating a new vector)
+    /**Add scalar to the vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to add
      */
@@ -965,8 +903,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide elements of vec1 by the vec2
+    /**Divide elements of vec1 by the vec2
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The quotient of the division operation
@@ -986,8 +923,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Divide a scalar to each element of the vector
+    /**Divide a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The quotient vector
@@ -1000,8 +936,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise divide and store result in vector 1
+    /**Element-wise divide and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -1018,8 +953,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Divide scalar from vector (without creating a new vector)
+    /**Divide scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -1028,8 +962,8 @@ public class Vector{
             vec1[ind0] /= scalar;
         }
     }
-    /**
-     * Return the minimum and maximum of the provided vector
+
+    /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
      * @return The [min, max] 
      */
@@ -1046,8 +980,7 @@ public class Vector{
         return out;
     }
 
-    /**
-     * Multiply the two vectors together
+    /**Multiply the two vectors together
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The element-wise product of the 2 vectors
@@ -1067,8 +1000,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Multiply a scalar to each element of the vector
+    /**Multiply a scalar to each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The product vector
@@ -1081,8 +1013,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise multiply and store result in vector 1
+    /**Element-wise multiply and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -1099,8 +1030,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply scalar with vector (without creating a new vector)
+    /**Multiply scalar with vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -1110,8 +1040,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Multiply all the elements of the vector
+    /**Multiply all the elements of the vector
      * @param vec1 Input vector 1
      * @return Product of all the elements.
      */
@@ -1123,8 +1052,7 @@ public class Vector{
         return out;
     }
 
-    /**
-     * Subtract vector 2 from vector 1
+    /**Subtract vector 2 from vector 1
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return The output of the subtraction operation
@@ -1144,8 +1072,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Subtract a scalar from each element of the vector
+    /**Subtract a scalar from each element of the vector
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The subtraaction vector
@@ -1158,8 +1085,7 @@ public class Vector{
         return output;
     }
 
-    /**
-     * Element-wise subtract and store result in vector 1
+    /**Element-wise subtract and store result in vector 1
      * @param vec1 Vector 1
      * @param vec2 Vector 2
      */
@@ -1176,8 +1102,7 @@ public class Vector{
         }
     }
 
-    /**
-     * Subtract scalar from vector (without creating a new vector)
+    /**Subtract scalar from vector (without creating a new vector)
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to divide
      */
@@ -1187,12 +1112,293 @@ public class Vector{
         }
     }
  
-    /**
-     * Sum up the elements of the vector
+    /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.
      */
     public static int sum(final int[] vec1){
         return Arrays.stream(vec1).sum();        
     }
+
+    //============================ support short  =============================
+    /**Add two vectors together
+     * @param vec1 Vector 1
+     * @param vec2 Vector 2
+     * @return Elementwisee sum of the two arrays
+     */
+    public static short[] add(final short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short) (vec1[ind0] + vec2[ind0]);
+        }
+        return output;
+    }
+
+    /**Add a scalar to each element of the vector
+     * @param vec1 Input vector
+     * @param scalar Scalar value
+     * @return The updated vector
+     */
+    public static short[] add(final short[] vec1, short scalar){
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short)(vec1[ind0] + scalar);
+        }
+        return output;
+    }
+
+    /**Add two vectors together and store result in vector 1
+     * @param vec1 Vector 1
+     * @param vec2 Vector 2
+     */
+    public static void addMe(short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] += vec2[ind0];
+        }
+    }
+
+    /**Add scalar to the vector (without creating a new vector)
+     * @param vec1 Input vector and target of where the sum is returned
+     * @param scalar Value to add
+     */
+    public static void addMe(short[] vec1, short scalar){
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] += scalar;
+        }
+    }
+
+    /**Divide elements of vec1 by the vec2
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return The quotient of the division operation
+     */
+    public static short[] divide(final short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "divide(): array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short)(vec1[ind0] / vec2[ind0]);
+        }
+        return output;
+    }
+
+    /**Divide a scalar to each element of the vector
+     * @param vec1 Input vector
+     * @param scalar Scalar value
+     * @return The quotient vector
+     */
+    public static short[] divide(final short[] vec1, short scalar){
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short)(vec1[ind0] / scalar);
+        }
+        return output;
+    }
+
+    /**Element-wise divide and store result in vector 1
+     * @param vec1 Vector 1
+     * @param vec2 Vector 2
+     */
+    public static void divideMe(short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] /= vec2[ind0];
+        }
+    }
+
+    /**Divide scalar from vector (without creating a new vector)
+     * @param vec1 Input vector and target of where the sum is returned
+     * @param scalar Value to divide
+     */
+    public static void divideMe(short[] vec1, short scalar){
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] /= scalar;
+        }
+    }
+
+    /**Return the minimum and maximum of the provided vector
+     * @param vec1 Input vector
+     * @return The [min, max] 
+     */
+    public static short[] getMinMax(short[] vec1){
+        short[] out = new short[2];
+        out[0] = 32767;
+        out[1] = -32767;
+        for (short elem : vec1){
+            if (elem < out[0])
+                out[0] = elem;
+            if (elem > out[1])
+                out[1] = elem;
+        }
+        return out;
+    }
+
+    /**Multiply the two vectors together
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return The element-wise product of the 2 vectors
+     */
+    public static short[] multiply(final short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "multiply(): array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short)(vec1[ind0] * vec2[ind0]);
+        }
+        return output;
+    }
+
+    /**Multiply a scalar to each element of the vector
+     * @param vec1 Input vector
+     * @param scalar Scalar value
+     * @return The product vector
+     */
+    public static short[] multiply(final short[] vec1, short scalar){
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short) (vec1[ind0] * scalar);
+        }
+        return output;
+    }
+
+    /**Element-wise multiply and store result in vector 1
+     * @param vec1 Vector 1
+     * @param vec2 Vector 2
+     */
+    public static void multiplyMe(short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] *= vec2[ind0];
+        }
+    }
+
+    /**Multiply scalar with vector (without creating a new vector)
+     * @param vec1 Input vector and target of where the sum is returned
+     * @param scalar Value to divide
+     */
+    public static void multiplyMe(short[] vec1, short scalar){
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] *= scalar;
+        }
+    }
+
+    /**Multiply all the elements of the vector
+     * @param vec1 Input vector 1
+     * @return Product of all the elements.
+     */
+    public static short product(final short[] vec1){
+        short out = 1;
+        for (int ind0 = 0; ind0 < vec1.length; ind0++){
+            out *= vec1[ind0];
+        }
+        return out;
+    }
+
+    /**Subtract vector 2 from vector 1
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return The output of the subtraction operation
+     */
+    public static short[] subtract(final short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "subtract(): array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short)(vec1[ind0] - vec2[ind0]);
+        }
+        return output;
+    }
+
+    /**Subtract a scalar from each element of the vector
+     * @param vec1 Input vector
+     * @param scalar Scalar value
+     * @return The subtraaction vector
+     */
+    public static short[] subtract(final short[] vec1, short scalar){
+        short[] output = new short[vec1.length];
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            output[ind0] = (short)(vec1[ind0] - scalar);
+        }
+        return output;
+    }
+
+    /**Element-wise subtract and store result in vector 1
+     * @param vec1 Vector 1
+     * @param vec2 Vector 2
+     */
+    public static void subtractMe(short[] vec1, final short[] vec2){
+        // ---------------------  error checking  ---------------------------
+        if (vec1.length != vec2.length){
+            throw new IllegalArgumentException(
+                "array lengths need to match");
+        }
+
+        // ---------------------  perform operation  ------------------------
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] /= vec2[ind0];
+        }
+    }
+
+    /**Subtract scalar from vector (without creating a new vector)
+     * @param vec1 Input vector and target of where the sum is returned
+     * @param scalar Value to divide
+     */
+    public static void subtractMe(short[] vec1, short scalar){
+        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
+            vec1[ind0] -= scalar;
+        }
+    }
+ 
+    /**Sum up the elements of the vector
+     * @param vec1 Input vector 1
+     * @return Sum of all the elements.
+     */
+    public static short sum(final short[] vec1){
+        short out = 0;
+        for (int ind0 = 0; ind0 < vec1.length; ind0++)
+            out += vec1[ind0];
+        return out;
+    }
+
 }

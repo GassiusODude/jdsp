@@ -14,6 +14,7 @@ import jdsp.swing.Plot;
 import jdsp.swing.PowerSpectralDensity;
 import jdsp.filters.FilterDesign;
 import jdsp.dataformat.DataObject;
+import jdsp.math.Vector;
 public class PanelFilterDesign extends JPanel {
     Plot plot = new Plot();
     PowerSpectralDensity psd = new PowerSpectralDensity();
@@ -59,6 +60,9 @@ public class PanelFilterDesign extends JPanel {
                 DataObject dObj = new DataObject(designMethod);
                 float[] axes = {0f, 1f, -0.5f, 1f};
                 axes[1] = (float) numTaps;
+                float[] minMax = Vector.getMinMax(filter);
+                axes[2] = minMax[0];
+                axes[3] = minMax[1];
                 plot.setAxes(axes);
                 dObj.addFeature(filter, designMethod);
                 plot.setLabels("Time Domain", "", designMethod);

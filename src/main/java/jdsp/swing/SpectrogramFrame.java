@@ -46,7 +46,7 @@ public class SpectrogramFrame extends JFrame{
     JSlider slPosition = new JSlider();
     JSlider slNfft = new JSlider(JSlider.HORIZONTAL, 256, 8192, 256);
     JSlider slWindow = new JSlider(JSlider.HORIZONTAL, 1024, 32 * 1024, 1024);
-
+    JPanel slidePanel;
     // ----------------------  spectrogram settings  ------------------------
     int window = 1024;
     int nfft = 256;
@@ -69,38 +69,12 @@ public class SpectrogramFrame extends JFrame{
 
         // add spectrogram
         p.add(specgram, BorderLayout.CENTER);
-        JPanel slidePanel = new JPanel();
-        slidePanel.setLayout(new GridLayout(3,2));
-        // add slider to configure position
-        slPosition.setOrientation(SwingConstants.HORIZONTAL);
-        slPosition.setSnapToTicks(true);
-        Dimension dim = new Dimension(30, 10);
-        slNfft.setPaintTicks(true);
-        slNfft.setMajorTickSpacing(256*8);
-        slNfft.setMinorTickSpacing(256);
-        slNfft.setPaintLabels(true);
-        slNfft.setSnapToTicks(true);
-        slWindow.setPaintTicks(true);
-        slWindow.setMajorTickSpacing(256*32);
-        slWindow.setMinorTickSpacing(1024);
-        slWindow.setPaintLabels(true);
-        slWindow.setSnapToTicks(true);
 
-        JLabel labNfft = new JLabel("NFFT");
-        labNfft.setPreferredSize(dim);
-        JLabel labWin = new JLabel("Window");
-        labWin.setPreferredSize(dim);
-        JLabel labPos = new JLabel("Position");
-        labPos.setPreferredSize(dim);
-        slidePanel.add(labNfft);
-        slidePanel.add(slNfft);
-        slidePanel.add(labWin);
-        slidePanel.add(slWindow);
-        slidePanel.add(labPos);
-        slidePanel.add(slPosition);
-        
+        // add slider panel
+        slidePanel = new JPanel();
+        slidePanel.setLayout(new GridLayout(3, 2));
+        setupSliders();
         p.add(slidePanel, BorderLayout.SOUTH);
-
         add(p);
 
         // ---------------  configure spectrogram fft and window  -----------
@@ -117,6 +91,59 @@ public class SpectrogramFrame extends JFrame{
         jfc.addChoosableFileFilter(
             new FileNameExtensionFilter("Real Float", "32f"));
         jfc.setAcceptAllFileFilterUsed(true);
+        
+        setupMenu();
+        setJMenuBar(menuBar);        
+        // -----------------  window listener for closing  ------------------
+        addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent event){
+              System.exit(0);
+            }
+        });
+
+        // -------------------  set size and show  --------------------------
+        setSize(500,500);
+        setVisible(true);
+    }
+    /**Setup Sliders
+     * 
+     * Setup the sliders and state change listeners
+     */
+    private void setupSliders(){
+        // add slider to configure position
+        slPosition.setOrientation(SwingConstants.HORIZONTAL);
+        slPosition.setSnapToTicks(true);
+        
+        // configure NFFT slider
+        slNfft.setPaintTicks(true);
+        slNfft.setMajorTickSpacing(256*8);
+        slNfft.setMinorTickSpacing(256);
+        slNfft.setPaintLabels(true);
+        slNfft.setSnapToTicks(true);
+
+        // configure window slider
+        slWindow.setPaintTicks(true);
+        slWindow.setMajorTickSpacing(256*32);
+        slWindow.setMinorTickSpacing(1024);
+        slWindow.setPaintLabels(true);
+        slWindow.setSnapToTicks(true);
+
+        // set up labels and sliders
+        Dimension dim = new Dimension(30, 10);
+        JLabel labNfft = new JLabel("NFFT");
+        labNfft.setPreferredSize(dim);
+        JLabel labWin = new JLabel("Window");
+        labWin.setPreferredSize(dim);
+        JLabel labPos = new JLabel("Position");
+        labPos.setPreferredSize(dim);
+        slidePanel.add(labNfft);
+        slidePanel.add(slNfft);
+        slidePanel.add(labWin);
+        slidePanel.add(slWindow);
+        slidePanel.add(labPos);
+        slidePanel.add(slPosition);
+
+        // ----------------  setup change listeners  ------------------------
         slPosition.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e){
                 
@@ -124,14 +151,17 @@ public class SpectrogramFrame extends JFrame{
                 if (fr != null){
                     // try updating the data with the new position
                     data = fr.loadSignal(slPosition.getValue() * bufferSize, bufferSize);
-                    specgram.setData(data);
 
                     // update the time offset of the spectrogram
                     timeOffset = slPosition.getValue() * bufferSize / sampleRate;
                     specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
+
+                    // update data and UI
+                    specgram.setData(data);
                 }
             }
         });
+
         slNfft.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e){
                 JSlider source = (JSlider) e.getSource();
@@ -142,8 +172,11 @@ public class SpectrogramFrame extends JFrame{
                 timeOffset = slPosition.getValue() * bufferSize / sampleRate;
                 specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
 
+                // update data and UI
+                specgram.setData(data);
             }
         });
+
         slWindow.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e){
                 JSlider source = (JSlider) e.getSource();
@@ -154,9 +187,18 @@ public class SpectrogramFrame extends JFrame{
                 timeOffset = slPosition.getValue() * bufferSize / sampleRate;
                 specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
 
+                // update data and UI
+                specgram.setData(data);
             }
         });
-        
+
+    }
+
+    /**Setup Menu
+     * 
+     * Setup the menus and action listeners
+     */
+    private void setupMenu(){
         // ----------------------------  Setup menu  ------------------------
         menu.add(menuItemLoad);
         menuItemLoad.addActionListener(new ActionListener(){
@@ -226,20 +268,7 @@ public class SpectrogramFrame extends JFrame{
             }
         });
         menuBar.add(menu);
-        setJMenuBar(menuBar);        
-        // -----------------  window listener for closing  ------------------
-        addWindowListener(new WindowAdapter(){
-            public void windowClosing(WindowEvent event){
-              System.exit(0);
-            }
-        });
-
-        // -------------------  set size and show  --------------------------
-        setSize(500,500);
-        setVisible(true);
     }
-
-
 
     public static void main(String[] args){ 
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
