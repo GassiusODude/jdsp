@@ -38,9 +38,12 @@ import jdsp.dataformat.DataObject;
 import jdsp.io.FileInfo;
 public class SpectrogramFrame extends JFrame{
     JMenuBar menuBar = new JMenuBar();
-    JMenu menu = new JMenu("File");
+    JMenu menuFile = new JMenu("File");
     JMenuItem menuItemLoad = new JMenuItem("Load Signal");
     JMenuItem menuItemExit = new JMenuItem("Exit");
+    JMenu menuEdit = new JMenu("Edit");
+    JMenuItem menuItemFs = new JMenuItem("Sample Rate");
+    JMenuItem menuItemFc = new JMenuItem("Radio Frequency");
     JFileChooser jfc = new JFileChooser();
     Spectrogram specgram = new Spectrogram();
     JSlider slPosition = new JSlider();
@@ -200,7 +203,7 @@ public class SpectrogramFrame extends JFrame{
      */
     private void setupMenu(){
         // ----------------------------  Setup menu  ------------------------
-        menu.add(menuItemLoad);
+        menuFile.add(menuItemLoad);
         menuItemLoad.addActionListener(new ActionListener(){
 
             public void actionPerformed(ActionEvent event){
@@ -261,13 +264,58 @@ public class SpectrogramFrame extends JFrame{
                 }
             }
         });
-        menu.add(menuItemExit);
+        menuFile.add(menuItemExit);
         menuItemExit.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 System.exit(0);
             }
         });
-        menuBar.add(menu);
+        menuBar.add(menuFile);
+
+        // -------------------  Setup Edit menu  ----------------------------
+        menuEdit.add(menuItemFs);
+        menuItemFs.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                // launch an input dialog and query user
+                String s = (String) JOptionPane.showInputDialog(
+                    "Enter the sampling rate of the signal",
+                    Float.toString(sampleRate));
+
+                
+                if (s == null)
+                    // if cancelled
+                    return;
+                else {
+                    // parse float from textfield
+                    float f = Float.parseFloat(s);
+                    if (f > 0){
+                        sampleRate = f;
+                        specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
+                    }
+                }
+            }
+        });
+        menuEdit.add(menuItemFc);
+        menuItemFc.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                // launch dialog and query user
+                String s = (String) JOptionPane.showInputDialog(
+                    "Enter the radio frequency of the signal",
+                    Float.toString(centerFrequency));
+                if (s == null)
+                    // cancelled
+                    return;
+                else{
+                    // parse input
+                    float f = Float.parseFloat(s);
+                    if (f > 0){
+                        centerFrequency= f;
+                        specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
+                    }
+                }
+            }
+        });
+        menuBar.add(menuEdit);
     }
 
     public static void main(String[] args){ 
