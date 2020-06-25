@@ -64,7 +64,7 @@ public class DataObject extends DefaultTableModel{
         String tmpName;
         ArrayList myArray;
         for (int ind0 = 0; ind0 < featureNames.length; ind0++){
-            // get feature name            
+            // get feature name
             tmpName = featureNames[ind0];
 
             // get type
@@ -126,7 +126,7 @@ public class DataObject extends DefaultTableModel{
     // =============================  set/get  ==============================
 
     /** Specify that this model is editable.
-     * 
+     *
      * This is intended for use with JTables.
      * @param newVal The new value.
      */
@@ -386,8 +386,10 @@ public class DataObject extends DefaultTableModel{
     /** Reset the data object */
     public void resetData(){
         numObs = 0;
-        features.clear();
-        featureNames.clear();
+        // just remove the data, not the feature names/types
+        for (int featInd=0; featInd < features.size(); featInd++)
+            features.get(featInd).clear();
+
         fireTableStructureChanged();
     }
 
@@ -410,7 +412,7 @@ public class DataObject extends DefaultTableModel{
             // open file and get buffered stream
             FileInputStream fis = new FileInputStream(f);
             br = new BufferedReader(new InputStreamReader(fis));
-            
+
             // allocate string to read one line of the file
             // allocate array of string for parsed output
             String strLine;
@@ -424,7 +426,7 @@ public class DataObject extends DefaultTableModel{
                 elements = strLine.split(token);
 
                 if (numFeatures == 0){
-                    // if not initialized, set the number of features based on 
+                    // if not initialized, set the number of features based on
                     // first line
                     numFeatures = elements.length;
                     featureNames = new String[numFeatures];
