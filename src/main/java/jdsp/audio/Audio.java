@@ -50,13 +50,14 @@ public class Audio{
 
             tmp = new int[numChannels][maxNumFrames];
             int sMod = 0;
+            boolean signed = false;
             switch(enc.toString()){
                 case "ALAW":
                     break;
                 case "PCM_FLOAT":
                     break;
                 case "PCM_SIGNED":
-                    //FIXME...2's complement
+                    signed = true;
                     break;
                 case "PCM_UNSIGNED":
                     if (nBytesPerSample == 2)
@@ -69,14 +70,13 @@ public class Audio{
             }
 
             // -----------------------  read from file  ---------------------
-
             while(ais.available() > 0){
                 // read in next block of data
                 ais.read(byteBuffer, 0, byteBuffer.length);
 
                 // convert bytes to short value
                 int numOut = FileReader.bytesToInt(
-                    byteBuffer, intBuffer, bigEndian, nBytesPerSample);
+                    byteBuffer, intBuffer, bigEndian, nBytesPerSample, signed);
 
                 // copy from buffer to the output array
                 for (int ind0 = 0; ind0 < numOut; ind0++){

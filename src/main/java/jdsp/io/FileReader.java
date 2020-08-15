@@ -121,27 +121,27 @@ public class FileReader{
      * Convert a byte array to short array.
      * Assumes default of 2 bytes per short
      *
-     * @param byteArray The input byte array
+     * @param bytes The input byte array
      * @param shortArray The short array to store the output
      * @param bigEndian Whether bytes are stored in big Endian format.
      */
-    public static int bytesToShort(final byte[] byteArray,
+    public static int bytesToShort(final byte[] bytes,
             final short[] shortArray, final boolean bigEndian){
-        return bytesToShort(byteArray, shortArray, bigEndian, 2);
+        return bytesToShort(bytes, shortArray, bigEndian, 2);
     }
 
     /**
      * Convert a byte array to short array
-     * @param byteArray The input byte array
+     * @param bytes The input byte array
      * @param shortArray The short array to store the output
      * @param bigEndian Whether bytes are stored in big Endian format.
      * @param numBytes Number of bytes per value
      * @return The number of shorts updated in shortArray.
      */
-    public static int bytesToShort(final byte[] byteArray,
+    public static int bytesToShort(final byte[] bytes,
             final short[] shortArray, final boolean bigEndian, int numBytes) {
         int numOut = 0;
-        final int nBytes = byteArray.length;
+        final int nBytes = bytes.length;
         final int nShorts = shortArray.length;
         final ByteBuffer byteBuffer = ByteBuffer.allocate(nBytes);
         numOut = nBytes / numBytes;
@@ -151,16 +151,16 @@ public class FileReader{
             case 1:
                 // single byte per short
                 for (int ind0 = 0; ind0 < numOut; ind0++)
-                    shortArray[ind0] = (short) (byteArray[ind0]);
+                    shortArray[ind0] = (short) (bytes[ind0]);
                 break;
             case 2:
                 if (bigEndian){
                     for (int ind0 = 0; ind0 < numOut; ind0++)
-                        shortArray[ind0] = (short) ((byteArray[ind0*2]<<8) + byteArray[ind0*2+1]);
+                        shortArray[ind0] = (short) ((bytes[ind0*2]<<8) + bytes[ind0*2+1]);
                 }
                 else{
                     for (int ind0 = 0; ind0 < numOut; ind0++)
-                        shortArray[ind0] = (short) ((byteArray[ind0*2+1]<<8) + byteArray[ind0*2]);
+                        shortArray[ind0] = (short) ((bytes[ind0*2+1]<<8) + bytes[ind0*2]);
                 }
                 break;
             default:
@@ -171,56 +171,75 @@ public class FileReader{
 
     /**
      * Convert a byte array to int array
-     * @param byteArray The input byte array
+     * @param bytes The input byte array
      * @param inttArray The int array to store the output
      * @param bigEndian Whether bytes are stored in big Endian format.
      * @param numBytes Number of bytes per value
      */
-    public static int bytesToInt(final byte[] byteArray,
-            final int[] intArray, final boolean bigEndian, int numBytes) {
+    public static int bytesToInt(final byte[] bytes, final int[] ints,
+            final boolean bigEndian, int numBytes, boolean signed) {
+        // -----------------------  error checking  -------------------------
+        assert numBytes > 0 && numBytes <= 4 : "numBytes: Expecting {1,2,4}";
         int numOut = 0;
-        final int nBytes = byteArray.length;
-        final int nInts = intArray.length;
+        final int nBytes = bytes.length;
+        final int nInts = ints.length;
         final ByteBuffer byteBuffer = ByteBuffer.allocate(nBytes);
         numOut = nBytes / numBytes;
         numOut = Math.min(numOut, nInts);
-
+        int mask1st = 0xFF;
+        int thresh = (int) Math.pow(2, numBytes * 8 - 1);
+        int maxValue = (int) Math.pow(2, numBytes * 8);
         switch(numBytes){
             case 1:
                 // single byte per int
-                for (int ind0 = 0; ind0 < numOut; ind0++)
-                    intArray[ind0] = (int) (byteArray[ind0] & 0xFF);
+                for (int ind0 = 0; ind0 < numOut; ind0++){
+                    ints[ind0] = (int) (bytes[ind0] & mask1st);
+                    if (signed && ints[ind0] > thresh)
+                        ints[ind0] -= maxValue;
+                }
                 break;
             case 2:
                 if (bigEndian){
-                    for (int ind0 = 0; ind0 < numOut; ind0++)
-                        intArray[ind0] = (int) (
-                            ((byteArray[ind0 * 2] & 0xFF) << 8) +
-                            (byteArray[ind0 * 2 + 1] & 0xFF));
+                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                        ints[ind0] = (int) (
+                            ((bytes[ind0 * 2] & mask1st) << 8) +
+                            (bytes[ind0 * 2 + 1] & 0xFF));
+                        if (signed && ints[ind0] > thresh)
+                            ints[ind0] -= maxValue;
+                    }
                 }
                 else{
-                    for (int ind0 = 0; ind0 < numOut; ind0++)
-                        intArray[ind0] = (int) (
-                            ((byteArray[ind0 * 2 + 1] & 0xFF) << 8) +
-                            (byteArray[ind0 * 2] & 0xFF));
+                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                        ints[ind0] = (int) (
+                            ((bytes[ind0 * 2 + 1] & mask1st) << 8) +
+                            (bytes[ind0 * 2] & 0xFF));
+                        if (signed && ints[ind0] > thresh)
+                            ints[ind0] -= maxValue;
+                    }
                 }
                 break;
             case 4:
                 if (bigEndian) {
-                    for (int ind0 = 0; ind0 < numOut; ind0++)
-                        intArray[ind0] = (int) (
-                            ((byteArray[ind0 * 4] & 0xFF) << 24) +
-                            ((byteArray[ind0 * 4 + 1] & 0xFF) << 16) +
-                            ((byteArray[ind0 * 4 + 2] & 0xFF) << 16) +
-                            ((byteArray[ind0 * 4 + 3] & 0xFF)));
+                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                        ints[ind0] = (int) (
+                            ((bytes[ind0 * 4] & mask1st) << 24) +
+                            ((bytes[ind0 * 4 + 1] & 0xFF) << 16) +
+                            ((bytes[ind0 * 4 + 2] & 0xFF) << 8) +
+                            ((bytes[ind0 * 4 + 3] & 0xFF)));
+                        if (signed && ints[ind0] > thresh)
+                            ints[ind0] -= maxValue;
+                    }
                 }
                 else{
-                    for (int ind0 = 0; ind0 < numOut; ind0++)
-                        intArray[ind0] = (int) (
-                            ((byteArray[ind0 * 4 + 3] & 0xFF) << 24) +
-                            ((byteArray[ind0 * 4 + 2] & 0xFF) << 16) +
-                            ((byteArray[ind0 * 4 + 1] & 0xFF) << 16) +
-                            (byteArray[ind0 * 4] & 0xFF));
+                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                        ints[ind0] = (int) (
+                            ((bytes[ind0 * 4 + 3] & mask1st) << 24) +
+                            ((bytes[ind0 * 4 + 2] & 0xFF) << 16) +
+                            ((bytes[ind0 * 4 + 1] & 0xFF) << 8) +
+                            (bytes[ind0 * 4] & 0xFF));
+                        if (signed && ints[ind0] > thresh)
+                            ints[ind0] -= maxValue;
+                    }
                 }
                 break;
             default:
@@ -233,35 +252,35 @@ public class FileReader{
     /** Bytes to float
      *
      * Handles conversion of bytes to float
-     * @param byteArray The array of bytes
+     * @param bytes The array of bytes
      * @param floatArray The output float array
      * @param bigEndian Endianess of the bytes
      * @return Number of floats to expect in float array
      */
-    public static int byteToFloat(final byte[] byteArray,
+    public static int byteToFloat(final byte[] bytes,
             final float[] floatArray, final boolean bigEndian){
         int tmpInt;
         int numOut = 0;
-        final int nBytes = byteArray.length;
+        final int nBytes = bytes.length;
         final int nFloats = floatArray.length;
         final ByteBuffer byteBuffer = ByteBuffer.allocate(nBytes);
         numOut = Math.min(nBytes / 4, nFloats);
 
         if (bigEndian){
             for (int ind0 = 0; ind0 < numOut; ind0++){
-                tmpInt = ((byteArray[ind0*4] & 0xFF) << 24) +
-                    ((byteArray[ind0*4 + 1] & 0xFF) << 16) +
-                    ((byteArray[ind0*4 + 2] & 0xFF) << 8) +
-                    (byteArray[ind0*4+3] & 0xFF);
+                tmpInt = ((bytes[ind0*4] & 0xFF) << 24) +
+                    ((bytes[ind0*4 + 1] & 0xFF) << 16) +
+                    ((bytes[ind0*4 + 2] & 0xFF) << 8) +
+                    (bytes[ind0*4+3] & 0xFF);
                 floatArray[ind0] = Float.intBitsToFloat(tmpInt);
             }
         }
         else{
             for (int ind0 = 0; ind0 < numOut; ind0++){
-                tmpInt = ((byteArray[ind0*4 + 3] & 0xFF) << 24) +
-                    ((byteArray[ind0*4 + 2] & 0xFF) << 16) +
-                    ((byteArray[ind0*4 + 1] & 0xFF) << 8) +
-                    (byteArray[ind0*4] & 0xFF);
+                tmpInt = ((bytes[ind0*4 + 3] & 0xFF) << 24) +
+                    ((bytes[ind0*4 + 2] & 0xFF) << 16) +
+                    ((bytes[ind0*4 + 1] & 0xFF) << 8) +
+                    (bytes[ind0*4] & 0xFF);
                 floatArray[ind0] = Float.intBitsToFloat(tmpInt);
             }
         }
