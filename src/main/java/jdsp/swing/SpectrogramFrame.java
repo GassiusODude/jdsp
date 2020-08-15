@@ -4,10 +4,6 @@
  * 2020-02-16
  *      Currently supports loading from float/short file.
  * 
- * TODO:
- * - Add UI support to specify sampling rate
- * - Add UI support to specify center frequency
- *  
  * @author Keith Chow
  */
 package jdsp.swing;
@@ -37,6 +33,10 @@ import jdsp.dataformat.DataObject;
 
 import jdsp.io.FileInfo;
 public class SpectrogramFrame extends JFrame{
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     JMenuBar menuBar = new JMenuBar();
     JMenu menuFile = new JMenu("File");
     JMenuItem menuItemLoad = new JMenuItem("Load Signal");
