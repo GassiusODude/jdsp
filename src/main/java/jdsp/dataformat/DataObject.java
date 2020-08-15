@@ -493,8 +493,8 @@ public class DataObject extends DefaultTableModel{
             }
 
             // ---------------------  write features  -----------------------
-            for (int obsInd=0; obsInd < this.numObs; obsInd++){
-                for (int featInd=0; featInd<features.size(); featInd++){
+            for (int obsInd = 0; obsInd < this.numObs; obsInd++){
+                for (int featInd = 0; featInd < features.size(); featInd++){
                     writer.write(features.get(featInd).get(obsInd) + token);
                 }
                 writer.write("\n");

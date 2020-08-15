@@ -2,7 +2,7 @@
  * The FileReader will support providing I/O to reading in
  * raw data format as short/float and complex interleaved
  * formats.
- * 
+ *
  * @author Keith Chow
  */
 package jdsp.io;
@@ -24,7 +24,7 @@ public class FileReader{
 
     /** Byter per sample given data type */
     public final static int[] BYTES_PER_SAMPLE = {2, 2, 4, 4};
-    
+
     /** Multiplier if complex */
     public final static int[] MULTIPLIER = {1, 2, 1, 2};
 
@@ -34,7 +34,7 @@ public class FileReader{
     private int dType = 0;
 
 
-    /** Construct a FileReader.  
+    /** Construct a FileReader.
      * This creates a RandomAccessFile to the specified filepath.
      * @param filepath Path to the file
      * @param dtype Data type index to the file.  @see DATA_TYPE
@@ -52,7 +52,7 @@ public class FileReader{
     }
 
     /** Load Signal
-     * 
+     *
      * Load the signal at the specified sample offset
      * @param sampleOffset Offset in samples from start of file
      * @param numSamples Number of samples to extract
@@ -64,7 +64,7 @@ public class FileReader{
         DataObject out = new DataObject(filepath);
 
         // number of bytes to load
-        int numBytes = numSamples * 
+        int numBytes = numSamples *
             BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType];
 
         // number of values to use
@@ -72,7 +72,7 @@ public class FileReader{
 
         try{
             // ---------------  skip to desired sample offset  --------------
-            myFile.seek(sampleOffset * 
+            myFile.seek(sampleOffset *
                 BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType]);
 
             // get byte array
@@ -90,7 +90,7 @@ public class FileReader{
                 case "COMPLEX INT16":
                     sArray = new short[numSamples];
                     numVals = bytesToShort(tmp, sArray, bigEndian);
-                        
+
                     short[][] sRealImag = ComplexInterleaved.getRealImag(sArray);
                     out.addFeature(sRealImag[0], "Real");
                     out.addFeature(sRealImag[1], "Imaginary");
@@ -98,14 +98,14 @@ public class FileReader{
 
                 case "FLOAT32":
                     fArray = new float[numSamples];
-                    numVals = bytes_to_float(tmp, fArray, bigEndian);
-                    
+                    numVals = byteToFloat(tmp, fArray, bigEndian);
+
                     out.addFeature(fArray, "Real");
                     break;
                 case "COMPLEX FLOAT32":
                     fArray = new float[numSamples];
-                    numVals = bytes_to_float(tmp, fArray, bigEndian);
-                        
+                    numVals = byteToFloat(tmp, fArray, bigEndian);
+
                     float[][] fRealImag = ComplexInterleaved.getRealImag(fArray);
                     out.addFeature(fRealImag[0], "Real");
                     out.addFeature(fRealImag[1], "Imaginary");
@@ -118,30 +118,117 @@ public class FileReader{
     }
 
     /**
+     * Convert a byte array to short array.
+     * Assumes default of 2 bytes per short
+     *
+     * @param byteArray The input byte array
+     * @param shortArray The short array to store the output
+     * @param bigEndian Whether bytes are stored in big Endian format.
+     */
+    public static int bytesToShort(final byte[] byteArray,
+            final short[] shortArray, final boolean bigEndian){
+        return bytesToShort(byteArray, shortArray, bigEndian, 2);
+    }
+
+    /**
      * Convert a byte array to short array
      * @param byteArray The input byte array
      * @param shortArray The short array to store the output
      * @param bigEndian Whether bytes are stored in big Endian format.
+     * @param numBytes Number of bytes per value
      * @return The number of shorts updated in shortArray.
      */
-    public static int bytesToShort(final byte[] byteArray, 
-            final short[] shortArray, final boolean bigEndian) {
+    public static int bytesToShort(final byte[] byteArray,
+            final short[] shortArray, final boolean bigEndian, int numBytes) {
         int numOut = 0;
         final int nBytes = byteArray.length;
         final int nShorts = shortArray.length;
         final ByteBuffer byteBuffer = ByteBuffer.allocate(nBytes);
-        numOut = Math.min(nBytes / 2, nShorts);
+        numOut = nBytes / numBytes;
+        numOut = Math.min(numOut, nShorts);
 
-        if (bigEndian){
-            for (int ind0 = 0; ind0 < numOut; ind0++)
-                shortArray[ind0] = (short) ((byteArray[ind0*2]<<8) + byteArray[ind0*2+1]);
-        }
-        else{
-            for (int ind0 = 0; ind0 < numOut; ind0++)
-                shortArray[ind0] = (short) ((byteArray[ind0*2+1]<<8) + byteArray[ind0*2]);
+        switch(numBytes){
+            case 1:
+                // single byte per short
+                for (int ind0 = 0; ind0 < numOut; ind0++)
+                    shortArray[ind0] = (short) (byteArray[ind0]);
+                break;
+            case 2:
+                if (bigEndian){
+                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                        shortArray[ind0] = (short) ((byteArray[ind0*2]<<8) + byteArray[ind0*2+1]);
+                }
+                else{
+                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                        shortArray[ind0] = (short) ((byteArray[ind0*2+1]<<8) + byteArray[ind0*2]);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("bytesToShort: numBytes should be 1 or 2");
         }
         return numOut;
     }
+
+    /**
+     * Convert a byte array to int array
+     * @param byteArray The input byte array
+     * @param inttArray The int array to store the output
+     * @param bigEndian Whether bytes are stored in big Endian format.
+     * @param numBytes Number of bytes per value
+     */
+    public static int bytesToInt(final byte[] byteArray,
+            final int[] intArray, final boolean bigEndian, int numBytes) {
+        int numOut = 0;
+        final int nBytes = byteArray.length;
+        final int nInts = intArray.length;
+        final ByteBuffer byteBuffer = ByteBuffer.allocate(nBytes);
+        numOut = nBytes / numBytes;
+        numOut = Math.min(numOut, nInts);
+
+        switch(numBytes){
+            case 1:
+                // single byte per int
+                for (int ind0 = 0; ind0 < numOut; ind0++)
+                    intArray[ind0] = (int) (byteArray[ind0] & 0xFF);
+                break;
+            case 2:
+                if (bigEndian){
+                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                        intArray[ind0] = (int) (
+                            ((byteArray[ind0 * 2] & 0xFF) << 8) +
+                            (byteArray[ind0 * 2 + 1] & 0xFF));
+                }
+                else{
+                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                        intArray[ind0] = (int) (
+                            ((byteArray[ind0 * 2 + 1] & 0xFF) << 8) +
+                            (byteArray[ind0 * 2] & 0xFF));
+                }
+                break;
+            case 4:
+                if (bigEndian) {
+                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                        intArray[ind0] = (int) (
+                            ((byteArray[ind0 * 4] & 0xFF) << 24) +
+                            ((byteArray[ind0 * 4 + 1] & 0xFF) << 16) +
+                            ((byteArray[ind0 * 4 + 2] & 0xFF) << 16) +
+                            ((byteArray[ind0 * 4 + 3] & 0xFF)));
+                }
+                else{
+                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                        intArray[ind0] = (int) (
+                            ((byteArray[ind0 * 4 + 3] & 0xFF) << 24) +
+                            ((byteArray[ind0 * 4 + 2] & 0xFF) << 16) +
+                            ((byteArray[ind0 * 4 + 1] & 0xFF) << 16) +
+                            (byteArray[ind0 * 4] & 0xFF));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("bytesToInt: numBytes should be 1, 2 or 4");
+        }
+        return numOut;
+    }
+
 
     /** Bytes to float
      *
@@ -151,7 +238,7 @@ public class FileReader{
      * @param bigEndian Endianess of the bytes
      * @return Number of floats to expect in float array
      */
-    public static int bytes_to_float(final byte[] byteArray,
+    public static int byteToFloat(final byte[] byteArray,
             final float[] floatArray, final boolean bigEndian){
         int tmpInt;
         int numOut = 0;
@@ -162,8 +249,8 @@ public class FileReader{
 
         if (bigEndian){
             for (int ind0 = 0; ind0 < numOut; ind0++){
-                tmpInt = ((byteArray[ind0*4] & 0xFF) << 24) + 
-                    ((byteArray[ind0*4 + 1] & 0xFF) << 16) + 
+                tmpInt = ((byteArray[ind0*4] & 0xFF) << 24) +
+                    ((byteArray[ind0*4 + 1] & 0xFF) << 16) +
                     ((byteArray[ind0*4 + 2] & 0xFF) << 8) +
                     (byteArray[ind0*4+3] & 0xFF);
                 floatArray[ind0] = Float.intBitsToFloat(tmpInt);
@@ -171,8 +258,8 @@ public class FileReader{
         }
         else{
             for (int ind0 = 0; ind0 < numOut; ind0++){
-                tmpInt = ((byteArray[ind0*4 + 3] & 0xFF) << 24) + 
-                    ((byteArray[ind0*4 + 2] & 0xFF) << 16) + 
+                tmpInt = ((byteArray[ind0*4 + 3] & 0xFF) << 24) +
+                    ((byteArray[ind0*4 + 2] & 0xFF) << 16) +
                     ((byteArray[ind0*4 + 1] & 0xFF) << 8) +
                     (byteArray[ind0*4] & 0xFF);
                 floatArray[ind0] = Float.intBitsToFloat(tmpInt);
@@ -183,7 +270,7 @@ public class FileReader{
     }
 
     /** Get the specified file path
-     * 
+     *
      * @return File path to load from.
      */
     public String getFilePath(){return filepath;}
