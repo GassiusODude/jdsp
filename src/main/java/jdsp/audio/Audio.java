@@ -12,7 +12,7 @@ import javax.sound.sampled.*;
 import javax.sound.sampled.AudioFormat.Encoding;
 import jdsp.dataformat.DataObject;
 import jdsp.io.FileReader;
-public class Audio{
+public class Audio {
     public final static int MAX_BUFFER_SIZE = 200000;
     public static int[][] extractSignal(String audioFile, DataObject dObj){
         int[][] tmp = {};

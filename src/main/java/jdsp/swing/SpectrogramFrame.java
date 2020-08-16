@@ -1,9 +1,9 @@
 /**
  * Frame to display Spectrogram
- * 
+ *
  * 2020-02-16
  *      Currently supports loading from float/short file.
- * 
+ *
  * @author Keith Chow
  */
 package jdsp.swing;
@@ -14,7 +14,6 @@ import java.awt.*;
 //import java.awt.Container;
 //import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.basic.BasicSliderUI.ChangeHandler;
@@ -27,10 +26,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
+import jdsp.audio.Audio;
 import jdsp.swing.Spectrogram;
 import jdsp.io.FileReader;
 import jdsp.dataformat.DataObject;
-
 import jdsp.io.FileInfo;
 public class SpectrogramFrame extends JFrame{
     /**
@@ -93,10 +92,12 @@ public class SpectrogramFrame extends JFrame{
             new FileNameExtensionFilter("Complex Short", "16ct"));
         jfc.addChoosableFileFilter(
             new FileNameExtensionFilter("Real Float", "32f"));
+        jfc.addChoosableFileFilter(
+            new FileNameExtensionFilter("Wave", "wav"));
         jfc.setAcceptAllFileFilterUsed(true);
-        
+
         setupMenu();
-        setJMenuBar(menuBar);        
+        setJMenuBar(menuBar);
         // -----------------  window listener for closing  ------------------
         addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent event){
@@ -109,14 +110,14 @@ public class SpectrogramFrame extends JFrame{
         setVisible(true);
     }
     /**Setup Sliders
-     * 
+     *
      * Setup the sliders and state change listeners
      */
     private void setupSliders(){
         // add slider to configure position
         slPosition.setOrientation(SwingConstants.HORIZONTAL);
         slPosition.setSnapToTicks(true);
-        
+
         // configure NFFT slider
         slNfft.setPaintTicks(true);
         slNfft.setMajorTickSpacing(256*8);
@@ -149,7 +150,7 @@ public class SpectrogramFrame extends JFrame{
         // ----------------  setup change listeners  ------------------------
         slPosition.addChangeListener(new ChangeListener(){
             public void stateChanged(ChangeEvent e){
-                
+
                 JSlider source = (JSlider) e.getSource();
                 if (fr != null){
                     // try updating the data with the new position
@@ -198,7 +199,7 @@ public class SpectrogramFrame extends JFrame{
     }
 
     /**Setup Menu
-     * 
+     *
      * Setup the menus and action listeners
      */
     private void setupMenu(){
@@ -219,25 +220,33 @@ public class SpectrogramFrame extends JFrame{
                         try{
                             fi = new FileInfo(filepath);
                             int numSamples=1;
-                            if (ext4.equals("32cf")){
+                            if (ext4.equals("32cf")) {
                                 numSamples = (int) (fi.getFileSize() / 8);
                                 fileType = 3;
                                 System.out.println("Complex Float");
                             }
-                            else if (ext4 == "16ct"){
+                            else if (ext4.equals("16ct")) {
                                 numSamples = (int)(fi.getFileSize() / 4);
                                 fileType = 1;
                                 System.out.println("Complex Short");
                             }
-                            else if (ext3 == "16t"){
+                            else if (ext3.equals("16t")) {
                                 numSamples = (int)(fi.getFileSize() / 2);
                                 fileType=0;
                                 System.out.println("Real Short");
                             }
-                            else if (ext4 == "32f"){
+                            else if (ext3.equals("32f")) {
                                 numSamples = (int)(fi.getFileSize() / 4);
                                 fileType = 2;
                                 System.out.println("Real Float");
+                            }
+                            else if (ext3.equals("wav")) {
+                                System.out.println("Loading Wave file");
+                                DataObject tmpDO = new DataObject("Wave");
+                                int[][] intMat = Audio.extractSignal(filepath, tmpDO);
+                                data = new DataObject("data");
+                                data.addFeature(intMat[0], "Wave");
+                                numSamples = data.getRowCount();
                             }
                             else{
                                 System.out.println("ext4 = " + ext4);
@@ -249,9 +258,12 @@ public class SpectrogramFrame extends JFrame{
                             slPosition.setMaximum((int)(numSamples/bufferSize));
                             slPosition.setPaintTicks(true);
                             slPosition.setMajorTickSpacing((int)(numSamples / bufferSize / 5));
-                            
-                            fr = new FileReader(filepath, fileType, false);
-                            data = fr.loadSignal(slPosition.getValue() * bufferSize, bufferSize);
+
+                            if (ext3 != "wav") {
+                                fr = new FileReader(filepath, fileType, false);
+                                data = fr.loadSignal(slPosition.getValue() * bufferSize, bufferSize);
+                            }
+
                             specgram.setData(data);
                         }
                         catch(FileNotFoundException fnfe){System.err.println(fnfe);}
@@ -281,7 +293,7 @@ public class SpectrogramFrame extends JFrame{
                     "Enter the sampling rate of the signal",
                     Float.toString(sampleRate));
 
-                
+
                 if (s == null)
                     // if cancelled
                     return;
@@ -318,11 +330,11 @@ public class SpectrogramFrame extends JFrame{
         menuBar.add(menuEdit);
     }
 
-    public static void main(String[] args){ 
+    public static void main(String[] args){
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
             public void run(){
                 SpectrogramFrame specG = new SpectrogramFrame();
             }
         });
-    } 
+    }
 }
