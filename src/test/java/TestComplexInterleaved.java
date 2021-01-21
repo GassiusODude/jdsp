@@ -1,11 +1,11 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
-import jdsp.math.ComplexInterleaved;
+import net.kcundercover.jdsp.math.ComplexInterleaved;
 public class TestComplexInterleaved{
     double threshDouble = 1e-12;
     float threshFloat = (float) 1e-6;
-    
+
     @Test
     public void testMagnDouble(){
         double[] in = {3, 4, 7, 7};
@@ -29,7 +29,7 @@ public class TestComplexInterleaved{
         double[] expected = {Math.PI*0.25, -Math.PI*0.25,
             Math.PI * 0.75, -Math.PI * 0.75};
         for (int ind0 = 0; ind0 < expected.length; ind0++){
-            System.out.println("Expected = " + expected[ind0] 
+            System.out.println("Expected = " + expected[ind0]
                 + ",\tOut = " + out[ind0]);
         }
         assertArrayEquals("Angle check", expected, out, threshDouble);
@@ -41,7 +41,7 @@ public class TestComplexInterleaved{
         float[] expected = {(float) Math.PI * 0.25f, (float) -Math.PI * 0.25f,
             (float) Math.PI * 0.75f, (float) -Math.PI * 0.75f};
         for (int ind0 = 0; ind0 < expected.length; ind0++){
-            System.out.println("Expected = " + expected[ind0] 
+            System.out.println("Expected = " + expected[ind0]
                 + ",\tOut = " + out[ind0]);
         }
         assertArrayEquals("Angle check", expected, out, threshFloat);

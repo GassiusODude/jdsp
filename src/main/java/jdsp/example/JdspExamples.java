@@ -1,22 +1,22 @@
-package jdsp.example;
+package net.kcundercover.jdsp.example;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JFrame; 
-import javax.swing.JScrollPane; 
-import javax.swing.JTable; 
-import jdsp.dataformat.DataObject;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import net.kcundercover.jdsp.dataformat.DataObject;
 import javax.swing.JTabbedPane;
-import jdsp.swing.Plot;
-import jdsp.swing.TableUI;
-import jdsp.swing.Spectrogram;
-import jdsp.example.PanelFilterDesign;
+import net.kcundercover.jdsp.swing.Plot;
+import net.kcundercover.jdsp.swing.TableUI;
+import net.kcundercover.jdsp.swing.Spectrogram;
+import net.kcundercover.jdsp.example.PanelFilterDesign;
 public class JdspExamples extends JTabbedPane{
-    // Table 
-    JTable j; 
-  
-    // Constructor 
-    public JdspExamples() 
-    { 
+    // Table
+    JTable j;
+
+    // Constructor
+    public JdspExamples()
+    {
         super();
 
         // --------------------  table example  -----------------------------
@@ -65,11 +65,11 @@ public class JdspExamples extends JTabbedPane{
         this.add("Spectrogram", specgram);
         specgram.setData(d2);
 
-    } 
-  
-    // Driver  method 
-    public static void main(String[] args) 
-    { 
+    }
+
+    // Driver  method
+    public static void main(String[] args)
+    {
 
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
             public void run(){
@@ -87,5 +87,5 @@ public class JdspExamples extends JTabbedPane{
                 newFrame.setVisible(true);
             }
         });
-    } 
-} 
+    }
+}

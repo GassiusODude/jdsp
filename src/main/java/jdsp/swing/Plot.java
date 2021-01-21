@@ -1,9 +1,9 @@
 /**
  * Plot JPanel
- * 
+ *
  * @author Keith Chow
   */
-package jdsp.swing;
+package net.kcundercover.jdsp.swing;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
 import java.lang.RuntimeException;
 import java.util.ArrayList;
 import javax.swing.*;
-import jdsp.dataformat.DataObject;
+import net.kcundercover.jdsp.dataformat.DataObject;
 
 
 public class Plot extends JPanel{
@@ -129,7 +129,7 @@ public class Plot extends JPanel{
     }
 
     /** Set the new axes
-     * 
+     *
      * @param newAxes The new axes (min x, max x, min y, max y)
      */
     public void setAxes(final float[] newAxes) {
@@ -153,7 +153,7 @@ public class Plot extends JPanel{
     }
 
     /** Set the labels
-     * 
+     *
      * @param x     The x-label (horizontal)
      * @param y     The y-label (vertical)
      * @param title The title of the plot.
@@ -165,7 +165,7 @@ public class Plot extends JPanel{
     }
 
     /** Set the line type
-     * 
+     *
      * @param newVal The new line type
      */
     public void setLine(final String newVal) {
@@ -174,7 +174,7 @@ public class Plot extends JPanel{
     }
 
     /** Set the margins
-     * 
+     *
      * @param marginX Set the horizontal margins
      * @param marginY Set the vertical margins
      */
@@ -184,7 +184,7 @@ public class Plot extends JPanel{
     }
 
     /** Set the marker
-     * 
+     *
      * Adding a marker indicates more clearly where the data points
      * are, rather than just the interpolated line.
      * @param marker The marker
@@ -195,7 +195,7 @@ public class Plot extends JPanel{
     }
 
     /** Set the marker
-     * 
+     *
      * @param marker The marker
      * @param width  Width of the marker
      * @param height Height of the marker
@@ -208,7 +208,7 @@ public class Plot extends JPanel{
     }
 
     /** Set the size of the plot
-     * 
+     *
      * @param width  New width
      * @param height New height
      */
@@ -243,13 +243,13 @@ public class Plot extends JPanel{
     }
 
     /** Draw the background.
-     * 
-     * This includes: 
+     *
+     * This includes:
      *      1) Background
      *      2) Draw grid
      *      3) Draw ticks on the axis.
      *      4) Draw labels and title.
-     * 
+     *
      * @param g Graphics object
      */
     public void drawBackground(final Graphics g) {
@@ -313,7 +313,7 @@ public class Plot extends JPanel{
     }
 
     /** Performs a line plot.
-     * 
+     *
      * @param g Graphics object
      */
     public void drawData(final Graphics g) {
@@ -327,7 +327,7 @@ public class Plot extends JPanel{
     }
 
     /** Draw a line based on ArrayList vector
-     * 
+     *
      * @param g2    The Graphics2D object.
      * @param aList The input signal (real)
      */
@@ -359,7 +359,7 @@ public class Plot extends JPanel{
     }
 
     /** Draw a line based on ArrayList vector given a float array
-     * 
+     *
      * @param g2      The Graphics2D object.
      * @param realSig The real signal
      */
@@ -393,7 +393,7 @@ public class Plot extends JPanel{
     }
 
     /** Draw the labels (x-label, y-label, title, legend)
-     * 
+     *
      * @param g Graphics object
      */
     public void drawLabels(final Graphics g) {
@@ -440,7 +440,7 @@ public class Plot extends JPanel{
     }
 
     /** Load the type of stroke to use.
-     * 
+     *
      * @param g Graphics object
      */
     public void loadLineType(final Graphics2D g) {
@@ -494,13 +494,13 @@ public class Plot extends JPanel{
     }
 
     /** Update marker detail.
-     * 
+     *
      * @param g Graphics object
      */
     protected final void updateMarkerDetail(final Graphics g) {}
 
     /** Update the plot location
-     * 
+     *
      * Specify spacing and margins for the plot
      */
     protected final void updatePlotLocations(){

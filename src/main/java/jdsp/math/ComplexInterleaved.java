@@ -1,10 +1,10 @@
 /**
  * This class contains a number of convenience functions for working with
  * complex interleaved data.
- * 
+ *
  * @author GassiusODude
  */
-package jdsp.math;
+package net.kcundercover.jdsp.math;
 public class ComplexInterleaved {
     // --------------------------  double support  --------------------------
     /**
@@ -26,7 +26,7 @@ public class ComplexInterleaved {
      * Assumes complex, interleaved samples.
      *      Sample[0] = complexSig[0] + j * complexSig[1]
      *      Sample[1] = complexSig[2] + j * complexSig[3]
-     * 
+     *
      * @param complexSig Complex interleaved signal
      * @return Real magnitude vector
      */
@@ -35,7 +35,7 @@ public class ComplexInterleaved {
         double[] output = new double[complexSig.length / 2];
 
         for (int ind0 = 0; ind0 < output.length; ind0++){
-            output[ind0] = complexSig[ind0 * 2] * complexSig[ind0 * 2] + 
+            output[ind0] = complexSig[ind0 * 2] * complexSig[ind0 * 2] +
                            complexSig[ind0 * 2 + 1] * complexSig[ind0 * 2 + 1];
             output[ind0] = Math.sqrt(output[ind0]);
         }
@@ -58,7 +58,7 @@ public class ComplexInterleaved {
         for (int ind0 = 0; ind0 < inSig.length; ind0++){
             output[ind0 * 2] =
                 inSig[ind0] * Math.cos(pi * normFreq * ind0);
-            output[ind0 * 2 + 1] = 
+            output[ind0 * 2 + 1] =
                 inSig[ind0] * Math.sin(pi * normFreq * ind0);
         }
         return output;
@@ -83,7 +83,7 @@ public class ComplexInterleaved {
                 inSig[ind0] * Math.cos(pi * normFreq * ind0) -
                 inSig[ind0 + 1] * Math.sin(pi * normFreq * ind0);
 
-            output[ind0 + 1] = 
+            output[ind0 + 1] =
                 inSig[ind0] * Math.sin(pi * normFreq * ind0) +
                 inSig[ind0 + 1] * Math.cos(pi * normFreq * ind0);
         }
@@ -94,7 +94,7 @@ public class ComplexInterleaved {
     // --------------------------  float support  --------------------------
 
     /** Calculate the phase of the complex signal
-     * 
+     *
      * @param complexSig The input complex signal
      * @return The real valued angle (with values in range -pi to pi)
      */
@@ -108,7 +108,7 @@ public class ComplexInterleaved {
     }
 
     /** Calculate the magnitude of each element in the array
-     * 
+     *
      * Assumes complex, interleaved samples.
      *      Sample[0] = complexSig[0] + j * complexSig[1]
      *      Sample[1] = complexSig[2] + j * complexSig[3]
@@ -121,7 +121,7 @@ public class ComplexInterleaved {
         float[] output = new float[complexSig.length / 2];
 
         for (int ind0 = 0; ind0 < output.length; ind0++){
-            output[ind0] = complexSig[ind0 * 2] * complexSig[ind0 * 2] + 
+            output[ind0] = complexSig[ind0 * 2] * complexSig[ind0 * 2] +
                            complexSig[ind0 * 2 + 1] * complexSig[ind0 * 2 + 1];
             output[ind0] = (float) Math.sqrt(output[ind0]);
         }
@@ -129,7 +129,7 @@ public class ComplexInterleaved {
     }
 
     /** Get the real and imaginary vectors
-     * 
+     *
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
@@ -145,7 +145,7 @@ public class ComplexInterleaved {
     }
 
     /** Get the real and imaginary vectors
-     * 
+     *
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
@@ -161,7 +161,7 @@ public class ComplexInterleaved {
     }
 
     /** Get the real and imaginary vectors
-     * 
+     *
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
@@ -177,7 +177,7 @@ public class ComplexInterleaved {
     }
 
     /** Get the real and imaginary vectors
-     * 
+     *
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
@@ -192,5 +192,5 @@ public class ComplexInterleaved {
         return out;
     }
 
-    
+
 }

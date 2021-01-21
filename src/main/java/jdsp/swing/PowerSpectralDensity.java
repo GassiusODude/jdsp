@@ -1,11 +1,11 @@
 /**
  * @author Keith Chow
  */
-package jdsp.swing;
+package net.kcundercover.jdsp.swing;
 import java.util.ArrayList;
 import java.awt.Graphics2D;
-import jdsp.math.DTFT;
-import jdsp.math.ComplexInterleaved;
+import net.kcundercover.jdsp.math.DTFT;
+import net.kcundercover.jdsp.math.ComplexInterleaved;
 
 public class PowerSpectralDensity extends Plot{
     public final static long serialVersionUID = 0;

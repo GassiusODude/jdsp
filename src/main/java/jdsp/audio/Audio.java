@@ -4,14 +4,14 @@
  * This class will provide support for reading and writing audio.
  * @author Keith Chow
  */
-package jdsp.audio;
+package net.kcundercover.jdsp.audio;
 
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
 import javax.sound.sampled.AudioFormat.Encoding;
-import jdsp.dataformat.DataObject;
-import jdsp.io.FileReader;
+import net.kcundercover.jdsp.dataformat.DataObject;
+import net.kcundercover.jdsp.io.FileReader;
 public class Audio {
     public final static int MAX_BUFFER_SIZE = 200000;
     public static int[][] extractSignal(String audioFile, DataObject dObj){

@@ -3,9 +3,9 @@ import static org.junit.Assert.assertArrayEquals;
 import java.util.Arrays;
 import java.util.Random;
 import org.junit.Test;
-import jdsp.math.Convolve;
-import jdsp.filters.FilterD;
-import jdsp.filters.FilterF;
+import net.kcundercover.jdsp.math.Convolve;
+import net.kcundercover.jdsp.filters.FilterD;
+import net.kcundercover.jdsp.filters.FilterF;
 
 /**
  * Tests the convolution function
@@ -26,7 +26,7 @@ public class TestFilters{
     final double[] d2 = {4, 5, 6, 7, 8, 9};
     final double[] d3 = {12, 31, 58, 70, 82, 94, 76, 45};
     double[] outD;
-    
+
     @Test
     /** Test convolve of floats equal length */
     public void testConvolve1(){
@@ -73,7 +73,7 @@ public class TestFilters{
         double[] tmp1 = {1,2,3,4,5,6,7};
         double[] tmp2 = {1,2,3,4,5,6,7};
         double[] out = f.applyFilter(tmp1);
-        
+
         FilterD f2 = new FilterD(1);
         f2.designFilter(11, 0, "HANN", 0.1);
         double[] outPart1 = f2.applyFilter(Arrays.copyOfRange(tmp2, 0, 3));
@@ -81,7 +81,7 @@ public class TestFilters{
         double[] out2 = new double[out.length];
         System.arraycopy(outPart1, 0, out2, 0, outPart1.length);
         System.arraycopy(outPart2, 0, out2, outPart1.length, outPart2.length);
-        
+
         assertEquals(out.length, outPart1.length + outPart2.length);
         assertArrayEquals(out, out2, 0.1);
     }
@@ -99,7 +99,7 @@ public class TestFilters{
         for (int ind0 = 0; ind0 < data.length; ind0 ++){
             data[ind0] = r.nextFloat();
         }
-        
+
         // -------------------------  run on data  --------------------------
         tic = System.nanoTime();
         for (int ind0 = 0; ind0 < numIter; ind0++)
@@ -129,7 +129,7 @@ public class TestFilters{
         for (int ind0 = 0; ind0 < data.length; ind0 ++){
             data[ind0] = r.nextDouble();
         }
-        
+
         // -------------------------  run on data  --------------------------
         tic = System.nanoTime();
         for (int ind0 = 0; ind0 < numIter; ind0++)

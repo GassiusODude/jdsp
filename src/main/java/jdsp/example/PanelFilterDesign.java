@@ -1,4 +1,4 @@
-package jdsp.example;
+package net.kcundercover.jdsp.example;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -10,18 +10,18 @@ import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Dimension;
-import jdsp.swing.Plot;
-import jdsp.swing.PowerSpectralDensity;
-import jdsp.filters.FilterDesign;
-import jdsp.dataformat.DataObject;
-import jdsp.math.Vector;
+import net.kcundercover.jdsp.swing.Plot;
+import net.kcundercover.jdsp.swing.PowerSpectralDensity;
+import net.kcundercover.jdsp.filters.FilterDesign;
+import net.kcundercover.jdsp.dataformat.DataObject;
+import net.kcundercover.jdsp.math.Vector;
 public class PanelFilterDesign extends JPanel {
     Plot plot = new Plot();
     PowerSpectralDensity psd = new PowerSpectralDensity();
-    public static final String[] SUPPORTED_FILTERS = 
+    public static final String[] SUPPORTED_FILTERS =
         {"BARTLETT", "HAMMING", "HANN"};
-    
-    
+
+
     JPanel sidePanel;
     JComboBox comboFilter = new JComboBox(SUPPORTED_FILTERS);
     JSlider slideBandwidth = new JSlider(1, 100);
@@ -47,12 +47,12 @@ public class PanelFilterDesign extends JPanel {
 
         sidePanel.add(new JLabel("Bandwidth"));
         sidePanel.add(slideBandwidth);
-        
+
         buttonDesign = new JButton("Design\nFilter");
         buttonDesign.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 String designMethod = comboFilter.getSelectedItem().toString();
-                float normBandwidth = 
+                float normBandwidth =
                     (float) slideBandwidth.getValue() / 100.0f;
                 int numTaps = Integer.parseInt(tfNumTaps.getText());
                 float[] filter = FilterDesign.firWindowDesignF(

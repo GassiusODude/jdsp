@@ -2,8 +2,8 @@
  * @author Keith Chow
  */
 
-package jdsp.filters;
-import jdsp.math.Convolve;
+package net.kcundercover.jdsp.filters;
+import net.kcundercover.jdsp.math.Convolve;
 public class FilterObject{
     /** Numerator of the filter */
     private double[] numerator = {1.0};
@@ -25,7 +25,7 @@ public class FilterObject{
     // -------------------------  set methods  ------------------------------
     // ======================================================================
     /** Set the numerator of the FilterObject
-     * 
+     *
      * @param numerator Numerator of the filter
      */
     public void setNumerator(double [] numerator){
@@ -35,7 +35,7 @@ public class FilterObject{
     }
 
     /** Set the denominator of the FilterObject
-     * 
+     *
      * @param denominator The new denominator of the filter object
      */
     public void setDenominator(double[] denominator){
@@ -43,7 +43,7 @@ public class FilterObject{
     }
 
     /**Filter applied on a complex interleaved input
-     * 
+     *
      * @param complexInput Complex interleaved input signal
      * @return Complex interleaved filted output
      */
@@ -51,7 +51,7 @@ public class FilterObject{
         return Convolve.convolveRealComplex(this.getNumerator(), complexInput);
     }
     /** Filter a real input signal
-     * 
+     *
      * @param realInput Real input signal
      * @return Filtered signal
      */

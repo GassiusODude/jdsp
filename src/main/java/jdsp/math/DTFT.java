@@ -1,10 +1,10 @@
 /**
  * The discrete time fourier transform.
- * 
+ *
  * @author GassiusODude
  */
-package jdsp.math;
-import jdsp.math.Vector;
+package net.kcundercover.jdsp.math;
+import net.kcundercover.jdsp.math.Vector;
 public class DTFT {
     public final static long serialVersionUID = 0;
     /**
@@ -21,12 +21,12 @@ public class DTFT {
         float[] output = new float[nfft * 2];
         int len_out = output.length;
         output[0] = Vector.sum(signal) / 2;
-        
+
         for (int freq=1; freq < nfft/2 + 1; freq++){
             // initialize sum of real and imaginary
             sumReal = 0;
             sumImag = 0;
-            
+
             // --------- exp(j*w*t) = 0.5*cos(wt) + 0.5j * sin(wt)  ---------
             // update mult for the duration for-loop
             mult = (float)(2 * Math.PI * freq / nfft);
@@ -61,19 +61,19 @@ public class DTFT {
         float[] output = new float[nfft * 2];
         int len_out = output.length;
         output[0] = Vector.sum(signal) / 2;
-        
+
         for (int freq=1; freq < nfft -1 ; freq++){
             // initialize sum of real and imaginary
             sumReal = 0;
             sumImag = 0;
-            
+
             // --------- exp(j*w*t) = 0.5*cos(wt) + 0.5j * sin(wt)  ---------
             // update mult for the duration for-loop
             mult = (float)(2 * Math.PI * freq / nfft);
             for (int t = 0; t < signal.length; t+=2){
                 sumReal += signal[t] * Math.cos(mult * t/2.0)
                     - signal[t+1] * Math.sin(mult * t/2.0);
-                sumImag += signal[t] * Math.sin(mult * t/2.0) 
+                sumImag += signal[t] * Math.sin(mult * t/2.0)
                     + signal[t+1] * Math.cos(mult * t/2.0);
             }
             sumReal /= 2;

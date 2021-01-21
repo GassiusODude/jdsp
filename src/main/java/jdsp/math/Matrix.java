@@ -1,10 +1,10 @@
-package jdsp.math;
-import jdsp.math.Vector;
+package net.kcundercover.jdsp.math;
+import net.kcundercover.jdsp.math.Vector;
 public class Matrix{
     /** Calculate the inverse of the matrix.
      *
      *  @param matrix The matrix that you want to find the inverse of.
-     *  @param out The output to store the inverse of matrix. 
+     *  @param out The output to store the inverse of matrix.
      */
     public static void inverse(final double[][] matrix, double[][] out){
         // -----------------------  error checking  -------------------------
@@ -25,7 +25,7 @@ public class Matrix{
         // use the Gauss-Jordan method to find inverse
         gaussJordan(matrix, out);
     }
-    
+
     /**
      * Gauss-Jordan is a Gaussian elimination method for solving a set of
      * linear equations.
@@ -86,7 +86,7 @@ public class Matrix{
 
     /**
      * Perform row swap
-     * 
+     *
      * @param matrix Input matrix
      * @param i First row
      * @param j Second row
@@ -132,12 +132,12 @@ public class Matrix{
        if (matrix.length > 0 && i >= 0 && i < matrix.length){
            // scale and store in initial vector
            Vector.multiplyMe(matrix[i], scale);
-       } 
+       }
        else{
            throw new IllegalArgumentException("index must be within length of matrix");
        }
     }
-    
+
     /**
      * Perform multiplication of two matrices.  matrix 1 should have number of
      * columns matching the number of rows in matrix 2.
@@ -145,11 +145,11 @@ public class Matrix{
      * @param mat2 Matrix 2 (b x c)
      * @param out Output Matrix (a x c)
      */
-    public static void matrixMultiply(final double[][] mat1, 
+    public static void matrixMultiply(final double[][] mat1,
             final double[][] mat2, double[][] out){
         // --------------------------  error checking  ----------------------
         // check to make sure correct dimensions
-        if (mat1.length == 0 || mat1[0].length == 0 || mat2.length == 0 || 
+        if (mat1.length == 0 || mat1[0].length == 0 || mat2.length == 0 ||
                 mat2[0].length == 0 || out.length == 0 || out[0].length == 0){
             throw new IllegalArgumentException("Matrix dimesnions should not be 0");
         }
@@ -189,7 +189,7 @@ public class Matrix{
                     i = 0;
                     for (int ind1 = 0; ind1 < matrix.length; ind1++)
                         if (ind1 != ind0)
-                            System.arraycopy(matrix[ind1], 1, 
+                            System.arraycopy(matrix[ind1], 1,
                                 temp[i++], 0, temp.length);
 
                     sum += mult * matrix[ind0][0] * determinant(temp);
@@ -200,7 +200,7 @@ public class Matrix{
 
     /**
      * Print out the matrix
-     * 
+     *
      * @param matrix The matrix to print
      */
     public static void display(final double[][] matrix){
@@ -214,7 +214,7 @@ public class Matrix{
 
     /**
      * Print out a vector
-     * 
+     *
      * @param vector The vector to print.
      */
     public static void display(final double[] vector){

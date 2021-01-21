@@ -1,8 +1,8 @@
 /**
- * Implements histogram functionality.  
+ * Implements histogram functionality.
  */
-package jdsp.math;
-import jdsp.math.Vector;
+package net.kcundercover.jdsp.math;
+import net.kcundercover.jdsp.math.Vector;
 public class Histogram{
     private int[] histCounts = new int[1];
     double[] histEdges = new double[1];
@@ -36,7 +36,7 @@ public class Histogram{
             throw new IllegalArgumentException("numBins should be greater than 1");
         }
         minMax = Vector.getMinMax(vec1);
-        
+
         if (minMax[1] == minMax[0]){
             // only one value
             histEdges = new double[1];

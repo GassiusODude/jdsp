@@ -1,6 +1,6 @@
-package jdsp.filters;
-import jdsp.filters.FilterDesign;
-import jdsp.math.Convolve;
+package net.kcundercover.jdsp.filters;
+import net.kcundercover.jdsp.filters.FilterDesign;
+import net.kcundercover.jdsp.math.Convolve;
 import java.security.InvalidParameterException;
 /**
  * The FilterF class will implement the following static methods:
@@ -35,13 +35,13 @@ public class FilterF{
     /**
      * Design a filter based on the provided specifications
      * and design technique.  This will update interal properties.
-     * 
+     *
      * @param numNum Number of numerator filter coefs.
      * @param numDen Number of denominator filter coefs.
      * @param design The design technique to use.
      * @param bandwidth Normalized bandwidth. (0.5 = half the sampling rate)
      */
-    public void designFilter(int numNum, int numDen, String design, 
+    public void designFilter(int numNum, int numDen, String design,
             float bandwidth) throws InvalidParameterException{
         // -------------------------  error checking  -----------------------
         assert numNum >= 1:
@@ -64,7 +64,7 @@ public class FilterF{
                 coefNumerator = FilterDesign.firWindowDesignF(
                     numNum, design, bandwidth);
                 coefDenominator = new float[0];
-                filterState = new float[numNum - 1];    
+                filterState = new float[numNum - 1];
                 break;
 
             // no matches...design not supported
@@ -89,7 +89,7 @@ public class FilterF{
 
 
         // update filterState
-        System.arraycopy(tmp, tmp.length - filterState.length, 
+        System.arraycopy(tmp, tmp.length - filterState.length,
             filterState, 0, filterState.length);
 
         // prepare output

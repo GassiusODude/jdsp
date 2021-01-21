@@ -1,7 +1,7 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
-import jdsp.io.FileReader;
+import net.kcundercover.jdsp.io.FileReader;
 
 public class TestFileReader{
     @Test
@@ -22,5 +22,5 @@ public class TestFileReader{
             expectedLittle, sList);
     }
 
-    
+
 }

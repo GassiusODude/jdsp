@@ -3,9 +3,9 @@
  * @author GassiusODude
  * @version 0.0
  */
-package jdsp.filters;
-import jdsp.math.Convolve;
-import jdsp.filters.FilterDesign;
+package net.kcundercover.jdsp.filters;
+import net.kcundercover.jdsp.math.Convolve;
+import net.kcundercover.jdsp.filters.FilterDesign;
 
 public class FilterD{
     /** Serial Version UID for this class */
@@ -37,13 +37,13 @@ public class FilterD{
     /**
      * Design a filter based on the provided specifications
      * and design technique.  This will update interal properties.
-     * 
+     *
      * @param numNum Number of numerator filter coefs.
      * @param numDen Number of denominator filter coefs.
      * @param design The design technique to use.
      * @param bandwidth Normalized bandwidth. (0.5 = half the sampling rate)
      */
-    public void designFilter(int numNum, int numDen, String design, 
+    public void designFilter(int numNum, int numDen, String design,
             double bandwidth){
         // -------------------------  error checking  -----------------------
         assert numNum >= 1 :
@@ -89,7 +89,7 @@ public class FilterD{
         double[] output = Convolve.convolve(tmp, coefNumerator);
 
         // update filterState
-        System.arraycopy(tmp, tmp.length - filterState.length, 
+        System.arraycopy(tmp, tmp.length - filterState.length,
             filterState, 0, filterState.length);
 
         // prepare output

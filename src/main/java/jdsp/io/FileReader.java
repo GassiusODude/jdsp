@@ -5,7 +5,7 @@
  *
  * @author Keith Chow
  */
-package jdsp.io;
+package net.kcundercover.jdsp.io;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.io.RandomAccessFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import jdsp.dataformat.DataObject;
-import jdsp.math.ComplexInterleaved;
+import net.kcundercover.jdsp.dataformat.DataObject;
+import net.kcundercover.jdsp.math.ComplexInterleaved;
 
 
 public class FileReader{
@@ -124,6 +124,7 @@ public class FileReader{
      * @param bytes The input byte array
      * @param shortArray The short array to store the output
      * @param bigEndian Whether bytes are stored in big Endian format.
+     * @return The number of samples
      */
     public static int bytesToShort(final byte[] bytes,
             final short[] shortArray, final boolean bigEndian){
@@ -172,9 +173,11 @@ public class FileReader{
     /**
      * Convert a byte array to int array
      * @param bytes The input byte array
-     * @param inttArray The int array to store the output
+     * @param ints The int array to store the output
      * @param bigEndian Whether bytes are stored in big Endian format.
      * @param numBytes Number of bytes per value
+     * @param signed Describes wheter bytes represent signed or unsigned ints
+     * @return Number of samples read
      */
     public static int bytesToInt(final byte[] bytes, final int[] ints,
             final boolean bigEndian, int numBytes, boolean signed) {

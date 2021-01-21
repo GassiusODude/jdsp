@@ -1,6 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import jdsp.math.Matrix;
+import net.kcundercover.jdsp.math.Matrix;
 
 public class TestMatrix{
     final static double thresh = 0.000001;

@@ -1,10 +1,10 @@
 /**
  * Signal Information
  * Track information about how to intrepret data
- * 
+ *
  * @author Keith Chow
  */
-package jdsp.io;
+package net.kcundercover.jdsp.io;
 import java.io.IOException;
 import java.sql.Timestamp;
 
@@ -29,7 +29,7 @@ public class SignalInfo extends FileInfo{
 
     /**
      * Constructor for signal information
-     * 
+     *
      * @param filepath Path to the signal
      * @param fs Sampling rate associated to the signal
      * @param fc Center frequency of the recording

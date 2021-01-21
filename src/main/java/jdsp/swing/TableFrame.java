@@ -2,9 +2,9 @@
  * The JFrame to show the TableUI.
  * @author GassiusODude
   */
-package jdsp.swing;
+package net.kcundercover.jdsp.swing;
 import javax.swing.JFrame;
-import jdsp.swing.TableUI;
+import net.kcundercover.jdsp.swing.TableUI;
 public class TableFrame extends JFrame{
     TableUI table;
     /**

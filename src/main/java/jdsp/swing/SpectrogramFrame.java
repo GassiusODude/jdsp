@@ -6,7 +6,7 @@
  *
  * @author Keith Chow
  */
-package jdsp.swing;
+package net.kcundercover.jdsp.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -26,11 +26,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
-import jdsp.audio.Audio;
-import jdsp.swing.Spectrogram;
-import jdsp.io.FileReader;
-import jdsp.dataformat.DataObject;
-import jdsp.io.FileInfo;
+import net.kcundercover.jdsp.audio.Audio;
+import net.kcundercover.jdsp.swing.Spectrogram;
+import net.kcundercover.jdsp.io.FileReader;
+import net.kcundercover.jdsp.dataformat.DataObject;
+import net.kcundercover.jdsp.io.FileInfo;
 public class SpectrogramFrame extends JFrame{
     /**
      *

@@ -1,17 +1,17 @@
 /**
  * Spectrogram
- * 
+ *
  * @author Keith Chow
  */
-package jdsp.swing;
+package net.kcundercover.jdsp.swing;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
-import jdsp.math.DTFT;
+import net.kcundercover.jdsp.math.DTFT;
 import java.awt.Graphics2D;
-import jdsp.math.Vector;
-import jdsp.math.ComplexInterleaved;
+import net.kcundercover.jdsp.math.Vector;
+import net.kcundercover.jdsp.math.ComplexInterleaved;
 public class Spectrogram extends Plot{
     private BufferedImage bImage;
     protected int window = 1024;
@@ -59,9 +59,9 @@ public class Spectrogram extends Plot{
     }
 
     /** Set signal information
-     * 
+     *
      * These contribute to the displayed axis for time and frequency
-     * 
+     *
      * @param sampleRate Sample rate of the signal
      * @param centerFrequency Tuned frequency of the signal
      * @param timeOffset The time offset from the start of file
@@ -163,7 +163,7 @@ public class Spectrogram extends Plot{
                         val = (int) COLOR_MAX_VALUE;
                     else
                         // normalize value in range and scale color
-                        val = (int)((valF - minMax[0]) / 
+                        val = (int)((valF - minMax[0]) /
                             (minMax[1] - minMax[0]) * COLOR_MAX_VALUE);
 
                     // set the color of the current pixel

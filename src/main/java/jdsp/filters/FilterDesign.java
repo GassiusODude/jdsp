@@ -1,10 +1,10 @@
 /**
  * @author Keith Chow
  */
-package jdsp.filters;
+package net.kcundercover.jdsp.filters;
 public class FilterDesign {
     /** Design filter based on windowing technique
-     * 
+     *
      * @param window Window Type from {"BARTLETT", "HAMMING", "HANN"}
      * @param x The x range to design the filter
      * @return The designed window function
@@ -21,12 +21,12 @@ public class FilterDesign {
                 break;
             case "HAMMING":
                 for (int ind0 = 0; ind0 < x.length; ind0++)
-                    output[ind0] = 0.54f + 0.46f * 
+                    output[ind0] = 0.54f + 0.46f *
                         (float) Math.cos(2.0f * pi * x[ind0]);
                 break;
             case "HANN":
                 for (int ind0 = 0; ind0 < x.length; ind0++)
-                    output[ind0] = 0.5f + 0.5f * 
+                    output[ind0] = 0.5f + 0.5f *
                         (float) Math.cos(2.0f * pi * x[ind0]);
                 break;
 
@@ -36,7 +36,7 @@ public class FilterDesign {
         return output;
     }
     /** Design an FIR filter with the WindowDesign Method.
-     * 
+     *
      * This first designs an ideal IIR filter of the specified bandwidth.
      * This is multipled in time with the desired window.
      * @param numTap Number of elements of the filter
@@ -56,7 +56,7 @@ public class FilterDesign {
         float tmp;
         // -------------------------  prepare x  ----------------------------
         float xInc = 1.0f / numTap;
-        
+
         if ((numTap&1) == 1){
             // odd
             x[0] = -(numTap - 1) / 2.0f / numTap;
@@ -84,8 +84,8 @@ public class FilterDesign {
 
         // ----------------------  design window  ---------------------------
         float mySum = 0.0f;
-        
-        // multiply IIR and window in time == convolve idea 
+
+        // multiply IIR and window in time == convolve idea
         for (int ind0 = 0; ind0 < numTap; ind0++){
             output[ind0] *= win[ind0];
             mySum += Math.abs(output[ind0]);
@@ -117,7 +117,7 @@ public class FilterDesign {
     // ======================================================================
 
     /** Design filter
-     * 
+     *
      * @param window Window Type from {"BARTLETT", "HAMMING", "HANN"}
      * @param x The x range to design the filter
      * @return The designed window function
@@ -135,12 +135,12 @@ public class FilterDesign {
                 break;
             case "HAMMING":
                 for (int ind0 = 0; ind0 < x.length; ind0++)
-                    output[ind0] = 0.54 + 0.46 * 
+                    output[ind0] = 0.54 + 0.46 *
                         Math.cos(2.0 * pi * x[ind0]);
                 break;
             case "HANN":
                 for (int ind0 = 0; ind0 < x.length; ind0++)
-                    output[ind0] = 0.5f + 0.5 * 
+                    output[ind0] = 0.5f + 0.5 *
                         Math.cos(2.0 * pi * x[ind0]);
                 break;
 
@@ -169,7 +169,7 @@ public class FilterDesign {
         double tmp;
         // -------------------------  prepare x  ----------------------------
         double xInc = 1.0f / numTap;
-        
+
         if ((numTap&1) == 1){
             // odd
             x[0] = -(numTap - 1) / 2.0 / numTap;
@@ -197,8 +197,8 @@ public class FilterDesign {
 
         // ----------------------  design window  ---------------------------
         double mySum = 0.0;
-        
-        // multiply IIR and window in time == convolve idea 
+
+        // multiply IIR and window in time == convolve idea
         for (int ind0 = 0; ind0 < numTap; ind0++){
             output[ind0] *= win[ind0];
             mySum += Math.abs(output[ind0]);
@@ -227,14 +227,14 @@ public class FilterDesign {
     }
 
     /** Design a square-root raised cosine filter
-     * 
+     *
      * @param numNum The number of taps for the FIR filter
      * @param sampleRate The sampling rate to design filter against
      * @param baud The baud of the signal or the inverse of the desired period.
      * @param rolloff The rolloff of the RRC
      * @return Return the designed filter
      */
-    public static double[] designSRRC(int numNum, double sampleRate, 
+    public static double[] designSRRC(int numNum, double sampleRate,
             double baud, double rolloff){
         // ---------------  setup internal variables  -----------------------
         double time;
@@ -247,12 +247,12 @@ public class FilterDesign {
             if (time == 0)
                 filter[ind0] = baud * (1 + rolloff * (4 / pi - 1));
             else if (Math.abs(time) == 1.0 / (baud * 4 * rolloff)){
-                filter[ind0] = rolloff * baud / Math.sqrt(2) * 
+                filter[ind0] = rolloff * baud / Math.sqrt(2) *
                     ((1 + 2 / pi) * Math.sin(pi / _4b) +
                     (1 - 2 / pi) * Math.cos(pi / _4b));
             }
             else{
-                filter[ind0] = baud * (Math.sin(pi * time * baud * (1 - rolloff)) + 
+                filter[ind0] = baud * (Math.sin(pi * time * baud * (1 - rolloff)) +
                     _4b * time * baud * Math.cos(pi * time * baud * (1 + rolloff)))
                     / (pi * time * baud * (1 - Math.pow(_4b * time * baud, 2)));
             }

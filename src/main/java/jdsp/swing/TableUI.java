@@ -3,15 +3,15 @@
  *      * Loading
  *      * Editing
  *      * Saving
- * 
+ *
  * @author GassiusODude
  * @since June 20, 2019
  */
-package jdsp.swing;
+package net.kcundercover.jdsp.swing;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import jdsp.dataformat.DataObject;
+import net.kcundercover.jdsp.dataformat.DataObject;
 import java.io.File;
 import java.awt.Dimension;
 import java.awt.BorderLayout;

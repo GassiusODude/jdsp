@@ -3,7 +3,7 @@
  * load in data.  It is used with Plots/Tables.
  * @author Keith Chow
  */
-package jdsp.dataformat;
+package net.kcundercover.jdsp.dataformat;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;

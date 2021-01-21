@@ -1,9 +1,9 @@
 /** File information
  * This is intended to extract useful information from files.
- * 
+ *
  * @author Keith Chow
  */
-package jdsp.io;
+package net.kcundercover.jdsp.io;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,7 +23,7 @@ public class FileInfo{
     public FileInfo(String filepath) throws IOException {
         // ---------------------  error checking  ---------------------------
         Path tmpPath = Paths.get(filepath);
-        assert Files.isRegularFile(tmpPath, LinkOption.NOFOLLOW_LINKS) : 
+        assert Files.isRegularFile(tmpPath, LinkOption.NOFOLLOW_LINKS) :
             "File does not exist";
 
         // ----------------------  store info  ------------------------------

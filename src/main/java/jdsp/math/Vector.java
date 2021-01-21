@@ -1,11 +1,11 @@
 /**
  * This function contains a number of commonly used functions applied
  * to a vector of numbers.
- * 
+ *
  * @author GassiusODude
  * @since June 2019
  */
-package jdsp.math;
+package net.kcundercover.jdsp.math;
 import java.util.Arrays;
 public class Vector{
     // ===========================  double support  =========================
@@ -128,10 +128,10 @@ public class Vector{
             vec1[ind0] /= scalar;
         }
     }
-    
+
     /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
-     * @return The [min, max] 
+     * @return The [min, max]
      */
     public static double[] getMinMax(double[] vec1){
         double[] out = new double[2];
@@ -280,7 +280,7 @@ public class Vector{
      * @return Sum of all the elements.
      */
     public static double sum(final double[] vec1){
-        return Arrays.stream(vec1).sum();        
+        return Arrays.stream(vec1).sum();
     }
 
     // ==============================  Float  ===============================
@@ -403,10 +403,10 @@ public class Vector{
             vec1[ind0] /= scalar;
         }
     }
-    
+
     /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
-     * @return The [min, max] 
+     * @return The [min, max]
      */
     public static float[] getMinMax(float[] vec1){
         float[] out = new float[2];
@@ -552,7 +552,7 @@ public class Vector{
             vec1[ind0] -= scalar;
         }
     }
- 
+
     /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.
@@ -688,7 +688,7 @@ public class Vector{
 
     /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
-     * @return The [min, max] 
+     * @return The [min, max]
      */
     public static long[] getMinMax(long[] vec1){
         long[] out = new long[2];
@@ -702,7 +702,7 @@ public class Vector{
         }
         return out;
     }
-    
+
     /**Multiply the two vectors together
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
@@ -834,13 +834,13 @@ public class Vector{
             vec1[ind0] -= scalar;
         }
     }
- 
+
     /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.
      */
     public static long sum(final long[] vec1){
-        return Arrays.stream(vec1).sum();        
+        return Arrays.stream(vec1).sum();
     }
     //============================ support int  =============================
     /**Add two vectors together
@@ -965,7 +965,7 @@ public class Vector{
 
     /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
-     * @return The [min, max] 
+     * @return The [min, max]
      */
     public static int[] getMinMax(int[] vec1){
         int[] out = new int[2];
@@ -1111,13 +1111,13 @@ public class Vector{
             vec1[ind0] -= scalar;
         }
     }
- 
+
     /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.
      */
     public static int sum(final int[] vec1){
-        return Arrays.stream(vec1).sum();        
+        return Arrays.stream(vec1).sum();
     }
 
     //============================ support short  =============================
@@ -1243,7 +1243,7 @@ public class Vector{
 
     /**Return the minimum and maximum of the provided vector
      * @param vec1 Input vector
-     * @return The [min, max] 
+     * @return The [min, max]
      */
     public static short[] getMinMax(short[] vec1){
         short[] out = new short[2];
@@ -1389,7 +1389,7 @@ public class Vector{
             vec1[ind0] -= scalar;
         }
     }
- 
+
     /**Sum up the elements of the vector
      * @param vec1 Input vector 1
      * @return Sum of all the elements.

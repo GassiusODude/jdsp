@@ -2,7 +2,7 @@
  * Convolution package
  * @author Keith Chow
  */
-package jdsp.math;
+package net.kcundercover.jdsp.math;
 public class Convolve{
     public final static long serialVersionUID = 0;
     /**

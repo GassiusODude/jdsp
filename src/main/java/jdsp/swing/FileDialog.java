@@ -1,4 +1,4 @@
-package jdsp.swing;
+package net.kcundercover.jdsp.swing;
 import java.awt.Window;
 import java.awt.Container;
 import javax.swing.*;

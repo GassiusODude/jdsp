@@ -12,12 +12,14 @@ jar {
     manifest {
         attributes(
             "Application-Name": "JDSP Library",
-            "Main-Class": "jdsp.example.JdspExamples",
+            "Main-Class": "net.kcundercover.jdsp.example.JdspExamples",
             "Built-By": "Keith Chow",
             'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
             'Created-By'     : "Gradle ${gradle.gradleVersion}",
             'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-            'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+            'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
+            'Codebase'       : "kcundercover.net",
+            'Trusted-Library':true
         )
     }
 }
