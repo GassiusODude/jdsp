@@ -59,9 +59,33 @@ public class TableFrame extends JFrame{
     }
 
     /**
+     * Allow bulk proceess of adding rows.
+     * @param msgs List of messages
+     * @param tokens List of tokens, matching length of msgs
+     * @throws Exception Errors on input
+     */
+    public void addRows(String[] msgs, String[] tokens) throws Exception {
+        if (msgs.length == 0 || tokens.length == 0) {
+            throw new Exception("Length of msgs and tokens should not be 0");
+        }
+        if (msgs.length != tokens.length){
+            throw new Exception("Length of msgs and tokens do not match!");
+        }
+        for (int ind0=0; ind0<msgs.length; ind0++){
+            table.addRow(msgs[ind0], tokens[ind0]);
+        }
+    }
+
+    /**
      * Display information of the current state of the table.
      */
     public void display(){
         table.display();
+    }
+
+    public static void main(String[] args) {
+        TableFrame tf = new TableFrame("Hello");
+        tf.show();
+
     }
 }
