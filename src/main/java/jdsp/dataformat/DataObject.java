@@ -14,6 +14,10 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.lang.*;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.ConsoleHandler;
+
 public class DataObject extends DefaultTableModel{
     private static final long serialVersionUID = 1L;
     private String name = "";
@@ -22,7 +26,7 @@ public class DataObject extends DefaultTableModel{
     private ArrayList<String> featureTypes;
     private int numObs = 0;
     private boolean tableEditable = false;
-
+    private Logger logger;
     /** Constructor for the DataObject
      * @param name The name of this DataObject
      */
@@ -31,6 +35,11 @@ public class DataObject extends DefaultTableModel{
         features = new ArrayList<ArrayList>();
         featureNames = new ArrayList<String>();
         featureTypes = new ArrayList<String>();
+
+        logger = Logger.getLogger("DataObject");
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.INFO);
+        logger.addHandler(handler);
     }
 
     /** Constructor with specification of the feature names.
@@ -63,6 +72,7 @@ public class DataObject extends DefaultTableModel{
     public void setDataFormat(String[] featureNames, String[] featureTypes){
         String tmpName;
         ArrayList myArray;
+
         for (int ind0 = 0; ind0 < featureNames.length; ind0++){
             // get feature name
             tmpName = featureNames[ind0];
@@ -89,6 +99,7 @@ public class DataObject extends DefaultTableModel{
 
             // update the feature with name and type.
             addFeature(myArray, tmpName, featureTypes[ind0]);
+            logger.info("Adding feature " + tmpName + "(" + featureTypes[ind0] + ")");
         }
     }
 
@@ -132,6 +143,7 @@ public class DataObject extends DefaultTableModel{
      */
     public void setEditable(boolean newVal){
         this.tableEditable = newVal;
+        logger.info("DataObject is " + newVal);
     }
 
     /** Return the name of the dataset
@@ -177,6 +189,7 @@ public class DataObject extends DefaultTableModel{
      */
     public void addFeature(ArrayList feature, String featureName){
         addFeature(feature, featureName, "str");
+        logger.info("Adding feature " + featureName);
     }
 
     /** Add a feature
@@ -194,6 +207,7 @@ public class DataObject extends DefaultTableModel{
         features.add(feature);
         featureNames.add(featureName);
         featureTypes.add(type);
+        logger.info("Adding feature " + featureName + " of type " + type);
         numObs = feature.size();
         this.fireTableStructureChanged();
     }
@@ -216,6 +230,7 @@ public class DataObject extends DefaultTableModel{
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("float");
+        logger.info("Adding feature " + featureName + " of type float");
         numObs = floatData.length;
         this.fireTableStructureChanged();
     }
@@ -238,6 +253,7 @@ public class DataObject extends DefaultTableModel{
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("str");
+        logger.info("Adding feature " + featureName + " of type str");
         numObs = strData.length;
         this.fireTableStructureChanged();
     }
@@ -260,6 +276,7 @@ public class DataObject extends DefaultTableModel{
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("int");
+        logger.info("Adding feature " + featureName + " of type int");
         numObs = intData.length;
         this.fireTableStructureChanged();
     }
@@ -282,6 +299,7 @@ public class DataObject extends DefaultTableModel{
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("short");
+        logger.info("Adding feature " + featureName + " of type short");
         numObs = shortData.length;
         this.fireTableStructureChanged();
     }
@@ -304,6 +322,7 @@ public class DataObject extends DefaultTableModel{
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("double");
+        logger.info("Adding feature " + featureName + " of type double");
         numObs = doubleData.length;
         this.fireTableStructureChanged();
     }
@@ -326,6 +345,7 @@ public class DataObject extends DefaultTableModel{
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("bool");
+        logger.info("Adding feature " + featureName + " of type bool");
         numObs = boolData.length;
         this.fireTableStructureChanged();
     }
@@ -340,12 +360,12 @@ public class DataObject extends DefaultTableModel{
         ArrayList aList = new ArrayList();;
 
         // --------------------------  parse the elements  ------------------
-        elements = input.split(token);
+        elements = input.split(token, this.features.size()+1);
         if (elements.length != this.features.size())
-            throw new RuntimeException("Number of features do not match");
+            throw new RuntimeException("Number of features do not match(" + elements.length + ", " + this.features.size() + ")");
 
         // verify
-        try{
+        try {
             for (int ind = 0; ind < elements.length; ind++){
                 featType = featureTypes.get(ind);
 
@@ -371,8 +391,11 @@ public class DataObject extends DefaultTableModel{
                         aList.add(tmp);
                 }
             }
-        }catch(Exception e){
-            return;
+        }
+        catch (Exception e) {
+            logger.severe("Exception caught " + e.toString());
+            throw new RuntimeException("Exception caught " + e.toString());
+            //return;
         }
         // ------------------------  update  --------------------------------
         // passed check
@@ -390,6 +413,7 @@ public class DataObject extends DefaultTableModel{
         for (int featInd=0; featInd < features.size(); featInd++)
             features.get(featInd).clear();
 
+        logger.info("Resetting data");
         fireTableStructureChanged();
     }
 

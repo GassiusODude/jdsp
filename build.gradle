@@ -1,13 +1,15 @@
-apply plugin: "java"
+plugins {
+    id "java" apply true
+}
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 repositories {
     mavenCentral()
 }
 dependencies {
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
-version = 1.01
+version = 1.02
 jar {
     manifest {
         attributes(
