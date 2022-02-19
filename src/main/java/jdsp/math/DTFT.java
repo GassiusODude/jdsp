@@ -13,7 +13,7 @@ public class DTFT {
      * @param nfft Number of FFT points
      * @return Complex FFT (with interleaved floats)
      */
-    public static float[] discreteFourierTransform(float[] signal, int nfft){
+    public static float[] discreteFourierTransform(float[] signal, int nfft) {
         // --------------------  prepare variables  -------------------------
         float sumReal, sumImag, mult;
 
@@ -22,7 +22,7 @@ public class DTFT {
         int len_out = output.length;
         output[0] = Vector.sum(signal) / 2;
 
-        for (int freq=1; freq < nfft/2 + 1; freq++){
+        for (int freq=1; freq < nfft/2 + 1; freq++) {
             // initialize sum of real and imaginary
             sumReal = 0;
             sumImag = 0;
@@ -30,7 +30,7 @@ public class DTFT {
             // --------- exp(j*w*t) = 0.5*cos(wt) + 0.5j * sin(wt)  ---------
             // update mult for the duration for-loop
             mult = (float)(2 * Math.PI * freq / nfft);
-            for (int t = 0; t < signal.length; t++){
+            for (int t = 0; t < signal.length; t++) {
                 sumReal += signal[t] * Math.cos(mult * t);
                 sumImag += signal[t] * Math.sin(mult * t);
             }
@@ -53,7 +53,7 @@ public class DTFT {
      * @param nfft Number of FFT points
      * @return Complex FFT (with interleaved floats)
      */
-    public static float[] discreteFourierTransformComplex(float[] signal, int nfft){
+    public static float[] discreteFourierTransformComplex(float[] signal, int nfft) {
         // --------------------  prepare variables  -------------------------
         float sumReal, sumImag, mult;
 
@@ -70,7 +70,7 @@ public class DTFT {
             // --------- exp(j*w*t) = 0.5*cos(wt) + 0.5j * sin(wt)  ---------
             // update mult for the duration for-loop
             mult = (float)(2 * Math.PI * freq / nfft);
-            for (int t = 0; t < signal.length; t+=2){
+            for (int t = 0; t < signal.length; t+=2) {
                 sumReal += signal[t] * Math.cos(mult * t/2.0)
                     - signal[t+1] * Math.sin(mult * t/2.0);
                 sumImag += signal[t] * Math.sin(mult * t/2.0)
@@ -91,7 +91,7 @@ public class DTFT {
      * @param input Input signal
      * @return Shifted array
      */
-    public static float[] fftShift(float[] input){
+    public static float[] fftShift(float[] input) {
         int mid = input.length / 2;
         float[] output = new float[input.length];
         System.arraycopy(input, 0, output, output.length - mid, mid);

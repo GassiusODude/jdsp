@@ -19,7 +19,11 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.ConsoleHandler;
 
-public class FileReader{
+/**
+ * The FileReader will access a RandomAccessFile to load data
+ *
+ */
+public class FileReader {
     /** Logger */
     protected Logger logger;
 
@@ -59,9 +63,9 @@ public class FileReader{
         // setup logger
         logger = Logger.getLogger("FileReader");
         ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.FINER);
+        handler.setLevel(Level.INFO);
         logger.addHandler(handler);
-        logger.setLevel(Level.FINER);
+        logger.setLevel(Level.INFO);
     }
 
     /**
@@ -74,10 +78,14 @@ public class FileReader{
 
     /** Load Signal
      *
-     * Load the signal at the specified sample offset
+     * Load the signal at the specified sample offset with the specified
+     * number of samples.  Storing as DataObject is not efficient in terms
+     * of storing things in ArrayList.  Consider loadSignalRawAsFloat
+     * instead
      * @param sampleOffset Offset in samples from start of file
      * @param numSamples Number of samples to extract
      * @return DataObject to store the recovered samples
+     * @see loadSignalRawAsFloat
      */
     public DataObject loadSignal(final int sampleOffset, final int numSamples) {
         // ------------------------  prepare variables  ---------------------
@@ -105,14 +113,14 @@ public class FileReader{
                 case "INT16":
                     sArray = new short[numSamples];
                     numVals = bytesToShort(tmp, sArray, bigEndian);
-
+                    logger.fine("loadSignal() Real Int16");
                     out.addFeature(sArray, "Real");
                     break;
 
-                    case "COMPLEX INT16":
+                case "COMPLEX INT16":
                     sArray = new short[numSamples * 2];
                     numVals = bytesToShort(tmp, sArray, bigEndian);
-
+                    logger.fine("loadSignal() Complex Int16");
                     short[][] sRealImag = ComplexInterleaved.getRealImag(sArray);
                     out.addFeature(sRealImag[0], "Real");
                     out.addFeature(sRealImag[1], "Imaginary");
@@ -121,14 +129,14 @@ public class FileReader{
                 case "FLOAT32":
                     fArray = new float[numSamples];
                     numVals = byteToFloat(tmp, fArray, bigEndian);
-
+                    logger.fine("loadSignal() Float32");
                     out.addFeature(fArray, "Real");
                     break;
 
                 case "COMPLEX FLOAT32":
                     fArray = new float[numSamples * 2];
                     numVals = byteToFloat(tmp, fArray, bigEndian);
-
+                    logger.fine("loadSignal() Complex Float32");
                     float[][] fRealImag = ComplexInterleaved.getRealImag(fArray);
                     out.addFeature(fRealImag[0], "Real");
                     out.addFeature(fRealImag[1], "Imaginary");
@@ -138,6 +146,7 @@ public class FileReader{
         catch(IOException ioe) {
             logger.warning(ioe.toString());
         }
+
         return out;
     }
 
@@ -150,8 +159,7 @@ public class FileReader{
      */
     public float[] loadSignalRawFloat(final int sampleOffset, final int numSamples, boolean isComplex) {
         // number of bytes to load
-        int numBytes = numSamples *
-            BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType];
+        int numBytes = numSamples * BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType];
 
         // get byte array
         byte[] tmp = new byte[numBytes];
@@ -171,8 +179,12 @@ public class FileReader{
 
         // convert the bytes to float
         float[] fArray = new float[numSamples * MULTIPLIER[dType]];
-        byteToFloat(tmp, fArray, bigEndian);
-
+        int numVals = byteToFloat(tmp, fArray, bigEndian);
+        if (numVals < numSamples) {
+            float[] out = new float[numVals];
+            System.arraycopy(fArray, 0, out, 0, numVals);
+            return out;
+        }
         // return the float array
         return fArray;
     }
@@ -213,6 +225,84 @@ public class FileReader{
         return fArray;
     }
 
+
+    /**
+     * Load signal as raw floats.
+     * @param sampleOffset The number of samples from the start of file
+     * @param numSamples Number of samples to load.
+     */
+    public float[] loadSignalRawAsFloat(final int sampleOffset, final int numSamples) {
+        // number of bytes to load
+        int bps = BYTES_PER_SAMPLE[dType];
+        int numBytes = numSamples * bps * MULTIPLIER[dType];
+
+        // number of values to use
+        int numVals;
+
+        try {
+            // ---------------  skip to desired sample offset  --------------
+            myFile.seek(sampleOffset *
+                BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType]);
+
+            // ---------------------  get byte array  -----------------------
+            byte[] tmp = new byte[numBytes];
+            int nBytes = myFile.read(tmp);
+
+            // ----------------  convert to bytes to float  -----------------
+            short[] sArray;
+            float[] fArray;
+            float[] out;
+
+            switch(DATA_TYPE[dType]){
+                case "INT16":
+                    logger.fine("loadSignal() Real Int16");
+
+                    // convert bytes to short
+                    sArray = new short[numSamples];
+                    numVals = bytesToShort(tmp, sArray, bigEndian);
+
+                    // convert short to floats
+                    out = new float[numVals];
+                    for (int ind = 0; ind < numVals; ind++)
+                        out[ind] = (float) (sArray[ind] / 32767.);
+                    return out;
+
+                case "COMPLEX INT16":
+                    logger.fine("loadSignal() Complex Int16");
+
+                    // convert bytes to short
+                    sArray = new short[numSamples * 2];
+                    numVals = bytesToShort(tmp, sArray, bigEndian);
+                    fArray = new float[numVals];
+                    for (int ind=0; ind < numVals; ind ++)
+                        fArray[ind] = (float) (sArray[ind] / 32767.0);
+                    return fArray;
+
+                case "FLOAT32":
+                    logger.fine("loadSignal() Float32");
+                    fArray = new float[numSamples];
+
+                    numVals = byteToFloat(tmp, fArray, bigEndian);
+
+                    return fArray;
+
+                case "COMPLEX FLOAT32":
+                    logger.fine("loadSignal() Complex Float32");
+
+                    fArray = new float[numSamples * 2];
+                    numVals = byteToFloat(tmp, fArray, bigEndian);
+                    return fArray;
+
+            }
+        }
+        catch (IOException ioe) {
+            logger.warning(ioe.toString());
+        }
+        return null;
+
+    }
+
+
     /**
      * Convert a byte array to short array.
      * Assumes default of 2 bytes per short
@@ -247,17 +337,20 @@ public class FileReader{
         switch(numBytes) {
             case 1:
                 // single byte per short
-                for (int ind0 = 0; ind0 < numOut; ind0++)
+                for (int ind0 = 0; ind0 < numOut; ind0++) {
                     shortArray[ind0] = (short) (bytes[ind0]);
+                }
                 break;
             case 2:
                 if (bigEndian){
-                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                    for (int ind0 = 0; ind0 < numOut; ind0++) {
                         shortArray[ind0] = (short) ((bytes[ind0*2]<<8) + bytes[ind0*2+1]);
+                    }
                 }
                 else{
-                    for (int ind0 = 0; ind0 < numOut; ind0++)
+                    for (int ind0 = 0; ind0 < numOut; ind0++) {
                         shortArray[ind0] = (short) ((bytes[ind0*2+1]<<8) + bytes[ind0*2]);
+                    }
                 }
                 break;
             default:
@@ -290,7 +383,7 @@ public class FileReader{
         int mask1st = 0xFF;
         int thresh = (int) Math.pow(2, numBytes * 8 - 1);
         int maxValue = (int) Math.pow(2, numBytes * 8);
-        switch(numBytes){
+        switch (numBytes) {
             case 1:
                 // single byte per int
                 for (int ind0 = 0; ind0 < numOut; ind0++){
@@ -299,9 +392,10 @@ public class FileReader{
                         ints[ind0] -= maxValue;
                 }
                 break;
+
             case 2:
-                if (bigEndian){
-                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                if (bigEndian) {
+                    for (int ind0 = 0; ind0 < numOut; ind0++) {
                         ints[ind0] = (int) (
                             ((bytes[ind0 * 2] & mask1st) << 8) +
                             (bytes[ind0 * 2 + 1] & 0xFF));
@@ -310,7 +404,7 @@ public class FileReader{
                     }
                 }
                 else{
-                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                    for (int ind0 = 0; ind0 < numOut; ind0++) {
                         ints[ind0] = (int) (
                             ((bytes[ind0 * 2 + 1] & mask1st) << 8) +
                             (bytes[ind0 * 2] & 0xFF));
@@ -321,7 +415,7 @@ public class FileReader{
                 break;
             case 4:
                 if (bigEndian) {
-                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                    for (int ind0 = 0; ind0 < numOut; ind0++) {
                         ints[ind0] = (int) (
                             ((bytes[ind0 * 4] & mask1st) << 24) +
                             ((bytes[ind0 * 4 + 1] & 0xFF) << 16) +
@@ -331,8 +425,8 @@ public class FileReader{
                             ints[ind0] -= maxValue;
                     }
                 }
-                else{
-                    for (int ind0 = 0; ind0 < numOut; ind0++){
+                else {
+                    for (int ind0 = 0; ind0 < numOut; ind0++) {
                         ints[ind0] = (int) (
                             ((bytes[ind0 * 4 + 3] & mask1st) << 24) +
                             ((bytes[ind0 * 4 + 2] & 0xFF) << 16) +
@@ -343,6 +437,7 @@ public class FileReader{
                     }
                 }
                 break;
+
             default:
                 throw new IllegalArgumentException("bytesToInt: numBytes should be 1, 2 or 4");
         }
@@ -359,7 +454,7 @@ public class FileReader{
      * @return Number of floats to expect in float array
      */
     public static int byteToFloat(final byte[] bytes,
-            final float[] floatArray, final boolean bigEndian){
+            final float[] floatArray, final boolean bigEndian) {
         int tmpInt;
         int numOut = 0;
         final int nBytes = bytes.length;
@@ -377,7 +472,7 @@ public class FileReader{
             }
         }
         else {
-            for (int ind0 = 0; ind0 < numOut; ind0++){
+            for (int ind0 = 0; ind0 < numOut; ind0++) {
                 tmpInt = ((bytes[ind0*4 + 3] & 0xFF) << 24) +
                     ((bytes[ind0*4 + 2] & 0xFF) << 16) +
                     ((bytes[ind0*4 + 1] & 0xFF) << 8) +

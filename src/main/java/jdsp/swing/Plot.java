@@ -99,6 +99,8 @@ public class Plot extends JPanel{
 
     /** The data object of the plot */
     protected DataObject data;
+    protected float[] floatData = null;
+    protected boolean floatDataComplex = false;
 
     /** Constructor for the plot */
     public Plot() {
@@ -150,6 +152,15 @@ public class Plot extends JPanel{
 
         // update the plot
         this.updateUI();
+    }
+
+    public void setFloatData(float[] fData) {
+        this.floatData = fData;
+        this.updateUI();
+    }
+
+    public void setFloatDataComplex(boolean isComplex){
+        this.floatDataComplex = isComplex;
     }
 
     /** Set the labels
