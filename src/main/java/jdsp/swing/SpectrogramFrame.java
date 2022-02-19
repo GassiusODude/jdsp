@@ -11,8 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.*;
-//import java.awt.Container;
-//import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -31,11 +29,11 @@ import net.kcundercover.jdsp.swing.Spectrogram;
 import net.kcundercover.jdsp.io.FileReader;
 import net.kcundercover.jdsp.dataformat.DataObject;
 import net.kcundercover.jdsp.io.FileInfo;
+
+
 public class SpectrogramFrame extends JFrame{
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+
+    public static final long serialVersionUID = 1L;
     JMenuBar menuBar = new JMenuBar();
     JMenu menuFile = new JMenu("File");
     JMenuItem menuItemLoad = new JMenuItem("Load Signal");
@@ -49,6 +47,7 @@ public class SpectrogramFrame extends JFrame{
     JSlider slNfft = new JSlider(JSlider.HORIZONTAL, 256, 8192, 256);
     JSlider slWindow = new JSlider(JSlider.HORIZONTAL, 1024, 32 * 1024, 1024);
     JPanel slidePanel;
+
     // ----------------------  spectrogram settings  ------------------------
     int window = 1024;
     int nfft = 256;
@@ -60,10 +59,11 @@ public class SpectrogramFrame extends JFrame{
     FileReader fr;
     FileInfo fi;
     DataObject data;
+    float[] floatData = null;
     int fileType = 0; // specify how file reader loads data
 
     /** Constructor for the SpectrogramFrame */
-    public SpectrogramFrame(){
+    public SpectrogramFrame() {
         super("Spectrogram Frame");
         // --------------------------  setup panel  -------------------------
         JPanel p = new JPanel();
@@ -99,21 +99,37 @@ public class SpectrogramFrame extends JFrame{
         setupMenu();
         setJMenuBar(menuBar);
         // -----------------  window listener for closing  ------------------
-        addWindowListener(new WindowAdapter(){
+        addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event){
               System.exit(0);
             }
         });
 
         // -------------------  set size and show  --------------------------
-        setSize(500,500);
+        setSize(500, 500);
         setVisible(true);
+    }
+
+    /**
+     * Check the file reader to determine if data is complex
+     */
+    public void setFloatDataComplex() {
+        switch (fr.getDataType()) {
+            case "INT16":
+            case "FLOAT32":
+                specgram.setFloatDataComplex(false);
+                break;
+            case "COMPLEX INT16":
+            case "COMPLEX FLOAT32":
+                specgram.setFloatDataComplex(true);
+                break;
+        }
     }
     /**Setup Sliders
      *
      * Setup the sliders and state change listeners
      */
-    private void setupSliders(){
+    private void setupSliders() {
         // add slider to configure position
         slPosition.setOrientation(SwingConstants.HORIZONTAL);
         slPosition.setSnapToTicks(true);
@@ -148,25 +164,27 @@ public class SpectrogramFrame extends JFrame{
         slidePanel.add(slPosition);
 
         // ----------------  setup change listeners  ------------------------
-        slPosition.addChangeListener(new ChangeListener(){
+        slPosition.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e){
 
                 JSlider source = (JSlider) e.getSource();
                 if (fr != null){
                     // try updating the data with the new position
-                    data = fr.loadSignal(slPosition.getValue() * bufferSize, bufferSize);
+                    floatData = fr.loadSignalRawAsFloat(
+                        slPosition.getValue() * bufferSize, bufferSize);
 
                     // update the time offset of the spectrogram
                     timeOffset = slPosition.getValue() * bufferSize / sampleRate;
                     specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
 
                     // update data and UI
-                    specgram.setData(data);
+                    specgram.setFloatData(floatData);
+
                 }
             }
         });
 
-        slNfft.addChangeListener(new ChangeListener(){
+        slNfft.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e){
                 JSlider source = (JSlider) e.getSource();
                 nfft = slNfft.getValue();
@@ -177,11 +195,11 @@ public class SpectrogramFrame extends JFrame{
                 specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
 
                 // update data and UI
-                specgram.setData(data);
+                specgram.repaint();
             }
         });
 
-        slWindow.addChangeListener(new ChangeListener(){
+        slWindow.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e){
                 JSlider source = (JSlider) e.getSource();
                 window = source.getValue();
@@ -192,7 +210,7 @@ public class SpectrogramFrame extends JFrame{
                 specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
 
                 // update data and UI
-                specgram.setData(data);
+                specgram.repaint();
             }
         });
 
@@ -202,50 +220,52 @@ public class SpectrogramFrame extends JFrame{
      *
      * Setup the menus and action listeners
      */
-    private void setupMenu(){
+    private void setupMenu() {
         // ----------------------------  Setup menu  ------------------------
         menuFile.add(menuItemLoad);
-        menuItemLoad.addActionListener(new ActionListener(){
+        menuItemLoad.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent event){
+            public void actionPerformed(ActionEvent event) {
                 try{
                     int retVal = jfc.showOpenDialog(null);
-                    if (retVal == 0){
+                    if (retVal == 0) {
                         File f = jfc.getSelectedFile();
                         String filepath = f.getAbsolutePath();
                         String ext4 = filepath.substring(filepath.length() - 4);
                         String ext3 = filepath.substring(filepath.length() - 3);
 
                         // do something with the file
-                        try{
+                        try {
                             fi = new FileInfo(filepath);
                             int numSamples=1;
                             if (ext4.equals("32cf")) {
                                 numSamples = (int) (fi.getFileSize() / 8);
                                 fileType = 3;
-                                System.out.println("Complex Float");
                             }
                             else if (ext4.equals("16ct")) {
                                 numSamples = (int)(fi.getFileSize() / 4);
                                 fileType = 1;
-                                System.out.println("Complex Short");
                             }
                             else if (ext3.equals("16t")) {
                                 numSamples = (int)(fi.getFileSize() / 2);
                                 fileType=0;
-                                System.out.println("Real Short");
                             }
                             else if (ext3.equals("32f")) {
                                 numSamples = (int)(fi.getFileSize() / 4);
                                 fileType = 2;
-                                System.out.println("Real Float");
                             }
                             else if (ext3.equals("wav")) {
-                                System.out.println("Loading Wave file");
-                                DataObject tmpDO = new DataObject("Wave");
-                                int[][] intMat = Audio.extractSignal(filepath, tmpDO);
-                                data = new DataObject("data");
-                                data.addFeature(intMat[0], "Wave");
+                                int[][] intMat = Audio.extractSignal(filepath, null);
+                                int nChan = intMat.length;
+                                int sampPerChan = intMat[0].length;
+                                int totalSamples = nChan * sampPerChan;
+                                floatData = new float[totalSamples];
+                                int fdIndex = 0;
+                                for (int chanInd = 0; chanInd < nChan; chanInd++){
+                                    for (int sInd = 0; sInd < sampPerChan; sInd++) {
+                                        floatData[fdIndex++] = (float) intMat[chanInd][sInd];
+                                    }
+                                }
                                 numSamples = data.getRowCount();
                             }
                             else{
@@ -260,11 +280,19 @@ public class SpectrogramFrame extends JFrame{
                             slPosition.setMajorTickSpacing((int)(numSamples / bufferSize / 5));
 
                             if (ext3 != "wav") {
+
                                 fr = new FileReader(filepath, fileType, false);
-                                data = fr.loadSignal(slPosition.getValue() * bufferSize, bufferSize);
+
+                                floatData = fr.loadSignalRawAsFloat(slPosition.getValue() * bufferSize, bufferSize);
+                                setFloatDataComplex();
+
+                                specgram.setFloatData(floatData);
                             }
 
-                            specgram.setData(data);
+                            timeOffset = slPosition.getValue() * bufferSize / sampleRate;
+                            specgram.setSignalInfo(sampleRate, centerFrequency, timeOffset);
+
+                            specgram.repaint();
                         }
                         catch(FileNotFoundException fnfe){System.err.println(fnfe);}
                         catch(IOException ioe){System.err.println(ioe);}
@@ -292,7 +320,6 @@ public class SpectrogramFrame extends JFrame{
                 String s = (String) JOptionPane.showInputDialog(
                     "Enter the sampling rate of the signal",
                     Float.toString(sampleRate));
-
 
                 if (s == null)
                     // if cancelled

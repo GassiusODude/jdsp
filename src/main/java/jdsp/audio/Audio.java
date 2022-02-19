@@ -14,6 +14,12 @@ import net.kcundercover.jdsp.dataformat.DataObject;
 import net.kcundercover.jdsp.io.FileReader;
 public class Audio {
     public final static int MAX_BUFFER_SIZE = 200000;
+    /**
+     * Extract signal from the specified audio file
+     * @param audioFile
+     * @param dObj If provided, update with the channel information
+     * @return The samples from the signal
+     */
     public static int[][] extractSignal(String audioFile, DataObject dObj){
         int[][] tmp = {};
         try {
@@ -70,7 +76,7 @@ public class Audio {
             }
 
             // -----------------------  read from file  ---------------------
-            while(ais.available() > 0){
+            while(ais.available() > 0) {
                 // read in next block of data
                 ais.read(byteBuffer, 0, byteBuffer.length);
 
@@ -92,15 +98,17 @@ public class Audio {
                     break;
             }
 
-            // add to data object
-            for (int chanInd = 0; chanInd < numChannels; chanInd++){
-                dObj.addFeature(tmp[chanInd], "Channel "+ chanInd);
+            if (dObj != null) {
+                // add to data object
+                for (int chanInd = 0; chanInd < numChannels; chanInd++) {
+                    dObj.addFeature(tmp[chanInd], "Channel "+ chanInd);
+                }
             }
         }
-        catch(UnsupportedAudioFileException uafe){
+        catch(UnsupportedAudioFileException uafe) {
             System.err.println(uafe.toString());
         }
-        catch(IOException ioe){
+        catch(IOException ioe) {
             System.err.print("Failed to load file." + ioe.toString());
         }
 
@@ -112,7 +120,7 @@ public class Audio {
      * @param in Input short
      * @return Encoded value
      */
-    public static short encodeMuLaw(short in){
+    public static short encodeMuLaw(short in) {
         short mu = 255;
 
         short mult = (short)((in <= 0) ? -1 : 1);
@@ -126,7 +134,7 @@ public class Audio {
      * @param s Short encoded value
      * @return Decoded value
      */
-    public static short decodeMuLaw(short s){
+    public static short decodeMuLaw(short s) {
         short mu = 255;
         short mult = (short)((s <= 0) ? -1 : 1);
 

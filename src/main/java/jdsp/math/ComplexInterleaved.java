@@ -12,9 +12,9 @@ public class ComplexInterleaved {
      * @param complexSig The input complex signal
      * @return The real valued angle (with values in range -pi to pi)
      */
-    public static double[] angle(double[] complexSig){
+    public static double[] angle(double[] complexSig) {
         double[] output = new double[complexSig.length / 2];
-        for (int ind0 = 0; ind0 < output.length; ind0++){
+        for (int ind0 = 0; ind0 < output.length; ind0++) {
             output[ind0] = Math.atan2(complexSig[ind0 * 2 + 1],
                 complexSig[ind0 * 2]);
         }
@@ -30,11 +30,11 @@ public class ComplexInterleaved {
      * @param complexSig Complex interleaved signal
      * @return Real magnitude vector
      */
-    public static double[] magnitude(double[] complexSig){
+    public static double[] magnitude(double[] complexSig) {
         // magnitude is real, half the size of interleaved input
         double[] output = new double[complexSig.length / 2];
 
-        for (int ind0 = 0; ind0 < output.length; ind0++){
+        for (int ind0 = 0; ind0 < output.length; ind0++) {
             output[ind0] = complexSig[ind0 * 2] * complexSig[ind0 * 2] +
                            complexSig[ind0 * 2 + 1] * complexSig[ind0 * 2 + 1];
             output[ind0] = Math.sqrt(output[ind0]);
@@ -47,15 +47,16 @@ public class ComplexInterleaved {
      * @param inSig Input signal (real)
      * @param normFreq Normalized frequency shift
      * @return Complex interleaved output
+
      */
-    public static double[] freqTranslateReal(double[] inSig, double normFreq){
+    public static double[] freqTranslateReal(double[] inSig, double normFreq) {
         if (normFreq > 1 || normFreq < -1)
             throw new IllegalArgumentException(
                 "norm frequency should be in range (-1,1)");
         // --------------------  perform translate  -------------------------
         double pi = Math.PI;
         double[] output = new double[inSig.length * 2];
-        for (int ind0 = 0; ind0 < inSig.length; ind0++){
+        for (int ind0 = 0; ind0 < inSig.length; ind0++) {
             output[ind0 * 2] =
                 inSig[ind0] * Math.cos(pi * normFreq * ind0);
             output[ind0 * 2 + 1] =
@@ -70,7 +71,7 @@ public class ComplexInterleaved {
      * @param normFreq Normalized frequency shift
      * @return Complex interleaved output
      */
-    public static double[] freqTranslateComplex(double[] inSig, double normFreq){
+    public static double[] freqTranslateComplex(double[] inSig, double normFreq) {
         if (normFreq > 1 || normFreq < -1)
             throw new IllegalArgumentException(
                 "norm frequency should be in range (-1,1)");
@@ -78,7 +79,7 @@ public class ComplexInterleaved {
         // --------------------  perform translate  -------------------------
         double pi = Math.PI*0.5;
         double[] output = new double[inSig.length];
-        for (int ind0 = 0; ind0 < inSig.length; ind0+=2){
+        for (int ind0 = 0; ind0 < inSig.length; ind0+=2) {
             output[ind0] =
                 inSig[ind0] * Math.cos(pi * normFreq * ind0) -
                 inSig[ind0 + 1] * Math.sin(pi * normFreq * ind0);
@@ -98,9 +99,9 @@ public class ComplexInterleaved {
      * @param complexSig The input complex signal
      * @return The real valued angle (with values in range -pi to pi)
      */
-    public static float[] angle(float[] complexSig){
+    public static float[] angle(float[] complexSig) {
         float[] output = new float[complexSig.length / 2];
-        for (int ind0 = 0; ind0 < output.length; ind0++){
+        for (int ind0 = 0; ind0 < output.length; ind0++) {
             output[ind0] = (float) Math.atan2(complexSig[ind0 * 2 + 1],
                 complexSig[ind0 * 2]);
         }
@@ -116,11 +117,11 @@ public class ComplexInterleaved {
      * @param complexSig Complex interleaved signal
      * @return Real magnitude vector
      */
-    public static float[] magnitude(float[] complexSig){
+    public static float[] magnitude(float[] complexSig) {
         // magnitude is real, half the size of interleaved input
         float[] output = new float[complexSig.length / 2];
 
-        for (int ind0 = 0; ind0 < output.length; ind0++){
+        for (int ind0 = 0; ind0 < output.length; ind0++) {
             output[ind0] = complexSig[ind0 * 2] * complexSig[ind0 * 2] +
                            complexSig[ind0 * 2 + 1] * complexSig[ind0 * 2 + 1];
             output[ind0] = (float) Math.sqrt(output[ind0]);
@@ -133,11 +134,11 @@ public class ComplexInterleaved {
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
-    public static float[][] getRealImag(float[] complexIn){
+    public static float[][] getRealImag(float[] complexIn) {
         assert (complexIn.length&1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         float[][] out = new float[2][numOut];
-        for (int ind0 = 0; ind0 < numOut; ind0++){
+        for (int ind0 = 0; ind0 < numOut; ind0++) {
             out[0][ind0] = complexIn[ind0 * 2];
             out[1][ind0] = complexIn[ind0 * 2 + 1];
         }
@@ -149,11 +150,11 @@ public class ComplexInterleaved {
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
-    public static double[][] getRealImag(double[] complexIn){
+    public static double[][] getRealImag(double[] complexIn) {
         assert (complexIn.length&1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         double[][] out = new double[2][numOut];
-        for (int ind0 = 0; ind0 < numOut; ind0++){
+        for (int ind0 = 0; ind0 < numOut; ind0++) {
             out[0][ind0] = complexIn[ind0 * 2];
             out[1][ind0] = complexIn[ind0 * 2 + 1];
         }
@@ -165,11 +166,11 @@ public class ComplexInterleaved {
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
-    public static int[][] getRealImag(int[] complexIn){
+    public static int[][] getRealImag(int[] complexIn) {
         assert (complexIn.length&1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         int[][] out = new int[2][numOut];
-        for (int ind0 = 0; ind0 < numOut; ind0++){
+        for (int ind0 = 0; ind0 < numOut; ind0++) {
             out[0][ind0] = complexIn[ind0 * 2];
             out[1][ind0] = complexIn[ind0 * 2 + 1];
         }
@@ -181,11 +182,11 @@ public class ComplexInterleaved {
      * @param complexIn Complex interleaved input
      * @return real and imaginary array
      */
-    public static short[][] getRealImag(short[] complexIn){
+    public static short[][] getRealImag(short[] complexIn) {
         assert (complexIn.length&1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         short[][] out = new short[2][numOut];
-        for (int ind0 = 0; ind0 < numOut; ind0++){
+        for (int ind0 = 0; ind0 < numOut; ind0++) {
             out[0][ind0] = complexIn[ind0 * 2];
             out[1][ind0] = complexIn[ind0 * 2 + 1];
         }
