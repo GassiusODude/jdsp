@@ -1,27 +1,55 @@
 plugins {
-    id "java" apply true
+    id "java"
+    id "maven-publish"
 }
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+version = "1.0.2" // keep as a semantic version
+
 repositories {
     mavenCentral()
 }
+
 dependencies {
     testImplementation 'junit:junit:4.12'
 }
-version = 1.02
+
 jar {
     manifest {
         attributes(
             "Application-Name": "JDSP Library",
             "Main-Class": "net.kcundercover.jdsp.example.JdspExamples",
             "Built-By": "Keith Chow",
-            'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
-            'Created-By'     : "Gradle ${gradle.gradleVersion}",
-            'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-            'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
-            'Codebase'       : "kcundercover.net",
-            'Trusted-Library':true
+            'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSSZ").format(new Date()),
+            'Created-By': "Gradle ${gradle.gradleVersion}",
+            'Build-Jdk': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+            'Build-OS': "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
+            'Codebase': "kcundercover.net",
+            'Trusted-Library': true
         )
+    }
+}
+
+// ----------------- Publish to Maven Local -----------------
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = "net.kcundercover"
+            artifactId = "jdsp"
+            version = project.version
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/GassiusODude/jdsp")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.token") ?: System.getenv("TOKEN")
+            }
+        }
     }
 }
