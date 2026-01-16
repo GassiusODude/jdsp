@@ -85,7 +85,7 @@ public class TableFrame extends JFrame{
 
     public static void main(String[] args) {
         TableFrame tf = new TableFrame("Hello");
-        tf.show();
+        tf.setVisible(true);
 
     }
 }

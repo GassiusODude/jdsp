@@ -3,17 +3,31 @@ plugins {
     id "maven-publish"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        "--add-modules", "jdk.incubator.vector"
+    ]
+}
 
-version = "1.0.2" // keep as a semantic version
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += [
+        "--add-modules", "jdk.incubator.vector"
+    ]
+}
+
+version = "1.1" // keep as a semantic version
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 jar {
