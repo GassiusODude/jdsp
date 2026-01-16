@@ -8,6 +8,8 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
+
+// tell the exec, compile and test to allow incubator
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += [
         "--add-modules", "jdk.incubator.vector"
@@ -19,6 +21,16 @@ tasks.withType(JavaExec).configureEach {
         "--add-modules", "jdk.incubator.vector"
     ]
 }
+tasks.withType(Test).configureEach {
+    jvmArgs += ["--add-modules", "jdk.incubator.vector"]
+}
+
+tasks.register("runJar", JavaExec) {
+    mainClass.set("net.kcundercover.jdsp.example.JdspExamples")
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ["--add-modules", "jdk.incubator.vector"]
+}
+
 
 version = "1.1" // keep as a semantic version
 

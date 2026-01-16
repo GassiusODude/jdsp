@@ -6,6 +6,7 @@
  * @since June 2019
  */
 package net.kcundercover.jdsp.math;
+import jdk.incubator.vector.*;
 import java.util.Arrays;
 public class Vector{
     // ===========================  double support  =========================
@@ -20,12 +21,30 @@ public class Vector{
             throw new IllegalArgumentException(
                 "array lengths need to match");
         }
+        VectorSpecies<Double> SPECIES = DoubleVector.SPECIES_PREFERRED;
+
+        // initialize variables
+        double[] output = new double[vec1.length];
+        int index = 0;
 
         // ---------------------  perform operation  ------------------------
-        double[] output = new double[vec1.length];
-        for (int ind0 = 0; ind0 < vec1.length; ind0 ++){
-            output[ind0] = vec1[ind0] + vec2[ind0];
+        for (; index < SPECIES.loopBound(vec1.length); index += SPECIES.length()) {
+            // Load vectors from arrays
+            DoubleVector va = DoubleVector.fromArray(SPECIES, vec1, index);
+            DoubleVector vb = DoubleVector.fromArray(SPECIES, vec2, index);
+
+            // Vector addition
+            DoubleVector vc = va.add(vb);
+
+            // Store back into array
+            vc.intoArray(output, index);
         }
+
+        // complete
+        for (; index < vec1.length; index++) {
+            output[index] = vec1[index] + vec2[index];
+        }
+
         return output;
     }
 
