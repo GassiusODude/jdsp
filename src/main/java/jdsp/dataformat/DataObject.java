@@ -18,14 +18,27 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.ConsoleHandler;
 
+/**
+ * DataObject class
+ */
 public class DataObject extends DefaultTableModel{
+    /** Serial Version UID */
     private static final long serialVersionUID = 1L;
+
+    /** Name of the data object */
     private String name = "";
+
+    /** List of Features */
     private ArrayList<ArrayList> features;
+    /** List of feature names */
     private ArrayList<String> featureNames;
+    /** List of feature types */
     private ArrayList<String> featureTypes;
+    /** Number of observations in this data object */
     private int numObs = 0;
+    /** Specify if table is editable */
     private boolean tableEditable = false;
+    /** THe logger object for this class */
     private Logger logger;
 
     /** Constructor for the DataObject
@@ -105,26 +118,44 @@ public class DataObject extends DefaultTableModel{
     }
 
     // ========================== DefaultTableModel  ========================
+    /** Get the number columns of the table or the number of features */
     @Override
     public int getColumnCount(){
         return this.getNumFeatures();
     }
 
+    /** Get the number of rows (or observations) */
     @Override
     public int getRowCount(){
         return numObs;
     }
 
+    /** 
+     * Get the name of the column/feature 
+     * @param col Column or feature index
+     * @return The name of the feature
+     */
     @Override
     public String getColumnName(int col){
         return this.getFeatureName(col);
     }
 
+    /** 
+     * Get the value of the provided observation/feature
+     * @param row Observation Index
+     * @param col Feature index
+     * @return The specified feature from the specified observation
+     */
     @Override
     public Object getValueAt(int row, int col){
         return this.features.get(col).get(row);
     }
 
+    /**
+     * Get the class type of the feature
+     * @param col The column/feature index
+     * @return The class type
+     */
     @Override
     public Class getColumnClass(int col){
         return features.get(col).get(0).getClass();

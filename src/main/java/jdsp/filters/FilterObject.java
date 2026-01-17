@@ -4,6 +4,8 @@
 
 package net.kcundercover.jdsp.filters;
 import net.kcundercover.jdsp.math.Convolve;
+
+/** FilterObject */
 public class FilterObject{
     /** Numerator of the filter */
     private double[] numerator = {1.0};
@@ -18,13 +20,22 @@ public class FilterObject{
     // ======================================================================
     // -------------------------  get methods  ------------------------------
     // ======================================================================
-    public double[] getNumerator(){return this.numerator;}
-    public double[] getDenominator(){return this.denominator;}
+    /**
+     * Get the numerator (feed forward taps)
+     * @return Feed forward taps of a filter
+     */
+    public double[] getNumerator() { return this.numerator; }
+
+    /** 
+     * Get the denominatory (feedback taps)
+     * @return The feedback taps
+     */
+    public double[] getDenominator() { return this.denominator; }
 
     // ======================================================================
     // -------------------------  set methods  ------------------------------
     // ======================================================================
-    /** Set the numerator of the FilterObject
+    /** Set the numerator(feedfoward taps) of the FilterObject
      *
      * @param numerator Numerator of the filter
      */
@@ -34,7 +45,7 @@ public class FilterObject{
         this.numerator = numerator;
     }
 
-    /** Set the denominator of the FilterObject
+    /** Set the denominator (feedback taps) of the FilterObject
      *
      * @param denominator The new denominator of the filter object
      */

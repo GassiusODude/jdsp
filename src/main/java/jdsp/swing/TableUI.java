@@ -16,19 +16,29 @@ import java.io.File;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
 
+/** Panel to demonstrate use of tables */
 public class TableUI extends JPanel{
     /** Commonly uses separator token */
     String[] TOKENS = {",", "$", "~", ".", "?", "#", "@", "+", " "};
-
+    /** Button to reset the data */
     private JButton buttonReset = new JButton("Reset Data");
+    /** Button to load data from CSV */
     private JButton buttonLoad = new JButton("Load CSV");
+    /** Button to save the data */
     private JButton buttonSave = new JButton("Save CSV");
+    /** Checkbox, if checked mean first row of CSV is header of feature names */
     private JCheckBox checkboxFRH = new JCheckBox("First Row Header", true);
+    /** Combobox to select token used in CSV */
     private JComboBox comboToken = new JComboBox<String>(TOKENS);
+    /** The table */
     private JTable table;
+    /** File chooser for selecting the CSV file */
     private JFileChooser jfc = new JFileChooser();
+    /** Top panel */
     private JPanel topPanel = new JPanel();
+    /** Middle pannel */
     private JScrollPane midPanel;
+    /** Data object */
     private DataObject dObj = new DataObject("My Data");
 
     /** Constructor.  Setup and layout panel. */

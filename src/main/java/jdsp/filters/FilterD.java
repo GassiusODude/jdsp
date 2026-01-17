@@ -7,6 +7,7 @@ package net.kcundercover.jdsp.filters;
 import net.kcundercover.jdsp.math.Convolve;
 import net.kcundercover.jdsp.filters.FilterDesign;
 
+/** Double Filter */
 public class FilterD{
     /** Serial Version UID for this class */
     public final static long serialVersionUID = 0;

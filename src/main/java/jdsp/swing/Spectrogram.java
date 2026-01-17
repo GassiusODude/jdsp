@@ -12,17 +12,26 @@ import net.kcundercover.jdsp.math.DTFT;
 import java.awt.Graphics2D;
 import net.kcundercover.jdsp.math.Vector;
 import net.kcundercover.jdsp.math.ComplexInterleaved;
+
+/** Spectrogram Plot */
 public class Spectrogram extends Plot{
+    /** The buffered image */
     private BufferedImage bImage;
+    /** Window */
     protected int window = 1024;
+    /** Number of FFT points */
     protected int nfft = 256;
+    /** Sample Rate */
     private float sampleRate = 1.0f;
+    /** Center frequency */
     private float centerFrequency = 0;
+    /** Time Offset */
     private float timeOffset = 0;
     /** minMax value to scale spectrogram by */
     private float[] minMax = {-30.0f, 25.0f};
-    private int COLOR_MAX_VALUE = 255*255;
-    private int COLOR_MIN_VALUE = 0;
+    
+    private static final int COLOR_MAX_VALUE = 255*255;
+    private static final int COLOR_MIN_VALUE = 0;
 
     /** Constructor */
     public Spectrogram(){
@@ -197,6 +206,10 @@ public class Spectrogram extends Plot{
         g2.drawImage(bImage, marginX, marginY, null);
     }
 
+    /**
+     * Draw float data
+     * @param g2 Graphics object
+     */
     public void drawFloatData(Graphics2D g2){
         if (floatData == null)
             return;

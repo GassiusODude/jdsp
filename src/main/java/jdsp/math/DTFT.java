@@ -5,8 +5,15 @@
  */
 package net.kcundercover.jdsp.math;
 import net.kcundercover.jdsp.math.Vector;
+
+/** Discrete Time Fourier Transform */
 public class DTFT {
+    /** Serial Version UID */
     public final static long serialVersionUID = 0;
+
+    /** Default constructor */
+    public DTFT() {}
+
     /**
      * Calculates the discrete time fourier transform of a real input signal
      * @param signal Real signal

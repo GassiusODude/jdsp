@@ -15,7 +15,10 @@ import jdk.incubator.vector.VectorSpecies;
 import jdk.incubator.vector.VectorOperators;
 import java.util.Arrays;
 
-
+/**
+ * The Vector class supports some commonly used operations (add, multiply, subtract, divide)
+ * and (dot product, L1 norm, L2 norm, getting min-max, and clamping range of values)
+ */
 public class Vector {
     private static final VectorSpecies<Double> SPECIES_DOUBLE = DoubleVector.SPECIES_PREFERRED;
     private static final VectorSpecies<Float> SPECIES_FLOAT = FloatVector.SPECIES_PREFERRED;
@@ -23,11 +26,17 @@ public class Vector {
     private static final VectorSpecies<Long> SPECIES_LONG = LongVector.SPECIES_PREFERRED;
     private static final VectorSpecies<Short> SPECIES_SHORT = ShortVector.SPECIES_PREFERRED;
 
-    // ===========================  double support  =========================
-    /**Add two vectors together
-     * @param vec1 Vector 1
-     * @param vec2 Vector 2
-     * @return Elementwisee sum of the two arrays
+    /** Default constructor */
+    public Vector(){}
+
+    // ============================================================================================
+    //                                      Double Support
+    // ============================================================================================
+    /**Add two vectors together element-wise
+     * 
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise sum of the two vectors
      */
     public static double[] add(final double[] vec1, final double[] vec2) {
         // ---------------------  error checking  ---------------------------
@@ -62,6 +71,7 @@ public class Vector {
     }
 
     /**Add a scalar to each element of the vector
+     * 
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The updated vector
@@ -84,9 +94,9 @@ public class Vector {
         return output;
     }
 
-    /**Add two vectors together and store result in vector 1
-     * @param vec1 Vector 1
-     * @param vec2 Vector 2
+    /**Add two vectors in-place and store result in vec1
+     * @param vec1 Input vector 1 and output sum
+     * @param vec2 Input vector 2
      */
     public static void addMe(double[] vec1, final double[] vec2) {
         // ---------------------  error checking  ---------------------------
@@ -111,7 +121,8 @@ public class Vector {
         }
     }
 
-    /**Add scalar to the vector (without creating a new vector)
+    /**Add scalar to the vector in-place
+     * 
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to add
      */
@@ -133,8 +144,8 @@ public class Vector {
     }
 
     /**Divide elements of vec1 by the vec2
-     * @param vec1 Input vector 1
-     * @param vec2 Input vector 2
+     * @param vec1 Input vector 1 (dividend)
+     * @param vec2 Input vector 2 (divisor)
      * @return The quotient of the division operation
      */
     public static double[] divide(final double[] vec1, final double[] vec2) {
@@ -161,8 +172,8 @@ public class Vector {
     }
 
     /**Divide a scalar to each element of the vector
-     * @param vec1 Input vector
-     * @param scalar Scalar value
+     * @param vec1 Input vector 1 (dividend)
+     * @param scalar Scalar value (divisor)
      * @return The quotient vector
      */
     public static double[] divide(final double[] vec1, double scalar) {
@@ -186,9 +197,9 @@ public class Vector {
         return output;
     }
 
-    /**Element-wise divide and store result in vector 1
-     * @param vec1 Vector 1
-     * @param vec2 Vector 2
+    /**Element-wise divide in place, store in vec1
+     * @param vec1 Input vector 1 (dividend) and output (quotient)
+     * @param vec2 Input vector 2 (divisor)
      */
     public static void divideMe(double[] vec1, final double[] vec2) {
         if (vec1.length != vec2.length) {
@@ -211,7 +222,7 @@ public class Vector {
         }
     }
 
-    /**Divide scalar from vector (without creating a new vector)
+    /**Divide scalar from vector (in-place)
      * @param vec1 Input vector (dividend) and output (quotient)
      * @param scalar Divisor
      */
@@ -270,6 +281,12 @@ public class Vector {
         return out;
     }
 
+    /**
+     * Element-wise multiply vector 1 and 2 and return the product
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Vector of element-wise products
+     */
     public static double[] multiply(final double[] vec1, final double[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("multiply(): array lengths need to match");
@@ -293,7 +310,12 @@ public class Vector {
         return output;
     }
 
-    // --------------------- Multiply by scalar --------------------
+    /**
+     * Scalar multiply with vector
+     * @param vec1 Input vector
+     * @param scalar Scaling factor
+     * @return Output product
+     */
     public static double[] multiply(final double[] vec1, double scalar) {
         double[] output = new double[vec1.length];
         int ind0 = 0;
@@ -315,8 +337,8 @@ public class Vector {
     }
 
     /**Element-wise multiply and store result in vector 1
-     * @param vec1 Vector 1
-     * @param vec2 Vector 2
+     * @param vec1 Input vector 1 and output (product)
+     * @param vec2 Input vector 2
      */
     public static void multiplyMe(double[] vec1, final double[] vec2) {
         if (vec1.length != vec2.length) {
@@ -338,7 +360,10 @@ public class Vector {
         }
     }
 
-    // --------------------- In-place multiply by scalar --------------------
+    /**Element-wise multiply with scalar and store product in vector 1
+     * @param vec1 Input vector 1 and output (product)
+     * @param scalar Scaling factor
+     */
     public static void multiplyMe(double[] vec1, double scalar) {
         int ind0 = 0;
         DoubleVector scalarVector = DoubleVector.broadcast(SPECIES_DOUBLE, scalar);
@@ -413,7 +438,12 @@ public class Vector {
         return output;
     }
 
-    // --------------------- Subtract scalar from vector --------------------
+    /**
+     * Subtract scalar from vector
+     * @param vec1 Input vector
+     * @param scalar The scalar value to subtract
+     * @return The output vec1 - scalar
+     */
     public static double[] subtract(final double[] vec1, double scalar) {
         double[] output = new double[vec1.length];
         int ind0 = 0;
@@ -435,7 +465,7 @@ public class Vector {
     }
 
     /**Element-wise subtract and store result in vector 1
-     * @param vec1 Vector 1
+     * @param vec1 Vector 1 and output
      * @param vec2 Vector 2
      */
     public static void subtractMe(double[] vec1, final double[] vec2) {
@@ -458,7 +488,11 @@ public class Vector {
         }
     }
 
-    // --------------------- In-place subtract scalar --------------------
+    /**
+     * Element-wise subtract by scalar from the input vector and store in vec1
+     * @param vec1 Input vector and output of subtration
+     * @param scalar Value to subtract
+     */
     public static void subtractMe(double[] vec1, double scalar) {
         int ind0 = 0;
         DoubleVector scalarVector = DoubleVector.broadcast(SPECIES_DOUBLE, scalar);
@@ -475,7 +509,11 @@ public class Vector {
         }
     }
 
-    // --------------------- Sum of elements --------------------
+    /**
+     * Sum all elememnts of the array
+     * @param vec1 Input vector
+     * @return Sum
+     */
     public static double sum(final double[] vec1) {
         int ind0 = 0;
         DoubleVector acc = DoubleVector.broadcast(SPECIES_DOUBLE, 0.0);
@@ -500,6 +538,12 @@ public class Vector {
         return result;
     }
 
+    /**
+     * Dot product of the two vectors
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return sum of products of input vectors
+     */
     public static double dot(final double[] vec1, final double[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("dot(): array lengths need to match");
@@ -529,6 +573,11 @@ public class Vector {
     }
 
 
+    /**
+     * L1 norm (sum of abs value of elements)
+     * @param vec1 Input vector
+     * @return L1 norm
+     */
     public static double norm1(final double[] vec1) {
         double acc = 0.0;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -537,6 +586,11 @@ public class Vector {
         return acc;
     }
 
+    /**
+     * L2 Norm (sum of squares)
+     * @param vec1 Input vector
+     * @return L2 norm
+     */
     public static double norm2(final double[] vec1) {
         double acc = 0.0;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -545,16 +599,26 @@ public class Vector {
         return Math.sqrt(acc);
     }
 
+    /**
+     * Clamp the input vector to a range
+     * @param vec1 Input vector (and updated output)
+     * @param min Minimum value
+     * @param max Maximum value
+     */
     public static void clampMe(double[] vec1, double min, double max) {
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
             vec1[ind0] = Math.max(min, Math.min(max, vec1[ind0]));
         }
     }
 
-
-
     // ==============================  Float  ===============================
 
+    /**
+     * Add 2 vectors together and return sum
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return element-wise sum
+     */
     public static float[] add(final float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("add(): array lengths need to match");
@@ -574,7 +638,12 @@ public class Vector {
         return output;
     }
 
-    // --------------------- Add scalar --------------------
+    /**
+     * Add a scalar to a vector and return
+     * @param vec1 Input vector
+     * @param scalar Scalar value to add
+     * @return Element-wise sum of vector and scalar
+     */
     public static float[] add(final float[] vec1, float scalar) {
         float[] output = new float[vec1.length];
         int ind0 = 0;
@@ -591,7 +660,11 @@ public class Vector {
         return output;
     }
 
-    // --------------------- In-place addition --------------------
+    /**
+     * Add two-vectors in-place
+     * @param vec1 Input vector 1 and output sum
+     * @param vec2 Input vector 2
+     */
     public static void addMe(float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("addMe(): array lengths need to match");
@@ -609,6 +682,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Add scalar to vector in-place
+     * @param vec1 Input vector and output (sum)
+     * @param scalar Scalar value to add
+     */
     public static void addMe(float[] vec1, float scalar) {
         int ind0 = 0;
         FloatVector scalarVector = FloatVector.broadcast(SPECIES_FLOAT, scalar);
@@ -623,7 +701,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Subtraction --------------------
+    /**
+     * Subrtract vec2 from vec1 and return element-wise subtraction
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Output of element-wise subtraction of 2 vectors
+     */
     public static float[] subtract(final float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("subtract(): array lengths need to match");
@@ -643,6 +726,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Subtract scalar value from the input vector and return
+     * @param vec1 Input vector 1
+     * @param scalar scalar value to subtract
+     * @return Output of element-wise subtraction
+     */
     public static float[] subtract(final float[] vec1, float scalar) {
         float[] output = new float[vec1.length];
         int ind0 = 0;
@@ -659,6 +748,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Subtract two vectors in place
+     * @param vec1 Input vector 1 and output of subtraction
+     * @param vec2 Input vector 2
+     */
     public static void subtractMe(float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("subtractMe(): array lengths need to match");
@@ -676,6 +770,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Subtract scalar from input vector (in-place)
+     * @param vec1 Input vector and output of subtraction
+     * @param scalar Value to subtract
+     */
     public static void subtractMe(float[] vec1, float scalar) {
         int ind0 = 0;
         FloatVector scalarVector = FloatVector.broadcast(SPECIES_FLOAT, scalar);
@@ -690,7 +789,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Multiply --------------------
+    /**
+     * Element-wise multiplication of two vectors
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise product
+     */
     public static float[] multiply(final float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("multiply(): array lengths need to match");
@@ -710,6 +814,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise multiplication of a scalar value with an input vector
+     * @param vec1 Input vector 1
+     * @param scalar Value to scale by
+     * @return Element-wise product
+     */
     public static float[] multiply(final float[] vec1, float scalar) {
         float[] output = new float[vec1.length];
         int ind0 = 0;
@@ -726,6 +836,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise multiplication (in-place)
+     * @param vec1 Input vector 1 and output product
+     * @param vec2 Input vector 2
+     */
     public static void multiplyMe(float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("multiplyMe(): array lengths need to match");
@@ -743,6 +858,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise multiplication of vector and scalar
+     * @param vec1 Input vector 1 and output product
+     * @param scalar Input vector 2
+     */
     public static void multiplyMe(float[] vec1, float scalar) {
         int ind0 = 0;
         FloatVector scalarVector = FloatVector.broadcast(SPECIES_FLOAT, scalar);
@@ -757,7 +877,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Divide --------------------
+    /**
+     * Element-wise division 
+     * @param vec1 Input vector 1 (dividend)
+     * @param vec2 Input vector 2 (divisor)
+     * @return Output (quotient)
+     */
     public static float[] divide(final float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("divide(): array lengths need to match");
@@ -777,6 +902,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise division 
+     * @param vec1 Input vector 1 (dividend)
+     * @param scalar Value to divide by (divisor)
+     * @return Output (quotient)
+     */
     public static float[] divide(final float[] vec1, float scalar) {
         float[] output = new float[vec1.length];
         int ind0 = 0;
@@ -793,6 +924,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise division 
+     * @param vec1 Input vector 1 (dividend) and output (quotient)
+     * @param vec2 Input vector 2 (divisor)
+     */
     public static void divideMe(float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("divideMe(): array lengths need to match");
@@ -810,6 +946,11 @@ public class Vector {
         }
     }
 
+        /**
+     * Element-wise division 
+     * @param vec1 Input vector 1 (dividend) and output (quotient)
+     * @param scalar Input scalar value (divisor)
+     */
     public static void divideMe(float[] vec1, float scalar) {
         int ind0 = 0;
         FloatVector scalarVector = FloatVector.broadcast(SPECIES_FLOAT, scalar);
@@ -824,7 +965,11 @@ public class Vector {
         }
     }
 
-    // --------------------- Sum --------------------
+    /**
+     * Sum all elements of the vector
+     * @param vec1 Input vector
+     * @return Sum
+     */
     public static float sum(final float[] vec1) {
         int ind0 = 0;
         FloatVector acc = FloatVector.broadcast(SPECIES_FLOAT, 0.0f);
@@ -846,7 +991,11 @@ public class Vector {
         return result;
     }
 
-    // --------------------- Product --------------------
+    /**
+     * Product of all elements of the vector
+     * @param vec1 Input vector 1
+     * @return Product
+     */
     public static float product(final float[] vec1) {
         int ind0 = 0;
         FloatVector acc = FloatVector.broadcast(SPECIES_FLOAT, 1.0f);
@@ -868,7 +1017,11 @@ public class Vector {
         return result;
     }
 
-    // --------------------- Min/Max --------------------
+    /**
+     * Get the minimum and maximum values of the vector
+     * @param vec1 Input vector 1
+     * @return List of [min, max]
+     */
     public static float[] getMinMax(float[] vec1) {
         float[] out = new float[2];
         out[0] = Float.MAX_VALUE;
@@ -897,6 +1050,12 @@ public class Vector {
         return out;
     }
 
+    /**
+     * Dot product of the 2 vectors (sum of the element-wise product)
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Dot product
+     */
     public static float dot(final float[] vec1, final float[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("dot(): array lengths need to match");
@@ -925,7 +1084,11 @@ public class Vector {
         return sum;
     }
 
-
+    /**
+     * L1 Norm (sum of abs value of elements of the vector)
+     * @param vec1 Input vector
+     * @return L1 Norm
+     */
     public static float norm1(final float[] vec1) {
         float acc = 0.0f;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -934,6 +1097,11 @@ public class Vector {
         return acc;
     }
 
+    /**
+     * L2 norm (sum of the squared values of the elements of the vector)
+     * @param vec1 Input vector 1
+     * @return L2 Norm
+     */
     public static float norm2(final float[] vec1) {
         float acc = 0.0f;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -942,18 +1110,28 @@ public class Vector {
         return (float) Math.sqrt(acc);
     }
 
+    /**
+     * Clamp value to specified range
+     * @param vec1 Input vector and output
+     * @param min Minimum value
+     * @param max Maximum value
+     */
     public static void clampMe(float[] vec1, float min, float max) {
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
             vec1[ind0] = Math.max(min, Math.min(max, vec1[ind0]));
         }
     }
 
+    // ============================================================================================
+    //                                          Long Support
+    // ============================================================================================
 
-    //==============================  long support  =========================
-
-
-
-    // --------------------- Elementwise addition --------------------
+    /**
+     * Element-wise addition of two vectors
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise sum
+     */
     public static long[] add(final long[] vec1, final long[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("add(): lengths must match");
 
@@ -972,6 +1150,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise addition of vector and a scalar value
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value to add
+     * @return Element-wise sum
+     */
     public static long[] add(final long[] vec1, long scalar) {
         long[] output = new long[vec1.length];
         int ind0 = 0;
@@ -988,7 +1172,11 @@ public class Vector {
         return output;
     }
 
-    // --------------------- In-place addition --------------------
+    /**
+     * Element-wise addition (in-place)
+     * @param vec1 Input vector 1 and output (sum)
+     * @param vec2 Input vector 2
+     */
     public static void addMe(long[] vec1, final long[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("addMe(): lengths must match");
         int ind0 = 0;
@@ -1004,6 +1192,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise addition (in-place) of vector and scalar value
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value
+     */
     public static void addMe(long[] vec1, long scalar) {
         int ind0 = 0;
         LongVector scalarVector = LongVector.broadcast(SPECIES_LONG, scalar);
@@ -1018,7 +1211,8 @@ public class Vector {
         }
     }
 
-    /**Product of all elements in a long vector
+    /**
+     * Product of all elements in a long vector
      * @param vec1 Input vector
      * @return Product of all elements
      */
@@ -1030,7 +1224,12 @@ public class Vector {
         return out;
     }
 
-    // --------------------- Subtraction --------------------
+    /**
+     * Element-wise subtraction
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Vec1 - vec2
+     */
     public static long[] subtract(final long[] vec1, final long[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("subtract(): lengths must match");
         long[] output = new long[vec1.length];
@@ -1048,6 +1247,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise subtraction
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value to subtract
+     * @return vec1 - scalar
+     */
     public static long[] subtract(final long[] vec1, long scalar) {
         long[] output = new long[vec1.length];
         int ind0 = 0;
@@ -1064,6 +1269,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise subtraction (in-place)
+     * @param vec1 Input vector 1 and output (subtraction)
+     * @param vec2 Input vector 2
+     */
     public static void subtractMe(long[] vec1, final long[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("subtractMe(): lengths must match");
         int ind0 = 0;
@@ -1079,6 +1289,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise subtraction (in-place)
+     * @param vec1 Input vector 1 and output (subtraction)
+     * @param scalar Scalar value to subtract
+     */
     public static void subtractMe(long[] vec1, long scalar) {
         int ind0 = 0;
         LongVector scalarVector = LongVector.broadcast(SPECIES_LONG, scalar);
@@ -1093,7 +1308,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Multiply --------------------
+    /**
+     * Element-wise multiplication
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise product
+     */
     public static long[] multiply(final long[] vec1, final long[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("multiply(): lengths must match");
         long[] output = new long[vec1.length];
@@ -1111,6 +1331,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise multiplication
+     * @param vec1 Input vector 1
+     * @param scalar Scaling factor
+     * @return Element-wise product
+     */
     public static long[] multiply(final long[] vec1, long scalar) {
         long[] output = new long[vec1.length];
         int ind0 = 0;
@@ -1127,6 +1353,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise multiplication (in-place)
+     * @param vec1 Input vector 1 and output (product)
+     * @param vec2 Input vector 2
+     */
     public static void multiplyMe(long[] vec1, final long[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("multiplyMe(): lengths must match");
         int ind0 = 0;
@@ -1142,6 +1373,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise multiplication (in-place)
+     * @param vec1 Input vector 1 and output (product)
+     * @param scalar Value to scale by
+     */
     public static void multiplyMe(long[] vec1, long scalar) {
         int ind0 = 0;
         LongVector scalarVector = LongVector.broadcast(SPECIES_LONG, scalar);
@@ -1156,7 +1392,11 @@ public class Vector {
         }
     }
 
-    // --------------------- Sum --------------------
+    /**
+     * Sum of all elements of the vector
+     * @param vec1 Input vector 1
+     * @return Sum
+     */
     public static long sum(final long[] vec1) {
         int ind0 = 0;
         LongVector acc = LongVector.broadcast(SPECIES_LONG, 0L);
@@ -1178,7 +1418,11 @@ public class Vector {
         return result;
     }
 
-    // --------------------- Min/Max --------------------
+    /**
+     * Get the min and max of the vector
+     * @param vec1 Input vector
+     * @return List of [min, max]
+     */
     public static long[] getMinMax(final long[] vec1) {
         long[] out = new long[2];
         out[0] = Long.MAX_VALUE;
@@ -1207,6 +1451,12 @@ public class Vector {
         return out;
     }
 
+    /**
+     * Dot product (sum of element-wise product)
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Dot product
+     */
     public static long dot(final long[] vec1, final long[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("dot(): array lengths need to match");
@@ -1235,7 +1485,11 @@ public class Vector {
         return sum;
     }
 
-
+    /**
+     * L1 norm (sum of abs values of vector)
+     * @param vec1 Input vector
+     * @return L1 norm
+     */
     public static long norm1(final long[] vec1) {
         long acc = 0L;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -1244,6 +1498,11 @@ public class Vector {
         return acc;
     }
 
+    /**
+     * L2 norm (sum of squared values of vector)
+     * @param vec1 Input vector
+     * @return L2 norm
+     */
     public static double norm2(final long[] vec1) {
         double acc = 0.0;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -1252,17 +1511,28 @@ public class Vector {
         return Math.sqrt(acc);
     }
 
+    /**
+     * Clamp range of input vector (in-place)
+     * @param vec1 Input vector and output
+     * @param min Minimum value
+     * @param max Maximum value
+     */
     public static void clampMe(long[] vec1, long min, long max) {
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
             vec1[ind0] = Math.max(min, Math.min(max, vec1[ind0]));
         }
     }
 
+    // ============================================================================================
+    //                                          Integer Support
+    // ============================================================================================
 
-    //============================ support int  =============================
-
-
-    // --------------------- Elementwise addition --------------------
+    /**
+     * ELement-wise addition
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise sum
+     */
     public static int[] add(final int[] vec1, final int[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("add(): lengths must match");
 
@@ -1281,6 +1551,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * ELement-wise addition
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value
+     * @return Element-wise sum
+     */
     public static int[] add(final int[] vec1, int scalar) {
         int[] output = new int[vec1.length];
         int ind0 = 0;
@@ -1297,7 +1573,11 @@ public class Vector {
         return output;
     }
 
-    // --------------------- In-place addition --------------------
+    /**
+     * ELement-wise addition (in-place)
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     */
     public static void addMe(int[] vec1, final int[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("addMe(): lengths must match");
         int ind0 = 0;
@@ -1313,6 +1593,11 @@ public class Vector {
         }
     }
 
+    /**
+     * ELement-wise addition (in-place)
+     * @param vec1 Input vector 1 and output sum
+     * @param scalar Scalar value
+     */
     public static void addMe(int[] vec1, int scalar) {
         int ind0 = 0;
         IntVector scalarVector = IntVector.broadcast(SPECIES_INT, scalar);
@@ -1327,7 +1612,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Subtraction --------------------
+    /**
+     * ELement-wise subtraction
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise subtraction
+     */
     public static int[] subtract(final int[] vec1, final int[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("subtract(): lengths must match");
         int[] output = new int[vec1.length];
@@ -1345,6 +1635,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * ELement-wise subtraction
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value
+     * @return Element-wise subtraction
+     */
     public static int[] subtract(final int[] vec1, int scalar) {
         int[] output = new int[vec1.length];
         int ind0 = 0;
@@ -1361,6 +1657,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * ELement-wise subtraction (in-place)
+     * @param vec1 Input vector 1 and output
+     * @param vec2 Input vector 2
+     */
     public static void subtractMe(int[] vec1, final int[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("subtractMe(): lengths must match");
         int ind0 = 0;
@@ -1376,6 +1677,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise subtraction (in-place)
+     * @param vec1 Input vector and output subtraction
+     * @param scalar Value to subtract
+     */
     public static void subtractMe(int[] vec1, int scalar) {
         int ind0 = 0;
         IntVector scalarVector = IntVector.broadcast(SPECIES_INT, scalar);
@@ -1390,7 +1696,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Multiply --------------------
+    /**
+     * Element-wise multiplication
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise product
+     */
     public static int[] multiply(final int[] vec1, final int[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("multiply(): lengths must match");
         int[] output = new int[vec1.length];
@@ -1408,6 +1719,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise multiplication
+     * @param vec1 Input vector 1
+     * @param scalar Value to multiply
+     * @return Element-wise product
+     */
     public static int[] multiply(final int[] vec1, int scalar) {
         int[] output = new int[vec1.length];
         int ind0 = 0;
@@ -1423,7 +1740,12 @@ public class Vector {
         }
         return output;
     }
-    
+
+    /**
+     * Element-wise multiplication (in-place)
+     * @param vec1 Input vector 1 and output product
+     * @param vec2 Input vector 2
+     */
     public static void multiplyMe(int[] vec1, final int[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("multiplyMe(): lengths must match");
         int ind0 = 0;
@@ -1439,6 +1761,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise multiplication (in-place)
+     * @param vec1 Input vector 1 and output product
+     * @param scalar Value to multiply
+     */
     public static void multiplyMe(int[] vec1, int scalar) {
         int ind0 = 0;
         IntVector scalarVector = IntVector.broadcast(SPECIES_INT, scalar);
@@ -1466,7 +1793,11 @@ public class Vector {
     }
 
 
-    // --------------------- Sum --------------------
+    /**
+     * Sum all elements of the vector
+     * @param vec1 Input vector
+     * @return Sum
+     */
     public static int sum(final int[] vec1) {
         int ind0 = 0;
         IntVector acc = IntVector.broadcast(SPECIES_INT, 0);
@@ -1488,7 +1819,11 @@ public class Vector {
         return result;
     }
 
-    // --------------------- Min/Max --------------------
+    /**
+     * Get the minimum and maximum values of the vector
+     * @param vec1 Input vector
+     * @return List of [min, max]
+     */
     public static int[] getMinMax(final int[] vec1) {
         int[] out = new int[2];
         out[0] = Integer.MAX_VALUE;
@@ -1517,6 +1852,12 @@ public class Vector {
         return out;
     }
 
+    /**
+     * Dot product (sum of element-wise product)
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Dot product
+     */
     public static long dot(final int[] vec1, final int[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("dot(): array lengths need to match");
@@ -1547,6 +1888,11 @@ public class Vector {
         return sum;
     }
 
+    /**
+     * L1 Norm (sum of absolute values of elements of the vector)
+     * @param vec1 Input vector
+     * @return L1 Norm
+     */
     public static long norm1(final int[] vec1) {
         long acc = 0L;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -1555,6 +1901,11 @@ public class Vector {
         return acc;
     }
 
+    /**
+     * L2 norm (sum of the squared values of the input vector)
+     * @param vec1 Input vector
+     * @return L2 Norm
+    */
     public static double norm2(final int[] vec1) {
         double acc = 0.0;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -1563,16 +1914,28 @@ public class Vector {
         return Math.sqrt(acc);
     }
 
+    /**
+     * Clamp the values of the input vector to given range
+     * @param vec1 Input vector and output (with clamped values)
+     * @param min Minimum value
+     * @param max Maximum value
+     */
     public static void clampMe(int[] vec1, int min, int max) {
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
             vec1[ind0] = Math.max(min, Math.min(max, vec1[ind0]));
         }
     }
 
+    // ============================================================================================
+    //                                      Short Support
+    // ============================================================================================
 
-    //============================ support short  =============================
-
-    // --------------------- Elementwise addition --------------------
+    /**
+     * Element-wise addition
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise sum
+     */
     public static short[] add(final short[] vec1, final short[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("add(): lengths must match");
         short[] output = new short[vec1.length];
@@ -1591,6 +1954,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise addition
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value
+     * @return Element-wise sum
+     */
     public static short[] add(final short[] vec1, short scalar) {
         short[] output = new short[vec1.length];
         int ind0 = 0;
@@ -1608,7 +1977,11 @@ public class Vector {
         return output;
     }
 
-    // --------------------- In-place addition --------------------
+    /**
+     * Element-wise addition (in-place)
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     */
     public static void addMe(short[] vec1, final short[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("addMe(): lengths must match");
         int ind0 = 0;
@@ -1624,6 +1997,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise addition (in-place)
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value
+     */
     public static void addMe(short[] vec1, short scalar) {
         int ind0 = 0;
         ShortVector scalarVector = ShortVector.broadcast(SPECIES_SHORT, scalar);
@@ -1638,7 +2016,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Subtraction --------------------
+    /**
+     * Element-wise subtraction
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise subtraction
+     */
     public static short[] subtract(final short[] vec1, final short[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("subtract(): lengths must match");
         short[] output = new short[vec1.length];
@@ -1657,6 +2040,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise subtraction
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value
+     * @return Element-wise subtraction
+     */
     public static short[] subtract(final short[] vec1, short scalar) {
         short[] output = new short[vec1.length];
         int ind0 = 0;
@@ -1674,6 +2063,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise subtraction (in-place)
+     * @param vec1 Input vector 1 and output (subtraction)
+     * @param vec2 Input vector 2
+     */
     public static void subtractMe(short[] vec1, final short[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("subtractMe(): lengths must match");
         int ind0 = 0;
@@ -1689,6 +2083,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise subtraction (in-place)
+     * @param vec1 Input vector 1 and output (subtraction)
+     * @param scalar Scalar value
+     */
     public static void subtractMe(short[] vec1, short scalar) {
         int ind0 = 0;
         ShortVector scalarVector = ShortVector.broadcast(SPECIES_SHORT, scalar);
@@ -1703,7 +2102,12 @@ public class Vector {
         }
     }
 
-    // --------------------- Multiply --------------------
+    /**
+     * Element-wise multiplication
+     * @param vec1 Input vector 1
+     * @param vec2 Input vector 2
+     * @return Element-wise product
+     */
     public static short[] multiply(final short[] vec1, final short[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("multiply(): lengths must match");
         short[] output = new short[vec1.length];
@@ -1722,6 +2126,12 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise multiplication
+     * @param vec1 Input vector 1
+     * @param scalar Scalar value
+     * @return Element-wise product
+     */
     public static short[] multiply(final short[] vec1, short scalar) {
         short[] output = new short[vec1.length];
         int ind0 = 0;
@@ -1739,6 +2149,11 @@ public class Vector {
         return output;
     }
 
+    /**
+     * Element-wise multiplication (in-place)
+     * @param vec1 Input vector 1 and output (product)
+     * @param vec2 Input vector 2
+     */
     public static void multiplyMe(short[] vec1, final short[] vec2) {
         if (vec1.length != vec2.length) throw new IllegalArgumentException("multiplyMe(): lengths must match");
         int ind0 = 0;
@@ -1754,6 +2169,11 @@ public class Vector {
         }
     }
 
+    /**
+     * Element-wise multiplication (in-place)
+     * @param vec1 Input vector 1 and output (product)
+     * @param scalar Scalar value
+     */
     public static void multiplyMe(short[] vec1, short scalar) {
         int ind0 = 0;
         ShortVector scalarVector = ShortVector.broadcast(SPECIES_SHORT, scalar);
@@ -1781,7 +2201,11 @@ public class Vector {
     }
 
 
-    // --------------------- Sum --------------------
+    /**
+     * Sum all elements of the vector
+     * @param vec1 Input vector
+     * @return Sum
+     */
     public static int sum(final short[] vec1) {
         int ind0 = 0;
         ShortVector acc = ShortVector.broadcast(SPECIES_SHORT, (short)0);
@@ -1803,7 +2227,11 @@ public class Vector {
         return result;
     }
 
-    // --------------------- Min/Max --------------------
+    /**
+     * Get the minimum and maximum values of the vector
+     * @param vec1 Input vector
+     * @return List of [min, max]
+     */
     public static short[] getMinMax(final short[] vec1) {
         short[] out = new short[2];
         out[0] = Short.MAX_VALUE;
@@ -1832,6 +2260,12 @@ public class Vector {
         return out;
     }
 
+    /**
+     * Dot product (sum of the element-wise product of elements)
+     * @param vec1 Input vector 1
+     * @param vec2 INput vector 2
+     * @return Dot product
+     */
     public static long dot(final short[] vec1, final short[] vec2) {
         if (vec1.length != vec2.length) {
             throw new IllegalArgumentException("dot(): array lengths need to match");
@@ -1867,6 +2301,11 @@ public class Vector {
     }
 
 
+    /**
+     * L1 norm (sum of absolute value of elements of the vector)
+     * @param vec1 Input vector
+     * @return L1 norm
+     */
     public static int norm1(final short[] vec1) {
         int acc = 0;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -1875,6 +2314,11 @@ public class Vector {
         return acc;
     }
 
+    /**
+     * L2 norm (sum of the squared values of the elements of the vector)
+     * @param vec1 Input vector
+     * @return L2 norm
+     */
     public static double norm2(final short[] vec1) {
         double acc = 0.0;
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
@@ -1883,6 +2327,12 @@ public class Vector {
         return Math.sqrt(acc);
     }
 
+    /**
+     * Clamp the range for the values of the vector
+     * @param vec1 Input vector and output (with clamped values)
+     * @param min Minimum value
+     * @param max Maximum value
+     */
     public static void clampMe(short[] vec1, short min, short max) {
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
             int v = vec1[ind0];

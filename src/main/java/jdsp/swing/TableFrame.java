@@ -5,10 +5,15 @@
 package net.kcundercover.jdsp.swing;
 import javax.swing.JFrame;
 import net.kcundercover.jdsp.swing.TableUI;
+/** 
+ * Class for the TableFrame
+ */
 public class TableFrame extends JFrame{
+    /** The table panel */
     TableUI table;
+
     /**
-     * Table Frame
+     * Table Frame constructor
      */
     public TableFrame(){
         super("TableFrame");
@@ -82,7 +87,10 @@ public class TableFrame extends JFrame{
     public void display(){
         table.display();
     }
-
+    /**
+     * Main function for the TableFrame
+     * @param args Input arguments
+    */
     public static void main(String[] args) {
         TableFrame tf = new TableFrame("Hello");
         tf.setVisible(true);
