@@ -6,9 +6,10 @@
 
 # Install
 
-| Dependence | Description |
-| :-: | :-: |
-| JDK21 | Migrated to JDK 21 to support `jdk.incubator.vector` |
+| Dependencies | Description | License | Added |
+| :-: | :-: | :-: | :-: |
+| JDK21 | Migrated to JDK 21 to support `jdk.incubator.vector` | |  2026-01-17 |
+| Efficient Java Matrix Library (EJML) | External matrix library | [LICENSE](EJML_LICENSE-2.0.txt) | 2026-01-18 |
 
 To install, perform the following actions.
 1. Build
