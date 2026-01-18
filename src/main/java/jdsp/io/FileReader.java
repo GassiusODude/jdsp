@@ -230,6 +230,7 @@ public class FileReader {
      * Load signal as raw floats.
      * @param sampleOffset The number of samples from the start of file
      * @param numSamples Number of samples to load.
+     * @return Float samples
      */
     public float[] loadSignalRawAsFloat(final int sampleOffset, final int numSamples) {
         // number of bytes to load

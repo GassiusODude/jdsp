@@ -3,10 +3,20 @@
  */
 package net.kcundercover.jdsp.math;
 import net.kcundercover.jdsp.math.Vector;
-public class Histogram{
+
+/** Histogram object */
+public class Histogram {
+    /** Default histogram constructor */
+    public Histogram() {}
+    /** Histogram counts */
     private int[] histCounts = new int[1];
+
+    /** Histogram edges */
     double[] histEdges = new double[1];
+
+    /** Min max */
     double[] minMax = new double[2];
+
     /**
      * Get the histogram counts for the last call to histogram
      * @return The integer counts

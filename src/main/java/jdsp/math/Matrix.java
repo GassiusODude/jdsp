@@ -1,6 +1,11 @@
 package net.kcundercover.jdsp.math;
 import net.kcundercover.jdsp.math.Vector;
-public class Matrix{
+/**
+ * Matrix object
+ */
+public class Matrix {
+    /** Default Matrix constructor */
+    public Matrix() {}
     /** Calculate the inverse of the matrix.
      *
      *  @param matrix The matrix that you want to find the inverse of.

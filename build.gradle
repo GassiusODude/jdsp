@@ -3,17 +3,53 @@ plugins {
     id "maven-publish"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
-version = "1.0.2" // keep as a semantic version
+// tell the exec, compile and test to allow incubator
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        "--add-modules", "jdk.incubator.vector"
+    ]
+}
+// tasks.withType(Javadoc).configureEach {
+//     options.addStringOption('module-path', classpath.asPath)
+//     options.addStringOption('add-modules', 'jdk.incubator.vector')
+// }
+tasks.withType(Javadoc).configureEach {
+    options.addBooleanOption('html5', true)
+
+    // Pass JVM arguments to the Javadoc tool
+    options.addStringOption('-add-modules', 'jdk.incubator.vector')
+}
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += [
+        "--add-modules", "jdk.incubator.vector"
+    ]
+}
+tasks.withType(Test).configureEach {
+    jvmArgs += ["--add-modules", "jdk.incubator.vector"]
+}
+
+tasks.register("runJar", JavaExec) {
+    mainClass.set("net.kcundercover.jdsp.example.JdspExamples")
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ["--add-modules", "jdk.incubator.vector"]
+}
+
+
+version = "1.1" // keep as a semantic version
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 jar {

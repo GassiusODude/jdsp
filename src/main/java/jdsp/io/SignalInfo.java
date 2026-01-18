@@ -8,6 +8,7 @@ package net.kcundercover.jdsp.io;
 import java.io.IOException;
 import java.sql.Timestamp;
 
+/** SignalInfo object */
 public class SignalInfo extends FileInfo{
     /** Sampling rate of the signal */
     protected double samplingRate = 1.0;

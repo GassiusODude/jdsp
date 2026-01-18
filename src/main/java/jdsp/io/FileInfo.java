@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.LinkOption;
 import java.io.IOException;
+
+/** FileInfo object */
 public class FileInfo{
     /** The filepath */
     protected String filepath = "";

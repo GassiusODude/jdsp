@@ -10,67 +10,82 @@ import net.kcundercover.jdsp.swing.Plot;
 import net.kcundercover.jdsp.swing.TableUI;
 import net.kcundercover.jdsp.swing.Spectrogram;
 import net.kcundercover.jdsp.example.PanelFilterDesign;
-public class JdspExamples extends JTabbedPane{
-    // Table
-    JTable j;
 
-    // Constructor
+/**
+ * Main class housing the swing examples in a tabbed pane
+ */
+public class JdspExamples extends JTabbedPane{
+
+    /**
+     * The Constructor
+     */
     public JdspExamples()
     {
         super();
 
-        // --------------------  table example  -----------------------------
-        DataObject dObj = new DataObject("Hello");
+        // table example
+        // ------------------------------------------------------
+        
+        DataObject dataObject0 = new DataObject("Hello");
         float[] f1 = {1.0f, 2.0f};
         boolean[] b1 = {true, false};
-        dObj.addFeature(f1, "Number");
-        dObj.addFeature(b1, "Boolean");
-        JTable table = new JTable(dObj);
+        dataObject0.addFeature(f1, "Number");
+        dataObject0.addFeature(b1, "Boolean");
+        JTable table = new JTable(dataObject0);
         JScrollPane sp = new JScrollPane(table);
         this.add("Table", sp);
 
-        // ----------------------  plot example  ----------------------------
-        Plot p = new Plot();
+        // plot example
+        // ------------------------------------------------------
+        Plot myPlot = new Plot();
         float[] newAxes = {-0.f, 20f, -1f, 1.f};
-        p.setAxes(newAxes);
-        p.setMargin(60, 40);
-        p.setPlotSize(540, 340);
-        p.setLabels("Frequency", "Feat. 1", "Freq. vs Feature 1");
-        p.setMarker(" ", 5, 10);
-        DataObject d = new DataObject("Cosine");
+        myPlot.setAxes(newAxes);
+        myPlot.setMargin(60, 40);
+        myPlot.setPlotSize(540, 340);
+        myPlot.setLabels("Frequency", "Feat. 1", "Freq. vs Feature 1");
+        myPlot.setMarker(" ", 5, 10);
+        DataObject dataObject1 = new DataObject("Cosine");
         float[] cos = new float[20];
         float[] sin = new float[20];
         for (int ind0 = 0; ind0 < cos.length; ind0++){
             cos[ind0] = (float) Math.cos(2 * Math.PI * 0.05 * ind0);
             sin[ind0] = (float) Math.sin(2 * Math.PI * 0.05 * ind0);
         }
-        d.addFeature(cos, "Real");
-        d.addFeature(sin, "Imag");
-        p.setData(d);
-        this.add("Plot", p);
+        dataObject1.addFeature(cos, "Real");
+        dataObject1.addFeature(sin, "Imag");
+        myPlot.setData(dataObject1);
+        this.add("Plot", myPlot);
 
+        // filter design
+        // ------------------------------------------------------
         PanelFilterDesign fd = new PanelFilterDesign();
         this.add("Filter Design", fd);
 
+        // table example
+        // ------------------------------------------------------
         TableUI tui = new TableUI();
         this.add("TableUI", tui);
 
-        DataObject d2 = new DataObject("Cosine");
+        // spectrogram example
+        // ------------------------------------------------------
+        DataObject dataObject2 = new DataObject("Cosine");
         float[] cos2 = new float[2000];
         for (int ind0 = 0; ind0 < cos2.length; ind0++){
             cos2[ind0] = (float) Math.cos(2 * Math.PI * 0.15 * ind0);
         }
-        d2.addFeature(cos2, "Cosine");
+        dataObject2.addFeature(cos2, "Cosine");
         Spectrogram specgram = new Spectrogram();
         this.add("Spectrogram", specgram);
-        specgram.setData(d2);
+        specgram.setData(dataObject2);
 
     }
 
-    // Driver  method
+    /** 
+     * Main function
+     * @param args Input arguments
+     */
     public static void main(String[] args)
     {
-
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
             public void run(){
                 javax.swing.JFrame newFrame = new javax.swing.JFrame("JdspExamples");

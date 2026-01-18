@@ -3,8 +3,15 @@
  * @author Keith Chow
  */
 package net.kcundercover.jdsp.math;
-public class Convolve{
+
+/** Convolve class */
+public class Convolve {
+    /** Serial Version UID */
     public final static long serialVersionUID = 0;
+
+    /** Default Constructor */
+    public Convolve() {}
+
     /**
      * Convolve 2 vectors together.
      *

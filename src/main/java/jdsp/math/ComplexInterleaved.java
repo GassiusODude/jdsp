@@ -5,7 +5,13 @@
  * @author GassiusODude
  */
 package net.kcundercover.jdsp.math;
+
+/** ComplexInterleaved object */
 public class ComplexInterleaved {
+
+    /** Default constructor */
+    public ComplexInterleaved() {}
+
     // --------------------------  double support  --------------------------
     /**
      * Calculate the phase of the complex signal

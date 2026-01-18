@@ -18,14 +18,27 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.ConsoleHandler;
 
+/**
+ * DataObject class
+ */
 public class DataObject extends DefaultTableModel{
+    /** Serial Version UID */
     private static final long serialVersionUID = 1L;
+
+    /** Name of the data object */
     private String name = "";
+
+    /** List of Features */
     private ArrayList<ArrayList> features;
+    /** List of feature names */
     private ArrayList<String> featureNames;
+    /** List of feature types */
     private ArrayList<String> featureTypes;
+    /** Number of observations in this data object */
     private int numObs = 0;
+    /** Specify if table is editable */
     private boolean tableEditable = false;
+    /** THe logger object for this class */
     private Logger logger;
 
     /** Constructor for the DataObject
@@ -105,26 +118,44 @@ public class DataObject extends DefaultTableModel{
     }
 
     // ========================== DefaultTableModel  ========================
+    /** Get the number columns of the table or the number of features */
     @Override
     public int getColumnCount(){
         return this.getNumFeatures();
     }
 
+    /** Get the number of rows (or observations) */
     @Override
     public int getRowCount(){
         return numObs;
     }
 
+    /** 
+     * Get the name of the column/feature 
+     * @param col Column or feature index
+     * @return The name of the feature
+     */
     @Override
     public String getColumnName(int col){
         return this.getFeatureName(col);
     }
 
+    /** 
+     * Get the value of the provided observation/feature
+     * @param row Observation Index
+     * @param col Feature index
+     * @return The specified feature from the specified observation
+     */
     @Override
     public Object getValueAt(int row, int col){
         return this.features.get(col).get(row);
     }
 
+    /**
+     * Get the class type of the feature
+     * @param col The column/feature index
+     * @return The class type
+     */
     @Override
     public Class getColumnClass(int col){
         return features.get(col).get(0).getClass();
@@ -410,11 +441,15 @@ public class DataObject extends DefaultTableModel{
     /** Reset the data object */
     public void resetData(){
         numObs = 0;
-        // just remove the data, not the feature names/types
-        for (int featInd=0; featInd < features.size(); featInd++)
-            features.get(featInd).clear();
 
-        logger.info("Resetting data");
+        // remove data and feature names
+        for (int featInd=0; featInd < features.size(); featInd++) {
+            features.get(featInd).clear();
+        }
+        features.clear();
+        featureNames.clear();
+
+        logger.fine("Resetting data");
         fireTableStructureChanged();
     }
 
@@ -432,9 +467,9 @@ public class DataObject extends DefaultTableModel{
      *      Otherwise label as "feature 1"
      * @param token The token to separate. Typically ","
      */
-    public final void loadCSV(File f, boolean firstRowHeader, String token){
+    public final void loadCSV(File f, boolean firstRowHeader, String token) {
         BufferedReader br = null;
-        try{
+        try {
             // open file and get buffered stream
             FileInputStream fis = new FileInputStream(f);
             br = new BufferedReader(new InputStreamReader(fis));
@@ -442,50 +477,53 @@ public class DataObject extends DefaultTableModel{
             // allocate string to read one line of the file
             // allocate array of string for parsed output
             String strLine;
-            String[] featureNames = new String[1];
-            String[] elements;
-            int numFeatures = 0;
+            String[] tmpNames = new String[1];
+            String[] tmpTokens;
+            int tmpNumFeats = 0;
             ArrayList[] aList = new ArrayList[1];
-            while ((strLine = br.readLine()) != null)
-            {
+            while ((strLine = br.readLine()) != null) {
                 // parse the file looking for comma separation
-                elements = strLine.split(token);
+                tmpTokens = strLine.split(token);
 
-                if (numFeatures == 0){
-                    // if not initialized, set the number of features based on
-                    // first line
-                    numFeatures = elements.length;
-                    featureNames = new String[numFeatures];
+                if (tmpNumFeats == 0){
+                    // if not initialized, set the number of features based on first line
+                    tmpNumFeats = tmpTokens.length;
+                    tmpNames = new String[tmpNumFeats];
 
-                    aList = new ArrayList[numFeatures];
-                    for (int ind0 = 0; ind0 < numFeatures; ind0++){
+                    aList = new ArrayList[tmpNumFeats];
+                    for (int ind0 = 0; ind0 < tmpNumFeats; ind0++){
                         aList[ind0] = new ArrayList<String>();
-                        if (firstRowHeader)
-                            featureNames[ind0] = elements[ind0];
-                        else
-                            featureNames[ind0] = "feature " + ind0;
+                        if (firstRowHeader) {
+                            tmpNames[ind0] = tmpTokens[ind0];
+                        } else {
+                            // if not first row header, label features based on feature index
+                            tmpNames[ind0] = "feature " + ind0;
+                        }
                     }
                     if (firstRowHeader)
                         // recorded as header, do not add as a data point.
                         continue;
                 }
-                else
-                    if (elements.length != numFeatures){
+                else {
+                    if (tmpTokens.length != tmpNumFeats){
                         // TODO: handle missing data
                         // currently, ignore line if it does not match
                         logger.warning("Number of features do not match");
                         continue;
                     }
+                }
 
-                // save current observation
-                for (int indFeat = 0; indFeat < numFeatures; indFeat++){
-                    aList[indFeat].add(elements[indFeat]);
+                // save current observation to each feature list
+                for (int indFeat = 0; indFeat < tmpNumFeats; indFeat++){
+                    aList[indFeat].add(tmpTokens[indFeat]);
                 }
             }
 
-            // save to object
-            for (int indFeat = 0; indFeat < numFeatures; indFeat++){
-                this.addFeature(aList[indFeat], featureNames[indFeat]);
+            // ====================================
+            // add all feature lists
+            // ====================================
+            for (int indFeat = 0; indFeat < tmpNumFeats; indFeat++){
+                this.addFeature(aList[indFeat], tmpNames[indFeat]);
             }
             this.fireTableStructureChanged();
         }
@@ -495,12 +533,12 @@ public class DataObject extends DefaultTableModel{
         catch(java.io.IOException ioe) {
             logger.warning("IO Exception");
         }
-        finally{
-            try{
-                if (br != null)
+        finally {
+            try {
+                if (br != null) {
                     br.close();
-            }catch(IOException ioe){
-
+                }
+            } catch(IOException ioe) {
             }
         }
     }
@@ -510,24 +548,30 @@ public class DataObject extends DefaultTableModel{
      * @param firstRowHeader Whether first row is the name of features
      * @param token Token to use to separate values.
      */
-    public final void saveCSV(File f, boolean firstRowHeader, String token){
-        try{
+    public final void saveCSV(File f, boolean firstRowHeader, String token) {
+        try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 
             // ---------------------  write column names  -------------------
-            if (firstRowHeader){
-                for (String tmpS : featureNames){
-                    writer.write(tmpS + token);
+            if (firstRowHeader) {
+                for (int i = 0; i < featureNames.size(); i++) {
+                    writer.write(featureNames.get(i));
+                    if (i < featureNames.size() - 1) {  // only write token if not last
+                        writer.write(token);
+                    }
                 }
                 writer.write("\n");
             }
 
             // ---------------------  write features  -----------------------
-            for (int obsInd = 0; obsInd < this.numObs; obsInd++){
-                for (int featInd = 0; featInd < features.size(); featInd++){
-                    writer.write(features.get(featInd).get(obsInd) + token);
+            for (int obsInd = 0; obsInd < this.numObs; obsInd++) {
+                for (int featInd = 0; featInd < features.size(); featInd++) {
+                    if (featInd < features.size() - 1) {
+                        writer.write(features.get(featInd).get(obsInd) + token);
+                    } else {
+                        writer.write(features.get(featInd).get(obsInd) + "\n");
+                    }
                 }
-                writer.write("\n");
             }
             writer.close();
         }

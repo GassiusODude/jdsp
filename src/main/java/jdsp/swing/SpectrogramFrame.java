@@ -23,44 +23,97 @@ import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-
+import java.util.logging.Logger;
 import net.kcundercover.jdsp.audio.Audio;
 import net.kcundercover.jdsp.swing.Spectrogram;
 import net.kcundercover.jdsp.io.FileReader;
 import net.kcundercover.jdsp.dataformat.DataObject;
 import net.kcundercover.jdsp.io.FileInfo;
 
-
+/** SpectrogramFrame */
 public class SpectrogramFrame extends JFrame{
-
+    /** Serial version UID */
     public static final long serialVersionUID = 1L;
+
+    /** Logger object */
+    private Logger logger = Logger.getLogger("SpectrogramFrame");
+
+    /** Menu bar */
     JMenuBar menuBar = new JMenuBar();
+
+    // File menu
+    // --------------------------------------------------
+    /** File menu */
     JMenu menuFile = new JMenu("File");
+    /** File menu item (load) */
     JMenuItem menuItemLoad = new JMenuItem("Load Signal");
+    /** File menu Item (exit) */
     JMenuItem menuItemExit = new JMenuItem("Exit");
+
+    // Edit menu
+    // --------------------------------------------------
+    /** File menu (edit) */
     JMenu menuEdit = new JMenu("Edit");
+    /** File menu item (Sample rate) */
     JMenuItem menuItemFs = new JMenuItem("Sample Rate");
+    /** File menu item(carrifer frequency) */
     JMenuItem menuItemFc = new JMenuItem("Radio Frequency");
+
+    /** File chooser */
     JFileChooser jfc = new JFileChooser();
+
+    /** Spectrogram */
     Spectrogram specgram = new Spectrogram();
-    JSlider slPosition = new JSlider();
-    JSlider slNfft = new JSlider(JSlider.HORIZONTAL, 256, 8192, 256);
-    JSlider slWindow = new JSlider(JSlider.HORIZONTAL, 1024, 32 * 1024, 1024);
+
+    // Sliders
+    // --------------------------------------------------
+    /** Panel to store the sliders */
     JPanel slidePanel;
 
-    // ----------------------  spectrogram settings  ------------------------
-    int window = 1024;
-    int nfft = 256;
-    int bufferSize = 100000;
-    float sampleRate = 1.0f;
-    float centerFrequency = 0.0f;
-    float timeOffset = 0.0f;
+    /** Slider for the time location */
+    JSlider slPosition = new JSlider();
 
-    FileReader fr;
-    FileInfo fi;
-    DataObject data;
-    float[] floatData = null;
-    int fileType = 0; // specify how file reader loads data
+    /** Slider to control the NFFT */
+    private JSlider slNfft = new JSlider(JSlider.HORIZONTAL, 256, 8192, 256);
+
+    /** Slider to control the Window size */
+    JSlider slWindow = new JSlider(JSlider.HORIZONTAL, 1024, 32 * 1024, 1024);
+    
+
+    // spectrogram settings
+    // --------------------------------------------------
+    /** Windowing size */
+    private int window = 1024;
+
+    /** Number of FFT points */
+    private int nfft = 256;
+
+    /** Buffer size */
+    private int bufferSize = 100000;
+
+    /** Sample rate */
+    private float sampleRate = 1.0f;
+
+    /** Center frequency */
+    private float centerFrequency = 0.0f;
+
+    /** Time offset */
+    private float timeOffset = 0.0f;
+
+    /** File Reader */
+    private FileReader fr;
+    
+    /** File Info */
+    private FileInfo fi;
+    
+    /** Data object */
+    private DataObject data;
+    
+    /** Float data */
+    private float[] floatData = null;
+
+    /** File type */
+    int fileType = 0;
 
     /** Constructor for the SpectrogramFrame */
     public SpectrogramFrame() {
@@ -255,7 +308,8 @@ public class SpectrogramFrame extends JFrame{
                                 fileType = 2;
                             }
                             else if (ext3.equals("wav")) {
-                                int[][] intMat = Audio.extractSignal(filepath, null);
+                                data = new DataObject(filepath);
+                                int[][] intMat = Audio.extractSignal(filepath, data);
                                 int nChan = intMat.length;
                                 int sampPerChan = intMat[0].length;
                                 int totalSamples = nChan * sampPerChan;
@@ -266,6 +320,8 @@ public class SpectrogramFrame extends JFrame{
                                         floatData[fdIndex++] = (float) intMat[chanInd][sInd];
                                     }
                                 }
+                                logger.info("Loading from audio file: " + 
+                                    nChan + " channels with " + totalSamples + " samples");
                                 numSamples = data.getRowCount();
                             }
                             else{
@@ -357,6 +413,10 @@ public class SpectrogramFrame extends JFrame{
         menuBar.add(menuEdit);
     }
 
+    /**
+     * main function
+     * @param args Input arguments
+    */
     public static void main(String[] args){
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
             public void run(){

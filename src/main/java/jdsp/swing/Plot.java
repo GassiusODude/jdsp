@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import javax.swing.*;
 import net.kcundercover.jdsp.dataformat.DataObject;
 
-
+/** Plot object */
 public class Plot extends JPanel{
+    /** The serial version UID */
     public final static long serialVersionUID = 0;
+
     /** Color of the background */
     protected final Color colorBG = Color.WHITE;
 
@@ -93,13 +95,21 @@ public class Plot extends JPanel{
     /** Width of the line */
     protected int lineWidth = 1;
 
+    /** Font metrics */
     private FontMetrics _fontMetrics;
+
+    /** Bounds for string */
     private Rectangle2D _stringBounds;
+
+    /** Toolbar */
     private final JToolBar toolBar;
 
     /** The data object of the plot */
     protected DataObject data;
+    /** Float data array */
     protected float[] floatData = null;
+
+    /** Speciyf if float data is complex */
     protected boolean floatDataComplex = false;
 
     /** Constructor for the plot */
@@ -154,11 +164,19 @@ public class Plot extends JPanel{
         this.updateUI();
     }
 
+    /**
+     * Set the float data
+     * @param fData The float data array
+     */
     public void setFloatData(float[] fData) {
         this.floatData = fData;
         this.updateUI();
     }
 
+    /**
+     * Set whether the plot is of complex data
+     * @param isComplex Specify wheter data is complex
+     */
     public void setFloatDataComplex(boolean isComplex){
         this.floatDataComplex = isComplex;
     }

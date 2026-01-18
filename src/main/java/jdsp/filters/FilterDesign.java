@@ -2,7 +2,13 @@
  * @author Keith Chow
  */
 package net.kcundercover.jdsp.filters;
+
+/** FilterDesign object */
 public class FilterDesign {
+
+    /** Default FilterDesign object */
+    public FilterDesign() {}
+
     /** Design filter based on windowing technique
      *
      * @param window Window Type from {"BARTLETT", "HAMMING", "HANN"}
@@ -35,6 +41,7 @@ public class FilterDesign {
         }
         return output;
     }
+
     /** Design an FIR filter with the WindowDesign Method.
      *
      * This first designs an ideal IIR filter of the specified bandwidth.
@@ -97,6 +104,7 @@ public class FilterDesign {
         }
         return output;
     }
+
     /** Design a moving average filter.
      * @param numNum Number of elements of the filter.
      * @return The designed filter
@@ -112,6 +120,7 @@ public class FilterDesign {
 
         return numerator;
     }
+
     // ======================================================================
     // -------------------  double version  ---------------------------------
     // ======================================================================
@@ -149,6 +158,7 @@ public class FilterDesign {
         }
         return output;
     }
+
     /**Design an FIR filter with the WindowDesigen Method.
      * This first designs an ideal IIR filter of the specified bandwidth.
      * This is multipled in time with the desired window.
@@ -210,6 +220,7 @@ public class FilterDesign {
         }
         return output;
     }
+
     /** Design a moving average filter.
      * @param numNum Number of elements of the filter.
      * @return The designed filter

@@ -7,8 +7,15 @@ import java.awt.Graphics2D;
 import net.kcundercover.jdsp.math.DTFT;
 import net.kcundercover.jdsp.math.ComplexInterleaved;
 
+/** Power Spectral Density Plot */
 public class PowerSpectralDensity extends Plot{
+    /** Serial version UID */
     public final static long serialVersionUID = 0;
+
+    /** Default PowerSpectralDensity plot constructor */
+    public PowerSpectralDensity() { }
+
+    /** Number of FFT points */
     private int nfft = 128;
 
     /**

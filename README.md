@@ -1,28 +1,41 @@
 # jdsp
 
+[TOC]
+
 `jdsp` is my initial attempt at building a library for signal processing in the Java language.
 
 # Install
 
+| Dependence | Description |
+| :-: | :-: |
+| JDK21 | Migrated to JDK 21 to support `jdk.incubator.vector` |
+
 To install, perform the following actions.
 1. Build
     ~~~bash
-    $ gradlew build
+        # Build
+        $ gradlew build
+
+        # Run Test
+        $ gradlew test
+
+        # Run Example (run the jar and add the incubator)
+        $ gradlew runJar
     ~~~
 2. Generate Javadoc
     ~~~BASH
-    $ gradlew javadoc
+        $ gradlew javadoc
     ~~~
 3. Publish `jdsp` to the local maven repository to be used in another project (for development only)
     ~~~bash
-    $ gradlew publishToMavenLocal
+        $ gradlew publishToMavenLocal
     ~~~
     * Recommendation is to specify version with `SNAPSHOT` (i.e. v1.0.2-SNAPSHOT)
 4. Install
     * Add the jar file to the $CLASSPATH
 5. Run
     ~~~bash
-    java -jar build/libs/jdsp-1.0.2.jar
+        java --add-modules jdk.incubator.vector -jar build/libs/jdsp-$VERSION.jar
     ~~~
 
 # Examples
