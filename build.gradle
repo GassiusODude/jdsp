@@ -45,6 +45,21 @@ tasks.register("runJar", JavaExec) {
 
 version = "1.1" // keep as a semantic version
 
+shadowJar {
+    from("${project.rootDir}") {
+        include "LICENSE"
+        include "APACHE_LICENSE-2.0.txt"
+        include "EJML_LICENSE-2.0.txt"
+        into "META-INF"
+    }
+
+    // prevent overwriting multiple license and notice files
+    append 'META-INF/LICENSE'
+    append 'META-INF/NOTICE'
+
+    mergeServiceFiles()
+}
+
 repositories {
     mavenCentral()
 }

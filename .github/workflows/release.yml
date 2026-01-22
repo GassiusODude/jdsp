@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on any version tag
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to create/update releases
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle' # Automatically caches dependencies for speed
+
+      - name: Build Fat JAR
+        run: chmod +x gradlew && ./gradlew shadowJar
+
+      - name: Create Release and Upload JAR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Finds your shadow JAR (naming usually follows your version/name)
+          JAR_FILE=$(find build/libs -name "*-all.jar")
+
+          # Creates a release for the tag and uploads the JAR asset
+          gh release create ${{ github.ref_name }} "$JAR_FILE" \
+            --title "Release ${{ github.ref_name }}" \
+            --generate-notes
