@@ -10,6 +10,7 @@
 | :-: | :-: | :-: | :-: |
 | JDK21 | Migrated to JDK 21 to support `jdk.incubator.vector` | |  2026-01-17 |
 | Efficient Java Matrix Library (EJML) | External matrix library | [LICENSE](EJML_LICENSE-2.0.txt) | 2026-01-18 |
+| Apache Commons Math 3 | Math library | [LICENSE-2.0](APACHE_LICENSE-2.0.txt)
 
 To install, perform the following actions.
 1. Build
@@ -37,6 +38,11 @@ To install, perform the following actions.
 5. Run
     ~~~bash
         java --add-modules jdk.incubator.vector -jar build/libs/jdsp-$VERSION.jar
+    ~~~
+6. Compiling FAT Jar
+    ~~~BASH
+        # Use fat jar so it includes dependencies
+        $ gradlew shadowJar
     ~~~
 
 # Examples
