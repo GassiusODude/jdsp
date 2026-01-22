@@ -1,15 +1,17 @@
-name: Release
+name: Release and Publish
 
 on:
   push:
+    branches: [ master ] # Validates code on every master push
     tags:
-      - 'v*' # Trigger on any version tag
+      - 'v*' # Full release process on tags like v1.1 or v1.0.2
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required to create/update releases
+      contents: write   # To create the GitHub Release and upload assets
+      packages: write   # To publish the JAR to GitHub Packages
 
     steps:
       - name: Checkout Code
@@ -20,19 +22,30 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'gradle' # Automatically caches dependencies for speed
+          cache: 'gradle' # Efficient dependency caching
+
+      - name: Run Tests
+        run: |
+          chmod +x gradlew
+          ./gradlew check # Ensures your code is stable before packaging
 
       - name: Build Fat JAR
-        run: chmod +x gradlew && ./gradlew shadowJar
+        run: ./gradlew shadowJar # Specifically builds the fat jar for the release
 
-      - name: Create Release and Upload JAR
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/') # Only for tag pushes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Finds your shadow JAR (naming usually follows your version/name)
+          # Automatically find the shadow JAR regardless of the version name
           JAR_FILE=$(find build/libs -name "*-all.jar")
-
-          # Creates a release for the tag and uploads the JAR asset
           gh release create ${{ github.ref_name }} "$JAR_FILE" \
             --title "Release ${{ github.ref_name }}" \
             --generate-notes
+
+      - name: Publish to GitHub Packages
+        if: startsWith(github.ref, 'refs/tags/') # Only for tag pushes
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew publish # Publishes the versioned artifact to Maven/GitHub Packages

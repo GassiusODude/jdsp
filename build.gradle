@@ -9,6 +9,7 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
+version = "1.2" // keep as a semantic version
 
 // tell the exec, compile and test to allow incubator
 tasks.withType(JavaCompile).configureEach {
@@ -43,7 +44,7 @@ tasks.register("runJar", JavaExec) {
 }
 
 
-version = "1.1" // keep as a semantic version
+
 
 shadowJar {
     from("${project.rootDir}") {

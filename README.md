@@ -45,6 +45,14 @@ To install, perform the following actions.
         $ gradlew shadowJar
     ~~~
 
+# Github Action
+
+* Set up Java environment with a gradle check
+* Create a fat JAR (to include dependencies)
+* If tagged
+  * Push release to Github, allowing other devs to pull the built fat JAR.
+  * Push to Github Maven, allowing Java projects to pull.
+
 # Examples
 
 ## Example: Creating and applying a Filter object
