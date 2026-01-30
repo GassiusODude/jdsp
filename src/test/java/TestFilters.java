@@ -1,8 +1,9 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;
-import org.junit.Test;
+
 import net.kcundercover.jdsp.math.Convolve;
 import net.kcundercover.jdsp.filters.FilterD;
 import net.kcundercover.jdsp.filters.FilterF;
@@ -31,35 +32,36 @@ public class TestFilters{
     /** Test convolve of floats equal length */
     public void testConvolve1(){
         outF = Convolve.convolve(s1, s1);
-        assertArrayEquals(expected1, outF, threshF);
+        assertArrayEquals(expected1, outF, threshF, "testConvolve1 failed");
     }
 
     @Test
     /** Test convolve of floats equal length 2 */
     public void testConvolve2(){
         outF = Convolve.convolve(s2, s2);
-        assertArrayEquals(expected2, outF, threshF);
+        assertArrayEquals(expected2, outF, threshF, "testConvolve2 failed");
+
     }
 
     @Test
     /** Test convolve of floats of different length */
     public void testConvolve3(){
         outF = Convolve.convolve(s2, s1);
-        assertArrayEquals(expected3, outF, threshF);
+        assertArrayEquals(expected3, outF, threshF, "testConvolve3 failed");
     }
 
     @Test
     /** Test convolve of floats of different length */
     public void testConvolve4(){
         outF = Convolve.convolve(expected3, s1);
-        assertArrayEquals(expected4, outF, threshF);
+        assertArrayEquals(expected4, outF, threshF, "testConvolve4 failed");
     }
 
     @Test
     /** Test convolve of doubles */
     public void testConvolve5(){
         outD = Convolve.convolve(d1, d2);
-        assertArrayEquals(d3, outD, threshD);
+        assertArrayEquals(d3, outD, threshD, "testConvolve5 failed");
     }
 
     @Test
@@ -83,7 +85,7 @@ public class TestFilters{
         System.arraycopy(outPart2, 0, out2, outPart1.length, outPart2.length);
 
         assertEquals(out.length, outPart1.length + outPart2.length);
-        assertArrayEquals(out, out2, 0.1);
+        assertArrayEquals(out, out2, 0.1, "testFiltD failed");
     }
 
     @Test

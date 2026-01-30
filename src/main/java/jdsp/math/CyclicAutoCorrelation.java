@@ -2,7 +2,15 @@ package net.kcundercover.jdsp.math;
 import org.apache.commons.math3.complex.Complex;
 import java.util.stream.IntStream;
 
+/**
+ * Calculates the Cyclic Autocorrelation Function (CAF)
+ */
 public class CyclicAutoCorrelation {
+    /** Default Constructor */
+    public CyclicAutoCorrelation() {
+
+    }
+
     /**
      * Calculate the CAF for the given alph and tau
      * @param real Real part of the input signal
@@ -11,8 +19,12 @@ public class CyclicAutoCorrelation {
      * @param tauRange Delays to apply
      * @param alphaRange Cyclic frequencies to apply
      * @return CAF grid
+     * @throws IllegalArgumentException on the real and imaginary vector lengths
      */
     public static double[][] calculateCafGrid(double[] real, double[] imag, double fs, int[] tauRange, double[] alphaRange) {
+        if (real.length != imag.length) {
+            throw new IllegalArgumentException("Real and imaginary list must equal");
+        }
         int N = real.length;
         int numAlphas = alphaRange.length;
         int numTaus = tauRange.length;

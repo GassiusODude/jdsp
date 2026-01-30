@@ -1,6 +1,6 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import org.junit.jupiter.api.Test;
 import net.kcundercover.jdsp.io.FileReader;
 
 public class TestFileReader{
@@ -13,13 +13,13 @@ public class TestFileReader{
 
         // --------------------  test big endian  ---------------------------
         FileReader.bytesToShort(bytes, sList, true);
-        assertArrayEquals("Byte to Short (big endian) failed",
-            expectedBig, sList);
+        assertArrayEquals(
+            expectedBig, sList, "Byte to Short (big endian) failed");
 
         // -----------------  test little endian  ---------------------------
         FileReader.bytesToShort(bytes, sList, false);
-        assertArrayEquals("Byte to Short (big endian) failed",
-            expectedLittle, sList);
+        assertArrayEquals(
+            expectedLittle, sList, "Byte to Short (big endian) failed");
     }
 
 

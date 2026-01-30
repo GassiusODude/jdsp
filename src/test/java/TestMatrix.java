@@ -1,5 +1,5 @@
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.data.DMatrixRMaj;
@@ -117,7 +117,7 @@ public class TestMatrix {
         System.out.printf("%-20s | %-15.2f%n", "Custom (Manual)", timeCustom / 1e6);
         System.out.printf("%-20s | %-15.2f%n", "EJML SimpleMatrix", timeEjmlSimple / 1e6);
         System.out.printf("%-20s | %-15.2f%n", "EJML Procedural", timeEjmlProc / 1e6);
-        
+
         // Final Validation
         assertEquals(-4, customC[0][0], thresh);
         assertEquals(-4, matC.get(0, 0), thresh);

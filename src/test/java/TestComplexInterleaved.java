@@ -1,6 +1,6 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import org.junit.jupiter.api.Test;
 import net.kcundercover.jdsp.math.ComplexInterleaved;
 public class TestComplexInterleaved{
     double threshDouble = 1e-12;
@@ -10,16 +10,16 @@ public class TestComplexInterleaved{
     public void testMagnDouble(){
         double[] in = {3, 4, 7, 7};
         double[] out = ComplexInterleaved.magnitude(in);
-        assertEquals("Magn double check", 5, out[0], threshDouble);
-        assertEquals("Magn double check", Math.sqrt(2*7*7), out[1], threshDouble);
+        assertEquals(5, out[0], threshDouble, "Magn double check");
+        assertEquals(Math.sqrt(2*7*7), out[1], threshDouble, "Magn double check");
     }
 
     @Test
     public void testMagnFloat(){
         float[] in = {3.0f, 4.0f, 7.0f, 7.0f};
         float[] out = ComplexInterleaved.magnitude(in);
-        assertEquals("Magn float check", 5.0f, out[0], threshFloat);
-        assertEquals("Magn float check", (float)Math.sqrt(2*7*7), out[1], threshFloat);
+        assertEquals(5.0f, out[0], threshFloat, "Magn float check");
+        assertEquals((float)Math.sqrt(2*7*7), out[1], threshFloat, "Magn float check");
     }
 
     @Test
@@ -32,7 +32,7 @@ public class TestComplexInterleaved{
             System.out.println("Expected = " + expected[ind0]
                 + ",\tOut = " + out[ind0]);
         }
-        assertArrayEquals("Angle check", expected, out, threshDouble);
+        assertArrayEquals(expected, out, threshDouble, "Angle check");
     }
     @Test
     public void testAngleFloat(){
@@ -44,7 +44,7 @@ public class TestComplexInterleaved{
             System.out.println("Expected = " + expected[ind0]
                 + ",\tOut = " + out[ind0]);
         }
-        assertArrayEquals("Angle check", expected, out, threshFloat);
+        assertArrayEquals(expected, out, threshFloat, "Angle check");
     }
 
 }
