@@ -4,8 +4,10 @@
  * @version 0.0
  */
 package net.kcundercover.jdsp.filters;
-import net.kcundercover.jdsp.math.Convolve;
+import java.security.InvalidParameterException;
+import java.util.Arrays;
 import net.kcundercover.jdsp.filters.FilterDesign;
+import net.kcundercover.jdsp.math.Convolve;
 
 /** Double Filter */
 public class FilterD{
@@ -18,8 +20,11 @@ public class FilterD{
     /** Denominator of filter */
     private double[] coefDenominator;
 
-    /** State of the filter */
-    private double[] filterState;
+    /** State of the filter (real) */
+    private double[] filterStateReal;
+
+    /** State of the filter (imaginary) */
+    private double[] filterStateImag;
 
     /** Constructor
      *
@@ -31,8 +36,7 @@ public class FilterD{
             "Number numerator coefficients should be >= 1";
 
         // initialize to moving average filter
-        coefNumerator = FilterDesign.designMovingAverageD(numNumerator);
-        coefDenominator = new double[0];
+        designFilter(numNumerator, 0, "MOVING AVERAGE", 0.5);
     }
 
     /**
@@ -45,7 +49,7 @@ public class FilterD{
      * @param bandwidth Normalized bandwidth. (0.5 = half the sampling rate)
      */
     public void designFilter(int numNum, int numDen, String design,
-            double bandwidth){
+            double bandwidth)  throws InvalidParameterException {
         // -------------------------  error checking  -----------------------
         assert numNum >= 1 :
             "Number numerator coefficients should be >= 1";
@@ -57,7 +61,6 @@ public class FilterD{
             case "MOVING AVERAGE":
                 coefNumerator = FilterDesign.designMovingAverageD(numNum);
                 coefDenominator = new double[0];
-                filterState = new double[numNum - 1];
                 break;
 
             // handle window design method
@@ -67,15 +70,17 @@ public class FilterD{
                 coefNumerator = FilterDesign.firWindowDesignD(
                     numNum, design, bandwidth);
                 coefDenominator = new double[0];
-                filterState = new double[numNum - 1];
                 break;
 
             // no matches...design not supported
             default:
-                assert false :
-                    "Design (" + design + ") not supported.";
+                throw new InvalidParameterException(
+                    "Design (" + design + ") not supported.");
         }
-        // TODO: update size of internal state
+
+        // initialize filter state
+        filterStateReal = new double[numNum - 1];
+        filterStateImag = new double[numNum - 1];
     }
 
     /** Apply the filter to the input signal
@@ -84,21 +89,76 @@ public class FilterD{
      */
     public double[] applyFilter(double[] input){
         // ------------------------  load filter state  ---------------------
-        double[] tmp = new double[input.length + filterState.length];
-        System.arraycopy(filterState, 0, tmp, 0, filterState.length);
-        System.arraycopy(input, 0, tmp, filterState.length, input.length);
+        double[] tmp = new double[input.length + filterStateReal.length];
+        System.arraycopy(filterStateReal, 0, tmp, 0, filterStateReal.length);
+        System.arraycopy(input, 0, tmp, filterStateReal.length, input.length);
         double[] output = Convolve.convolve(tmp, coefNumerator);
 
         // update filterState
-        System.arraycopy(tmp, tmp.length - filterState.length,
-            filterState, 0, filterState.length);
+        System.arraycopy(tmp, tmp.length - filterStateReal.length,
+            filterStateReal, 0, filterStateReal.length);
+        if (input.length >= filterStateImag.length) {
+            // imaginary side was 0.
+            Arrays.fill(filterStateImag, 0.0);
+
+        } else {
+            System.arraycopy(
+                filterStateImag, input.length,
+                filterStateImag, 0, filterStateImag.length - input.length);
+            // zeropad the rest
+            Arrays.fill(
+                filterStateImag,
+                filterStateImag.length - input.length, filterStateImag.length,
+                0.0);
+        }
 
         // prepare output
         tmp = new double[input.length];
-        System.arraycopy(output, filterState.length, tmp, 0, tmp.length);
+        System.arraycopy(output, filterStateReal.length, tmp, 0, tmp.length);
 
         return tmp;
     }
 
-    // =====================  static methods  ===============================
+    /** Apply the filter to the input signal (complex signal)
+     * @param inputReal Input signal (real part)
+     * @param inputImag Input signal (imaginary part)
+     * @return Filtered output Complex
+     */
+    public double[][] applyFilter(double[] inputReal, double[] inputImag){
+        double[][] out2= new double[2][inputReal.length];
+        double[] filter_out, tmp;
+        tmp = new double[inputReal.length + filterStateReal.length];
+
+        // -------------------- filter real  --------------------------------
+        // load in the filter state
+        System.arraycopy(filterStateReal, 0, tmp, 0, filterStateReal.length);
+        System.arraycopy(inputReal, 0, tmp, filterStateReal.length, inputReal.length);
+
+        filter_out = Convolve.convolve(tmp, coefNumerator);
+
+        // track state of filterStateReal for next call
+        System.arraycopy(
+            tmp, tmp.length - filterStateReal.length,
+            filterStateReal, 0, filterStateReal.length);
+
+        // NOTE: remote filter delay
+        System.arraycopy(filter_out, filterStateReal.length, out2[0], 0, inputReal.length);
+
+        // -------------------- filter imag  --------------------------------
+        // load in the filter state
+        System.arraycopy(filterStateImag, 0, tmp, 0, filterStateImag.length);
+        System.arraycopy(inputImag, 0, tmp, filterStateImag.length, inputImag.length);
+
+        filter_out = Convolve.convolve(tmp, coefNumerator);
+
+        // track state of filterStateReal for next call
+        System.arraycopy(
+            tmp, tmp.length - filterStateReal.length,
+            filterStateReal, 0, filterStateReal.length);
+
+        // NOTE: remote filter delay
+        System.arraycopy(filter_out, filterStateReal.length, out2[1], 0, tmp.length);
+
+        return out2;
+    }
 }
