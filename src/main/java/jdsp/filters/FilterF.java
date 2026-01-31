@@ -28,8 +28,9 @@ public class FilterF{
      */
     public FilterF(int numNumerator){
         // -------------------------  error checking  -----------------------
-        assert numNumerator >= 1 :
-            "Number Numerator Coefficients should be >= 1";
+        if (numNumerator >= 1) {
+            throw new IllegalArgumentException("Number numerator coefficients should be >= 1");
+        }
 
         // initialize to moving average filter
         designFilter(numNumerator, 0, "MOVING AVERAGE", 0.5f);
@@ -47,10 +48,17 @@ public class FilterF{
     public void designFilter(int numNum, int numDen, String design,
             float bandwidth) throws InvalidParameterException {
         // -------------------------  error checking  -----------------------
-        assert numNum >= 1:
-            "Number Numerator Coefficients should be >= 1";
-        assert numDen >= 0:
-            "Number Denominator Coefficients should be > 0";
+        if (numNum >= 1) {
+            throw new IllegalArgumentException(
+                "Number numerator coefficients should be >= 1");
+        }
+        if (numDen >= 0) {
+            throw new IllegalArgumentException(
+                "Number Denominator Coefficients should be > 0");
+        }
+        if (bandwidth <= 0) {
+            throw new IllegalArgumentException("Bandwidth should be positive");
+        }
 
         // -------------------------  design filter  ------------------------
         switch (design){
@@ -84,7 +92,6 @@ public class FilterF{
      * @return Filtered output
      */
     public float[] applyFilter(float[] input){
-
         // ------------------------  load filter state  ---------------------
         float[] tmp = new float[input.length + filterStateReal.length];
         System.arraycopy(filterStateReal, 0, tmp, 0, filterStateReal.length);
@@ -123,7 +130,12 @@ public class FilterF{
      * @return Filtered output Complex
      */
     public float[][] applyFilter(float[] inputReal, float[] inputImag){
-        float[][] out2= new float[2][inputReal.length];
+        // -------------------------  error checking  -----------------------
+        if (inputReal.length != inputImag.length)
+            throw new IllegalArgumentException("Input real and imaginary should be same length");
+
+        // ---------------------  allocate local  ---------------------------
+        float[][] out2 = new float[2][inputReal.length];
         float[] filter_out, tmp;
         tmp = new float[inputReal.length + filterStateReal.length];
 

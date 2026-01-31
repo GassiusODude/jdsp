@@ -29,11 +29,13 @@ public class FilterD{
     /** Constructor
      *
      * @param numNumerator Number of numerator elements.
+     * @throws IllegalArgumentException Verify if number numerator is greater than 0.
      */
     public FilterD(int numNumerator){
         // -------------------------  error checking  -----------------------
-        assert numNumerator >= 1 :
-            "Number numerator coefficients should be >= 1";
+        if (numNumerator < 1) {
+            throw new IllegalArgumentException("Number numerator coefficients should be >= 1");
+        }
 
         // initialize to moving average filter
         designFilter(numNumerator, 0, "MOVING AVERAGE", 0.5);
@@ -51,10 +53,17 @@ public class FilterD{
     public void designFilter(int numNum, int numDen, String design,
             double bandwidth)  throws InvalidParameterException {
         // -------------------------  error checking  -----------------------
-        assert numNum >= 1 :
-            "Number numerator coefficients should be >= 1";
-        assert numDen >= 0 :
-            "Number Denominator Coefficients should be > 0";
+        if (numNum < 1) {
+            throw new IllegalArgumentException(
+                "Number numerator coefficients should be >= 1");
+        }
+        if (numDen < 0) {
+            throw new IllegalArgumentException(
+                "Number Denominator Coefficients should be > 0");
+        }
+        if (bandwidth <= 0) {
+            throw new IllegalArgumentException("Bandwidth should be positive");
+        }
 
         // -------------------------  design filter  ------------------------
         switch (design){
@@ -124,8 +133,13 @@ public class FilterD{
      * @param inputImag Input signal (imaginary part)
      * @return Filtered output Complex
      */
-    public double[][] applyFilter(double[] inputReal, double[] inputImag){
-        double[][] out2= new double[2][inputReal.length];
+    public double[][] applyFilter(double[] inputReal, double[] inputImag) {
+        // -------------------------  error checking  -----------------------
+        if (inputReal.length != inputImag.length)
+            throw new IllegalArgumentException("Input real and imaginary should be same length");
+
+        // ---------------------  allocate local  ---------------------------
+        double[][] out2 = new double[2][inputReal.length];
         double[] filter_out, tmp;
         tmp = new double[inputReal.length + filterStateReal.length];
 
@@ -157,7 +171,7 @@ public class FilterD{
             filterStateReal, 0, filterStateReal.length);
 
         // NOTE: remote filter delay
-        System.arraycopy(filter_out, filterStateReal.length, out2[1], 0, tmp.length);
+        System.arraycopy(filter_out, filterStateImag.length, out2[1], 0, inputImag.length);
 
         return out2;
     }
