@@ -26,7 +26,7 @@ public class PanelFilterDesign extends JPanel {
     private PowerSpectralDensity psd = new PowerSpectralDensity();
 
     /** The support filter design options */
-    public static final String[] SUPPORTED_FILTERS =
+    private static final String[] SUPPORTED_FILTERS =
         {"BARTLETT", "HAMMING", "HANN"};
 
 
@@ -37,10 +37,10 @@ public class PanelFilterDesign extends JPanel {
 
     /** Slider to specify the bandwidth of the filter */
     private JSlider slideBandwidth = new JSlider(1, 100);
-    
+
     /** TextField to specify the number of taps for the designed FIR filter */
     private JTextField tfNumTaps = new JTextField("11");
-    
+
     /** Button to execute the filter design on the current settings */
     private JButton buttonDesign;
 
@@ -48,7 +48,7 @@ public class PanelFilterDesign extends JPanel {
     public PanelFilterDesign(){
         this.setLayout(new BorderLayout());
         JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new GridLayout(2,1));
+        centerPanel.setLayout(new GridLayout(2, 1));
         centerPanel.add(plot);
         centerPanel.add(psd);
         this.add(centerPanel, BorderLayout.CENTER);
@@ -56,7 +56,7 @@ public class PanelFilterDesign extends JPanel {
         // ------------------  setup side panel  ----------------------------
         sidePanel = new JPanel();
         sidePanel.setPreferredSize(new Dimension(200, 100));
-        sidePanel.setLayout(new GridLayout(5,2));
+        sidePanel.setLayout(new GridLayout(5, 2));
         sidePanel.add(new JLabel("Method"));
         sidePanel.add(comboFilter);
 

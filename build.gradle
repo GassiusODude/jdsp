@@ -2,6 +2,8 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id "java"
     id "maven-publish"
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '6.0.26' // Third-party plugin
 }
 
 java {
@@ -44,7 +46,18 @@ tasks.register("runJar", JavaExec) {
 }
 
 
+checkstyle {
+    toolVersion = "10.12.5"
+    ignoreFailures = false // Build fails if violations found
+    configProperties = [
+        'org.checkstyle.google.severity': 'warning',
+        'org.checkstyle.google.suppressionfilter.config': "${project.rootDir}/config/checkstyle/checkstyle-suppressions.xml"
+    ]
+}
 
+spotbugs {
+    toolVersion = '4.8.3'
+}
 
 shadowJar {
     manifest {

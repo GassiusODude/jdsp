@@ -10,7 +10,7 @@ import net.kcundercover.jdsp.filters.FilterDesign;
 import net.kcundercover.jdsp.math.Convolve;
 
 /** Double Filter */
-public class FilterD{
+public final class FilterD{
     /** Serial Version UID for this class */
     public final static long serialVersionUID = 0;
 
@@ -18,7 +18,7 @@ public class FilterD{
     private double[] coefNumerator;
 
     /** Denominator of filter */
-    private double[] coefDenominator;
+    // private double[] coefDenominator;
 
     /** State of the filter (real) */
     private double[] filterStateReal;
@@ -69,7 +69,7 @@ public class FilterD{
         switch (design){
             case "MOVING AVERAGE":
                 coefNumerator = FilterDesign.designMovingAverageD(numNum);
-                coefDenominator = new double[0];
+                // coefDenominator = new double[0];
                 break;
 
             // handle window design method
@@ -78,7 +78,7 @@ public class FilterD{
             case "HANN":
                 coefNumerator = FilterDesign.firWindowDesignD(
                     numNum, design, bandwidth);
-                coefDenominator = new double[0];
+                // coefDenominator = new double[0];
                 break;
 
             // no matches...design not supported
@@ -135,12 +135,12 @@ public class FilterD{
      */
     public double[][] applyFilter(double[] inputReal, double[] inputImag) {
         // -------------------------  error checking  -----------------------
-        if (inputReal.length != inputImag.length)
+        if (inputReal.length != inputImag.length) {
             throw new IllegalArgumentException("Input real and imaginary should be same length");
-
+        }
         // ---------------------  allocate local  ---------------------------
         double[][] out2 = new double[2][inputReal.length];
-        double[] filter_out, tmp;
+        double[] filterOut, tmp;
         tmp = new double[inputReal.length + filterStateReal.length];
 
         // -------------------- filter real  --------------------------------
@@ -148,7 +148,7 @@ public class FilterD{
         System.arraycopy(filterStateReal, 0, tmp, 0, filterStateReal.length);
         System.arraycopy(inputReal, 0, tmp, filterStateReal.length, inputReal.length);
 
-        filter_out = Convolve.convolve(tmp, coefNumerator);
+        filterOut = Convolve.convolve(tmp, coefNumerator);
 
         // track state of filterStateReal for next call
         System.arraycopy(
@@ -156,14 +156,14 @@ public class FilterD{
             filterStateReal, 0, filterStateReal.length);
 
         // NOTE: remote filter delay
-        System.arraycopy(filter_out, filterStateReal.length, out2[0], 0, inputReal.length);
+        System.arraycopy(filterOut, filterStateReal.length, out2[0], 0, inputReal.length);
 
         // -------------------- filter imag  --------------------------------
         // load in the filter state
         System.arraycopy(filterStateImag, 0, tmp, 0, filterStateImag.length);
         System.arraycopy(inputImag, 0, tmp, filterStateImag.length, inputImag.length);
 
-        filter_out = Convolve.convolve(tmp, coefNumerator);
+        filterOut = Convolve.convolve(tmp, coefNumerator);
 
         // track state of filterStateReal for next call
         System.arraycopy(
@@ -171,7 +171,7 @@ public class FilterD{
             filterStateReal, 0, filterStateReal.length);
 
         // NOTE: remote filter delay
-        System.arraycopy(filter_out, filterStateImag.length, out2[1], 0, inputImag.length);
+        System.arraycopy(filterOut, filterStateImag.length, out2[1], 0, inputImag.length);
 
         return out2;
     }

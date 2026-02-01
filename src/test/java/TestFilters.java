@@ -74,8 +74,8 @@ public class TestFilters{
         FilterD f = new FilterD(1);
         f.designFilter(11, 0, "HANN", 0.1);
 
-        double[] tmp1 = {1,2,3,4,5,6,7};
-        double[] tmp2 = {1,2,3,4,5,6,7};
+        double[] tmp1 = {1, 2, 3, 4, 5, 6, 7};
+        double[] tmp2 = {1, 2, 3, 4, 5, 6, 7};
         double[] out = f.applyFilter(tmp1);
 
         FilterD f2 = new FilterD(1);
@@ -107,16 +107,17 @@ public class TestFilters{
 
         // -------------------------  run on data  --------------------------
         tic = System.nanoTime();
-        for (int ind0 = 0; ind0 < numIter; ind0++)
+        for (int ind0 = 0; ind0 < numIter; ind0++) {
             out = f2.applyFilter(data);
+        }
         toc = System.nanoTime();
 
         // ---------------------------- report  -----------------------------
         float elapsed = (toc - tic) / 100000000.0f;
-        System.out.println("\nThroughut Test on Float (101 Filter taps)"+
+        System.out.println("\nThroughut Test on Float (101 Filter taps)" +
                            "\n=========================================");
         System.out.println("Elapsed time = " + elapsed + " seconds");
-        long totalSamples = data.length * numIter;
+        int totalSamples = data.length * numIter;
         System.out.println("Throughtput = " + (totalSamples / elapsed) +
             " samples per second");
     }
@@ -133,14 +134,15 @@ public class TestFilters{
 
         // -------------------------  run on data  --------------------------
         tic = System.nanoTime();
-        for (int ind0 = 0; ind0 < numIter; ind0++)
+        for (int ind0 = 0; ind0 < numIter; ind0++) {
             out = f2.applyFilter(data);
+        }
 
         toc = System.nanoTime();
 
         // ---------------------------- report  -----------------------------
         float elapsed = (toc - tic) / 100000000.0f;
-        System.out.println("\nThroughut Test on Double (101 Filter taps)"+
+        System.out.println("\nThroughut Test on Double (101 Filter taps)" +
                            "\n==========================================");
         System.out.println("Elapsed time = " + elapsed + " seconds");
         long totalSamples = data.length * numIter;
@@ -165,7 +167,6 @@ public class TestFilters{
         f2.designFilter(filtLen, 0, "HANN", 0.1);
 
         // ---------  initialize input data  ---------
-        ThreadLocalRandom random = ThreadLocalRandom.current();
         double[] dataReal = ThreadLocalRandom.current().doubles(100000).toArray();
         double[] dataImag = ThreadLocalRandom.current().doubles(100000).toArray();
 

@@ -1,10 +1,13 @@
 package net.kcundercover.jdsp.math;
-import java.lang.Thread;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /** Convolver object */
 public class Convolver {
+    private static final Logger C_LOGGER = Logger.getLogger(Convolver.class.getName());
+
     /** Number of threads */
     int numThreads = 4;
 
@@ -18,6 +21,7 @@ public class Convolver {
     public Convolver(int numThreads){
         this.numThreads = numThreads;
         executorService = Executors.newFixedThreadPool(numThreads);
+        C_LOGGER.log(Level.INFO, "Convolver set up for {} threads", numThreads);
     }
 
     /**
@@ -29,7 +33,7 @@ public class Convolver {
     public float[] convolve(final float[] in1, final float[] in2){
 
         float[] output = new float[in1.length + in2.length - 1];
-        for (int ind0=0; ind0<output.length; ind0++){
+        for (int ind0 = 0; ind0 < output.length; ind0++) {
             Runnable command = new ConvolverFloat(in1, in2, output, ind0);
             executorService.execute(command);
         }
@@ -40,11 +44,11 @@ public class Convolver {
     }
 }
 
-/** 
+/**
  * ConvolverFloat object
 */
 class ConvolverFloat extends Thread {
-    
+
     final float[] input1;
     final float[] input2;
     float[] output;
@@ -67,24 +71,21 @@ class ConvolverFloat extends Thread {
                 for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0] += input1[ind0 - ind1] * input2[ind1];
                 }
-            }
-            else {
+            } else {
                 start = (ind0 - len2 + 1 < 0) ? 0 : ind0 - len2 + 1;
-                for (int ind1=start; ind1 < len1; ind1++){
+                for (int ind1 = start; ind1 < len1; ind1++) {
                     float tmp = input2[ind0 - ind1];
                     output[ind0] += input1[ind1] * tmp;
                 }
             }
-        }
-        else {
+        } else {
             if (ind0 < len2){
-                for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
+                for (int ind1 = 0; ind1 < ind0 + 1; ind1++) {
                     output[ind0] += input2[ind0 - ind1] * input1[ind1];
                 }
-            }
-            else{
+            } else {
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
-                for (int ind1=start; ind1 < len2; ind1++){
+                for (int ind1 = start; ind1 < len2; ind1++) {
                     float tmp = input1[ind0 - ind1];
                     output[ind0] += input2[ind1] * tmp;
                 }

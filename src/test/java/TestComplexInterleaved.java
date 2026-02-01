@@ -11,7 +11,7 @@ public class TestComplexInterleaved{
         double[] in = {3, 4, 7, 7};
         double[] out = ComplexInterleaved.magnitude(in);
         assertEquals(5, out[0], threshDouble, "Magn double check");
-        assertEquals(Math.sqrt(2*7*7), out[1], threshDouble, "Magn double check");
+        assertEquals(Math.sqrt(2 * 7 * 7), out[1], threshDouble, "Magn double check");
     }
 
     @Test
@@ -19,14 +19,14 @@ public class TestComplexInterleaved{
         float[] in = {3.0f, 4.0f, 7.0f, 7.0f};
         float[] out = ComplexInterleaved.magnitude(in);
         assertEquals(5.0f, out[0], threshFloat, "Magn float check");
-        assertEquals((float)Math.sqrt(2*7*7), out[1], threshFloat, "Magn float check");
+        assertEquals((float) Math.sqrt(2 * 7 * 7), out[1], threshFloat, "Magn float check");
     }
 
     @Test
     public void testAngleDouble(){
         double[] in = {7, 7, 3, -3, -4, 4, -2, -2};
         double[] out = ComplexInterleaved.angle(in);
-        double[] expected = {Math.PI*0.25, -Math.PI*0.25,
+        double[] expected = {Math.PI * 0.25, -Math.PI * 0.25,
             Math.PI * 0.75, -Math.PI * 0.75};
         for (int ind0 = 0; ind0 < expected.length; ind0++){
             System.out.println("Expected = " + expected[ind0]
@@ -46,5 +46,4 @@ public class TestComplexInterleaved{
         }
         assertArrayEquals(expected, out, threshFloat, "Angle check");
     }
-
 }

@@ -33,13 +33,23 @@ public class FileInfo{
         fileSize = Files.size(tmpPath);
     }
 
+    @Override
+    protected final void finalize() {
+        // Do nothing. This prevents subclasses from implementing
+        // a finalizer that could exploit a failed constructor.
+    }
+
     /** Get the file path
      * @return The file path.
      */
-    public String getFilePath(){return filepath;}
+    public String getFilePath() {
+        return filepath;
+    }
 
     /** Get the size of the current file
      * @return Get filesize in number of bytes.
      */
-    public long getFileSize(){ return fileSize; }
+    public long getFileSize() {
+        return fileSize;
+    }
 }

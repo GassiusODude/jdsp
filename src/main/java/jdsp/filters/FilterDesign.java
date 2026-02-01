@@ -22,18 +22,21 @@ public class FilterDesign {
 
         switch (window){
             case "BARTLETT":
-                for (int ind0 = 0; ind0 < x.length; ind0++)
+                for (int ind0 = 0; ind0 < x.length; ind0++) {
                     output[ind0] = 1.0f - (float)Math.abs(2 * x[ind0]);
+                }
                 break;
             case "HAMMING":
-                for (int ind0 = 0; ind0 < x.length; ind0++)
+                for (int ind0 = 0; ind0 < x.length; ind0++) {
                     output[ind0] = 0.54f + 0.46f *
                         (float) Math.cos(2.0f * pi * x[ind0]);
+                }
                 break;
             case "HANN":
-                for (int ind0 = 0; ind0 < x.length; ind0++)
+                for (int ind0 = 0; ind0 < x.length; ind0++) {
                     output[ind0] = 0.5f + 0.5f *
                         (float) Math.cos(2.0f * pi * x[ind0]);
+                }
                 break;
 
             default:
@@ -64,12 +67,12 @@ public class FilterDesign {
         // -------------------------  prepare x  ----------------------------
         float xInc = 1.0f / numTap;
 
-        if ((numTap&1) == 1){
+        if ((numTap & 1) == 1) {
             // odd
             x[0] = -(numTap - 1) / 2.0f / numTap;
-        }else{
+        } else {
             // even
-            x[0] = (0.5f - numTap / 2) / numTap;
+            x[0] = (0.5f - 0.5f * numTap) / numTap;
         }
         for (int ind0 = 1; ind0 < numTap; ind0 ++){
             x[ind0] = x[ind0 - 1] + xInc;
@@ -79,11 +82,10 @@ public class FilterDesign {
 
         // -----------------  design ideal IIR filter  ----------------------
         // load sinc into output
-        for (int ind0 = 0; ind0 < numTap; ind0++){
-            if (x[ind0] == 0){
+        for (int ind0 = 0; ind0 < numTap; ind0++) {
+            if (x[ind0] == 0) {
                 output[ind0] = 1.0f;
-            }
-            else{
+            } else {
                 tmp = normalizeBandwidth * pi * x[ind0] * numTap;
                 output[ind0] = (float) Math.sin(tmp) / tmp;
             }
@@ -137,24 +139,27 @@ public class FilterDesign {
         double[] output = new double[x.length];
         double pi = Math.PI;
 
-        switch (window){
+        switch (window) {
             case "BARTLETT":
-                for (int ind0 = 0; ind0 < x.length; ind0++)
+                for (int ind0 = 0; ind0 < x.length; ind0++) {
                     output[ind0] = 1.0f - Math.abs(2 * x[ind0]);
+                }
                 break;
             case "HAMMING":
-                for (int ind0 = 0; ind0 < x.length; ind0++)
+                for (int ind0 = 0; ind0 < x.length; ind0++) {
                     output[ind0] = 0.54 + 0.46 *
                         Math.cos(2.0 * pi * x[ind0]);
+                }
                 break;
             case "HANN":
-                for (int ind0 = 0; ind0 < x.length; ind0++)
+                for (int ind0 = 0; ind0 < x.length; ind0++) {
                     output[ind0] = 0.5f + 0.5 *
                         Math.cos(2.0 * pi * x[ind0]);
+                }
                 break;
 
             default:
-                assert false: "Unsupported window type: "+ window;
+                assert false: "Unsupported window type: " + window;
         }
         return output;
     }
@@ -180,12 +185,12 @@ public class FilterDesign {
         // -------------------------  prepare x  ----------------------------
         double xInc = 1.0f / numTap;
 
-        if ((numTap&1) == 1){
+        if ((numTap & 1) == 1) {
             // odd
             x[0] = -(numTap - 1) / 2.0 / numTap;
-        }else{
+        } else {
             // even
-            x[0] = (0.5 - numTap / 2) / numTap;
+            x[0] = (0.5 - numTap * 0.5) / numTap;
         }
         for (int ind0 = 1; ind0 < numTap; ind0 ++){
             x[ind0] = x[ind0 - 1] + xInc;
@@ -195,11 +200,10 @@ public class FilterDesign {
 
         // -----------------  design ideal IIR filter  ----------------------
         // load sinc into output
-        for (int ind0 = 0; ind0 < numTap; ind0++){
+        for (int ind0 = 0; ind0 < numTap; ind0++) {
             if (x[ind0] == 0){
                 output[ind0] = 1.0;
-            }
-            else{
+            } else {
                 tmp = normalizeBandwidth * pi * x[ind0] * numTap;
                 output[ind0] = Math.sin(tmp) / tmp;
             }
@@ -232,8 +236,9 @@ public class FilterDesign {
 
         // initialize to moving average filter
         double[] numerator = new double[numNum];
-        for (int ind0 = 0; ind0 < numNum; ind0++)
+        for (int ind0 = 0; ind0 < numNum; ind0++) {
             numerator[ind0] = 1.0 / numNum;
+        }
         return numerator;
     }
 
@@ -251,24 +256,22 @@ public class FilterDesign {
         double time;
         double[] filter = new double[numNum];
         double pi = Math.PI;
-        double _4b = 4 * rolloff;
+        double fourB = 4 * rolloff;
         // -----------------------  setup time  -----------------------------
         for (int ind0 = 0; ind0 < filter.length; ind0++){
             time = (ind0 - (numNum - 1) / 2.0) / sampleRate;
-            if (time == 0)
+            if (time == 0) {
                 filter[ind0] = baud * (1 + rolloff * (4 / pi - 1));
-            else if (Math.abs(time) == 1.0 / (baud * 4 * rolloff)){
+            } else if (Math.abs(time) == 1.0 / (baud * 4 * rolloff)) {
                 filter[ind0] = rolloff * baud / Math.sqrt(2) *
-                    ((1 + 2 / pi) * Math.sin(pi / _4b) +
-                    (1 - 2 / pi) * Math.cos(pi / _4b));
-            }
-            else{
+                    ((1 + 2 / pi) * Math.sin(pi / fourB) +
+                    (1 - 2 / pi) * Math.cos(pi / fourB));
+            } else {
                 filter[ind0] = baud * (Math.sin(pi * time * baud * (1 - rolloff)) +
-                    _4b * time * baud * Math.cos(pi * time * baud * (1 + rolloff)))
-                    / (pi * time * baud * (1 - Math.pow(_4b * time * baud, 2)));
+                    fourB * time * baud * Math.cos(pi * time * baud * (1 + rolloff)))
+                    / (pi * time * baud * (1 - Math.pow(fourB * time * baud, 2)));
             }
        }
-
-        return filter;
+       return filter;
     }
 }

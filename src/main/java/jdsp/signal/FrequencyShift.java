@@ -1,8 +1,6 @@
 package net.kcundercover.jdsp.signal;
 
-import java.util.Arrays;
 import java.util.stream.IntStream;
-import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
 
 public class FrequencyShift {
@@ -42,8 +40,6 @@ public class FrequencyShift {
      * @param sampleRate  The sampling rate of the input (Hz)
      */
     public static void applyFrequencyShiftInPlace(double[] inReal, double[] inImag, double freqShift, double sampleRate) {
-        int n = inReal.length;
-
         double omega = 2.0 * FastMath.PI * freqShift / sampleRate;
 
         if (inReal.length < PARALLEL_THRESHOLD) {

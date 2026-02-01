@@ -1,22 +1,24 @@
 package net.kcundercover.jdsp.signal;
 
-import java.util.logging.*;
-import org.apache.commons.math3.transform.*;
+import java.util.logging.Logger;
+import org.apache.commons.math3.transform.DftNormalization;
+import org.apache.commons.math3.transform.FastFourierTransformer;
+import org.apache.commons.math3.transform.TransformType;
 import org.apache.commons.math3.complex.Complex;
-
-
 
 /**
  * Power spectral density
  */
 public class PowerSpectralDensity {
-    private static final Logger logger = Logger.getLogger(PowerSpectralDensity.class.getName());
+    private static final Logger PSD_LOGGER = Logger.getLogger(PowerSpectralDensity.class.getName());
     public static boolean isPowerOfTwo(int n) {
         return n > 0 && (n & (n - 1)) == 0;
     }
     public static int nextPowerOfTwo(int n) {
         int highestOneBit = Integer.highestOneBit(n);
-        if (n == highestOneBit) return n; // Already a power of 2
+        if (n == highestOneBit) {
+            return n; // Already a power of 2
+        }
         return highestOneBit << 1;       // Go to the next one
     }
 
@@ -29,15 +31,14 @@ public class PowerSpectralDensity {
      */
     public static double[][] calculatePsdWelch(double[][] data, double sampleRate, int windowSize) {
         int nfft;
-        int zeropad = 0;
         if (isPowerOfTwo(windowSize)) {
-            logger.info(String.format(
+            PSD_LOGGER.info(String.format(
                 "Using Apache Common Math FFT requires windowSize(%d) to be a power of 2, setting nfft to match",
                 windowSize));
             nfft = windowSize;
         } else {
             nfft = nextPowerOfTwo(windowSize);
-            zeropad = nfft - windowSize;
+
         }
 
         int totalSamples = data[0].length;
@@ -61,17 +62,15 @@ public class PowerSpectralDensity {
         Complex[] segmentComplex = new Complex[nfft];
 
         for (int start = 0; start + windowSize <= totalSamples; start += step) {
-
             // Apply window to segment
             for (int i = 0; i < nfft; i++) {
                 if (i < windowSize) {
                     segmentComplex[i] = new Complex(
-                        data[0][start+i] * window[i],
-                        data[1][start+i] * window[i]);
+                        data[0][start + i] * window[i],
+                        data[1][start + i] * window[i]);
                 } else {
                     segmentComplex[i] = Complex.ZERO;
                 }
-
             }
 
             // Perform FFT
@@ -84,14 +83,11 @@ public class PowerSpectralDensity {
             }
             segmentCount++;
         }
-
         double[][] out = new double[2][nfft];
-
-
         double scalingFactor = 1.0 / (segmentCount * sampleRate * windowPowerSum);
         for (int k = 0; k < averagedPSD.length; k++) {
-            double freq = k * sampleRate / nfft - sampleRate/2;
-            double psdValue = averagedPSD[(k + nfft/2) % nfft] * scalingFactor;
+            double freq = k * sampleRate / nfft - sampleRate / 2;
+            double psdValue = averagedPSD[(k + nfft / 2) % nfft] * scalingFactor;
 
             // Convert to dB/Hz for standard PSD visualization
             double dbPsd = 10 * Math.log10(psdValue);
@@ -102,5 +98,4 @@ public class PowerSpectralDensity {
         }
         return out;
     }
-
 }

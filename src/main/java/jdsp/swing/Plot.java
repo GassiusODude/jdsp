@@ -6,11 +6,17 @@
 package net.kcundercover.jdsp.swing;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.geom.Rectangle2D;
-import java.lang.RuntimeException;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import net.kcundercover.jdsp.dataformat.DataObject;
 
 /** Plot object */
@@ -25,9 +31,13 @@ public class Plot extends JPanel{
     protected final Color colorFG = Color.BLACK;
 
     /** Color map, to alternate colors */
-    public static final Color[] COLOR_MAP = {
+    private static final Color[] COLOR_MAP = {
         Color.RED, Color.BLUE, Color.GREEN, Color.MAGENTA,
         Color.ORANGE, Color.CYAN, Color.PINK};
+
+    public Color[] getColorMap() {
+        return COLOR_MAP.clone();
+    }
 
     /** The label on the x-axis */
     protected String labelX = "X";
@@ -96,10 +106,10 @@ public class Plot extends JPanel{
     protected int lineWidth = 1;
 
     /** Font metrics */
-    private FontMetrics _fontMetrics;
+    private FontMetrics fontMetrics;
 
     /** Bounds for string */
-    private Rectangle2D _stringBounds;
+    private Rectangle2D stringBounds;
 
     /** Toolbar */
     private final JToolBar toolBar;
@@ -156,10 +166,13 @@ public class Plot extends JPanel{
     /** Set the data object
      * @param data The data object
      */
-    public void setData(final DataObject data){
+    public void setData(final DataObject data) {
         // update the date
-        this.data = data;
-
+        if (data == null) {
+            this.data = null;
+        } else {
+            this.data = data.clone();
+        }
         // update the plot
         this.updateUI();
     }
@@ -169,7 +182,11 @@ public class Plot extends JPanel{
      * @param fData The float data array
      */
     public void setFloatData(float[] fData) {
-        this.floatData = fData;
+        if (fData == null) {
+            this.floatData = null;
+        } else {
+            this.floatData = fData.clone();
+        }
         this.updateUI();
     }
 
@@ -375,9 +392,9 @@ public class Plot extends JPanel{
             normY = ((float) aList.get(ind0) - axes[2]) / scaleY;
             datY[ind0] = (int) (sideBottom - plotHeight * normY);
         }
-        if (lineType != " ")
+        if (lineType != " ") {
             g2.drawPolyline(datX, datY, aList.size());
-
+        }
         if (marker != " ") {
             for (int ind0 = 0; ind0 < aList.size(); ind0++) {
                 g2.drawString(marker,
@@ -409,8 +426,9 @@ public class Plot extends JPanel{
             datY[ind0] = (int) (sideBottom - plotHeight * normY);
         }
         // --------------- use strokes for various line types --------------
-        if (lineType != " ")
+        if (lineType != " ") {
             g2.drawPolyline(datX, datY, realSig.length);
+        }
 
         // ------------------ draw markers --------------------------------
         // markers can show the time resolution
@@ -427,29 +445,29 @@ public class Plot extends JPanel{
      */
     public void drawLabels(final Graphics g) {
         // initialize some variables
-        _fontMetrics = g.getFontMetrics();
+        fontMetrics = g.getFontMetrics();
         int labelHeight, labelWidth;
 
         // initialize foreground color for labels
         g.setColor(colorFG);
 
         // ---------------------- draw y-labels ---------------------------
-        _stringBounds = _fontMetrics.getStringBounds(labelY, g);
-        labelHeight = (int) _stringBounds.getHeight();
-        labelWidth = (int) _stringBounds.getWidth();
+        stringBounds = fontMetrics.getStringBounds(labelY, g);
+        labelHeight = (int) stringBounds.getHeight();
+        labelWidth = (int) stringBounds.getWidth();
         g.drawString(labelY, (marginX - labelWidth) / 2, (int) (getHeight()) / 2);
 
         // ----------------------- draw X label ---------------------------
-        _stringBounds = _fontMetrics.getStringBounds(labelX, g);
-        labelHeight = (int) _stringBounds.getHeight();
-        labelWidth = (int) _stringBounds.getWidth();
-        g.drawString(labelX, marginX / 2 + (int) (getWidth() - _stringBounds.getWidth()) / 2,
+        stringBounds = fontMetrics.getStringBounds(labelX, g);
+        labelHeight = (int) stringBounds.getHeight();
+        labelWidth = (int) stringBounds.getWidth();
+        g.drawString(labelX, marginX / 2 + (int) (getWidth() - stringBounds.getWidth()) / 2,
                 getHeight() - (marginY - labelHeight) / 2);
 
         // ------------------------ draw title ----------------------------
-        _stringBounds = _fontMetrics.getStringBounds(labelTitle, g);
-        labelHeight = (int) _stringBounds.getHeight();
-        labelWidth = (int) _stringBounds.getWidth();
+        stringBounds = fontMetrics.getStringBounds(labelTitle, g);
+        labelHeight = (int) stringBounds.getHeight();
+        labelWidth = (int) stringBounds.getWidth();
         g.drawString(labelTitle, marginX / 2 + (int) (getWidth() - labelWidth) / 2, (marginY + labelHeight) / 2);
 
         // -------------------- display legend ----------------------------
@@ -457,9 +475,9 @@ public class Plot extends JPanel{
             String featName;
             for (int ind0 = 0; ind0 < data.getNumFeatures(); ind0++) {
                 featName = data.getFeatureName(ind0);
-                _stringBounds = _fontMetrics.getStringBounds(featName, g);
-                labelHeight = (int) _stringBounds.getHeight();
-                labelWidth = (int) _stringBounds.getWidth();
+                stringBounds = fontMetrics.getStringBounds(featName, g);
+                labelHeight = (int) stringBounds.getHeight();
+                labelWidth = (int) stringBounds.getWidth();
 
                 // match the color to the plot
                 g.setColor(COLOR_MAP[ind0]);
@@ -546,5 +564,4 @@ public class Plot extends JPanel{
         // update axes location
         updateAxesLoc();
     }
-
 }

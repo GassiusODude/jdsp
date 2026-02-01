@@ -1,7 +1,10 @@
 package net.kcundercover.jdsp.swing;
 import java.awt.Window;
-import java.awt.Container;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JRootPane;
+import javax.swing.JTextField;
 import java.awt.Dialog.ModalityType;
 
 /**
@@ -15,7 +18,7 @@ public class FileDialog extends JDialog {
     private String dataType = "SHORT";
 
     /** Supported data types */
-    public static final String[] DATA_TYPES =
+    private static final String[] DATA_TYPES =
         {"SHORT", "COMPLEX SHORT", "FLOAT32", "COMPLEX FLOAT32", "WAVE"};
 
     /** The text field to enter the file path */
@@ -33,7 +36,7 @@ public class FileDialog extends JDialog {
     /** Combobox to select the data type */
     private JComboBox cbDataType = new JComboBox(DATA_TYPES);
 
-    /** 
+    /**
      * Constructor for FileDialog
      * @param win The parent window calling this dialog
      */
@@ -48,7 +51,7 @@ public class FileDialog extends JDialog {
         cp.add(bConfirm);
         cp.add(bCancel);
         this.dialogInit();
-        setSize(300,300);
+        setSize(300, 300);
         setVisible(true);
     }
 

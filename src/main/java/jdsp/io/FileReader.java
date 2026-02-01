@@ -6,10 +6,7 @@
  * @author Keith Chow
  */
 package net.kcundercover.jdsp.io;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
+// import java.nio.ByteBuffer;
 import java.io.RandomAccessFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,19 +20,19 @@ import java.util.logging.ConsoleHandler;
  * The FileReader will access a RandomAccessFile to load data
  *
  */
-public class FileReader {
+public final class FileReader {
     /** Logger */
     protected Logger logger;
 
     /** Name of the data types */
-    public final static String[] DATA_TYPE = {
+    private final static String[] DATA_TYPE = {
         "INT16", "COMPLEX INT16", "FLOAT32", "COMPLEX FLOAT32"};
 
     /** Byter per sample given data type */
-    public final static int[] BYTES_PER_SAMPLE = {2, 2, 4, 4};
+    private final static int[] BYTES_PER_SAMPLE = {2, 2, 4, 4};
 
     /** Multiplier if complex */
-    public final static int[] MULTIPLIER = {1, 2, 1, 2};
+    private final static int[] MULTIPLIER = {1, 2, 1, 2};
 
     private String filepath;
     private final RandomAccessFile myFile;
@@ -106,7 +103,7 @@ public class FileReader {
 
             // get byte array
             byte[] tmp = new byte[numBytes];
-            myFile.read(tmp);
+            myFile.readFully(tmp);
             short[] sArray;
             float[] fArray;
             switch(DATA_TYPE[dType]){
@@ -141,9 +138,10 @@ public class FileReader {
                     out.addFeature(fRealImag[0], "Real");
                     out.addFeature(fRealImag[1], "Imaginary");
                     break;
+                default:
+                    break;
             }
-        }
-        catch(IOException ioe) {
+        } catch(IOException ioe) {
             logger.warning(ioe.toString());
         }
 
@@ -171,9 +169,8 @@ public class FileReader {
                 BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType]);
 
             // read from file
-            myFile.read(tmp);
-        }
-        catch(IOException ioe) {
+            myFile.readFully(tmp);
+        } catch(IOException ioe) {
             logger.warning(ioe.toString());
         }
 
@@ -211,9 +208,8 @@ public class FileReader {
                 BYTES_PER_SAMPLE[dType] * MULTIPLIER[dType]);
 
             // read from file
-            myFile.read(tmp);
-        }
-        catch(IOException ioe) {
+            myFile.readFully(tmp);
+        } catch(IOException ioe) {
             logger.warning(ioe.toString());
         }
 
@@ -248,6 +244,7 @@ public class FileReader {
             // ---------------------  get byte array  -----------------------
             byte[] tmp = new byte[numBytes];
             int nBytes = myFile.read(tmp);
+            logger.log(Level.INFO, "Read {} bytes.", nBytes);
 
             // ----------------  convert to bytes to float  -----------------
             short[] sArray;
@@ -264,8 +261,9 @@ public class FileReader {
 
                     // convert short to floats
                     out = new float[numVals];
-                    for (int ind = 0; ind < numVals; ind++)
+                    for (int ind = 0; ind < numVals; ind++) {
                         out[ind] = (float) (sArray[ind] / 32767.);
+                    }
                     return out;
 
                 case "COMPLEX INT16":
@@ -275,8 +273,9 @@ public class FileReader {
                     sArray = new short[numSamples * 2];
                     numVals = bytesToShort(tmp, sArray, bigEndian);
                     fArray = new float[numVals];
-                    for (int ind=0; ind < numVals; ind ++)
+                    for (int ind = 0; ind < numVals; ind ++) {
                         fArray[ind] = (float) (sArray[ind] / 32767.0);
+                    }
                     return fArray;
 
                 case "FLOAT32":
@@ -295,8 +294,7 @@ public class FileReader {
                     return fArray;
 
             }
-        }
-        catch (IOException ioe) {
+        } catch(IOException ioe) {
             logger.warning(ioe.toString());
         }
         return null;
@@ -345,12 +343,11 @@ public class FileReader {
             case 2:
                 if (bigEndian){
                     for (int ind0 = 0; ind0 < numOut; ind0++) {
-                        shortArray[ind0] = (short) ((bytes[ind0*2]<<8) + bytes[ind0*2+1]);
+                        shortArray[ind0] = (short) (((bytes[ind0 * 2] & 0xFF) << 8) | (bytes[ind0 * 2 + 1] & 0xFF));
                     }
-                }
-                else{
+                } else{
                     for (int ind0 = 0; ind0 < numOut; ind0++) {
-                        shortArray[ind0] = (short) ((bytes[ind0*2+1]<<8) + bytes[ind0*2]);
+                        shortArray[ind0] = (short) (((bytes[ind0 * 2 + 1] & 0xFF) << 8) + (bytes[ind0 * 2] & 0xFF));
                     }
                 }
                 break;
@@ -387,10 +384,11 @@ public class FileReader {
         switch (numBytes) {
             case 1:
                 // single byte per int
-                for (int ind0 = 0; ind0 < numOut; ind0++){
+                for (int ind0 = 0; ind0 < numOut; ind0++) {
                     ints[ind0] = (int) (bytes[ind0] & mask1st);
-                    if (signed && ints[ind0] > thresh)
+                    if (signed && ints[ind0] > thresh) {
                         ints[ind0] -= maxValue;
+                    }
                 }
                 break;
 
@@ -400,17 +398,18 @@ public class FileReader {
                         ints[ind0] = (int) (
                             ((bytes[ind0 * 2] & mask1st) << 8) +
                             (bytes[ind0 * 2 + 1] & 0xFF));
-                        if (signed && ints[ind0] > thresh)
+                        if (signed && ints[ind0] > thresh) {
                             ints[ind0] -= maxValue;
+                        }
                     }
-                }
-                else{
+                } else {
                     for (int ind0 = 0; ind0 < numOut; ind0++) {
                         ints[ind0] = (int) (
                             ((bytes[ind0 * 2 + 1] & mask1st) << 8) +
                             (bytes[ind0 * 2] & 0xFF));
-                        if (signed && ints[ind0] > thresh)
+                        if (signed && ints[ind0] > thresh) {
                             ints[ind0] -= maxValue;
+                        }
                     }
                 }
                 break;
@@ -422,23 +421,23 @@ public class FileReader {
                             ((bytes[ind0 * 4 + 1] & 0xFF) << 16) +
                             ((bytes[ind0 * 4 + 2] & 0xFF) << 8) +
                             ((bytes[ind0 * 4 + 3] & 0xFF)));
-                        if (signed && ints[ind0] > thresh)
+                        if (signed && ints[ind0] > thresh) {
                             ints[ind0] -= maxValue;
+                        }
                     }
-                }
-                else {
+                } else {
                     for (int ind0 = 0; ind0 < numOut; ind0++) {
                         ints[ind0] = (int) (
                             ((bytes[ind0 * 4 + 3] & mask1st) << 24) +
                             ((bytes[ind0 * 4 + 2] & 0xFF) << 16) +
                             ((bytes[ind0 * 4 + 1] & 0xFF) << 8) +
                             (bytes[ind0 * 4] & 0xFF));
-                        if (signed && ints[ind0] > thresh)
+                        if (signed && ints[ind0] > thresh) {
                             ints[ind0] -= maxValue;
+                        }
                     }
                 }
                 break;
-
             default:
                 throw new IllegalArgumentException("bytesToInt: numBytes should be 1, 2 or 4");
         }
@@ -471,13 +470,12 @@ public class FileReader {
                     (bytes[ind0 * 4 + 3] & 0xFF);
                 floatArray[ind0] = Float.intBitsToFloat(tmpInt);
             }
-        }
-        else {
+        } else {
             for (int ind0 = 0; ind0 < numOut; ind0++) {
-                tmpInt = ((bytes[ind0*4 + 3] & 0xFF) << 24) +
-                    ((bytes[ind0*4 + 2] & 0xFF) << 16) +
-                    ((bytes[ind0*4 + 1] & 0xFF) << 8) +
-                    (bytes[ind0*4] & 0xFF);
+                tmpInt = ((bytes[ind0 * 4 + 3] & 0xFF) << 24) +
+                    ((bytes[ind0 * 4 + 2] & 0xFF) << 16) +
+                    ((bytes[ind0 * 4 + 1] & 0xFF) << 8) +
+                    (bytes[ind0 * 4] & 0xFF);
                 floatArray[ind0] = Float.intBitsToFloat(tmpInt);
             }
         }

@@ -1,8 +1,7 @@
 package net.kcundercover.jdsp.signal;
 
 import java.util.Arrays;
-import java.util.logging.*;
-import org.apache.commons.math3.complex.Complex;
+import java.util.logging.Logger;
 import org.apache.commons.math3.util.FastMath;
 import net.kcundercover.jdsp.signal.FrequencyShift;
 import net.kcundercover.jdsp.filters.FilterD;
@@ -11,8 +10,8 @@ import net.kcundercover.jdsp.filters.FilterD;
 /**
  * Resampler object
  */
-public class Resampler {
-    private static final Logger logger = Logger.getLogger(Resampler.class.getName());
+public final class Resampler {
+    private static final Logger RESAMPLER_LOGGER = Logger.getLogger(Resampler.class.getName());
 
     /** The factor to upsample */
     private int upFactor;
@@ -70,7 +69,7 @@ public class Resampler {
         // resample
         double[][] out = resample(basebandReal, basebandImag);
 
-        logger.info(String.format(
+        RESAMPLER_LOGGER.info(String.format(
             "Downconverted {} samples ({} samples per second) to {} samples ({} samples per second)",
             inReal.length, sampleRate,
             out[0].length, sampleRate * upFactor / downFactor
@@ -100,7 +99,7 @@ public class Resampler {
         } else {
             upR = new double[bbReal.length * upFactor];
             upI = new double[bbImag.length * upFactor];
-            for (int ind=0; ind< bbReal.length; ind++) {
+            for (int ind = 0; ind < bbReal.length; ind++) {
                 upR[ind * upFactor] = bbReal[ind];
                 upI[ind * upFactor] = bbImag[ind];
             }
@@ -113,9 +112,9 @@ public class Resampler {
         // Decimate
         double[][] out = new double[2][upIQ[0].length / downFactor];
 
-        for (int ind0=0; ind0 < out[0].length; ind0++) {
-            out[0][ind0] = upIQ[0][ind0*downFactor];
-            out[1][ind0] = upIQ[1][ind0*downFactor];
+        for (int ind0 = 0; ind0 < out[0].length; ind0++) {
+            out[0][ind0] = upIQ[0][ind0 * downFactor];
+            out[1][ind0] = upIQ[1][ind0 * downFactor];
         }
 
         return out;
@@ -124,19 +123,19 @@ public class Resampler {
     /**
      * Shifts to baseband and decimates
      *
-     * @param inR        Input Real (I) array
-     * @param inI        Input Imaginary (Q) array
+     * @param inR Input Real (I) array
+     * @param inI Input Imaginary (Q) array
      * @param centerFreq Freq to move to 0Hz
-     * @param fs         Source sample rate
-     * @param M          Decimation factor (integer)
-     * @return           A 2D array [2][N/M] containing [outReal, outImag]
+     * @param fs Source sample rate
+     * @param decim Decimation factor (integer)
+     * @return A 2D array [2][N/decim] containing [outReal, outImag]
      */
-    public static double[][] downConvertPolyphase(double[] inR, double[] inI, double centerFreq, double fs, int M) {
+    public static double[][] downConvertPolyphase(double[] inR, double[] inI, double centerFreq, double fs, int decim) {
         if (inR.length != inI.length) {
             throw new IllegalArgumentException("I/Q length mismatch");
         }
 
-        int outLen = inR.length / M;
+        int outLen = inR.length / decim;
         double[] outR = new double[outLen];
         double[] outI = new double[outLen];
 
@@ -150,8 +149,8 @@ public class Resampler {
 
             // Inner loop: Filter + Mix
             // We only calculate the samples we actually keep (Polyphase approach)
-            for (int k = 0; k < M; k++) {
-                int idx = i * M + k;
+            for (int k = 0; k < decim; k++) {
+                int idx = i * decim + k;
                 double phase = omega * idx;
                 double cos = FastMath.cos(phase);
                 double sin = FastMath.sin(phase);
@@ -165,11 +164,9 @@ public class Resampler {
             }
 
             // Decimate & Scale
-            outR[i] = sumR / M;
-            outI[i] = sumI / M;
+            outR[i] = sumR / decim;
+            outI[i] = sumI / decim;
         }
-
         return new double[][]{outR, outI};
     }
-
 }

@@ -8,7 +8,7 @@ import net.kcundercover.jdsp.math.DTFT;
 import net.kcundercover.jdsp.math.ComplexInterleaved;
 
 /** Power Spectral Density Plot */
-public class PowerSpectralDensity extends Plot{
+public class PowerSpectralDensity extends Plot {
     /** Serial version UID */
     public final static long serialVersionUID = 0;
 
@@ -33,9 +33,9 @@ public class PowerSpectralDensity extends Plot{
      * @param g2 The graphics object to draw with
      * @param aList Array List of te input signal (assuming real)
      */
-    public void draw(Graphics2D g2, ArrayList aList){
+    public void draw(Graphics2D g2, ArrayList aList) {
         float[] fArray = new float[aList.size()];
-        for (int ind0=0; ind0<fArray.length; ind0++){
+        for (int ind0 = 0; ind0 < fArray.length; ind0++){
             fArray[ind0] = (float) aList.get(ind0);
         }
         float[] dtft = DTFT.discreteFourierTransform(fArray, nfft);

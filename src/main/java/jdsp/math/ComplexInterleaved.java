@@ -56,9 +56,10 @@ public class ComplexInterleaved {
 
      */
     public static double[] freqTranslateReal(double[] inSig, double normFreq) {
-        if (normFreq > 1 || normFreq < -1)
+        if (normFreq > 1 || normFreq < -1) {
             throw new IllegalArgumentException(
                 "norm frequency should be in range (-1,1)");
+        }
         // --------------------  perform translate  -------------------------
         double pi = Math.PI;
         double[] output = new double[inSig.length * 2];
@@ -78,12 +79,13 @@ public class ComplexInterleaved {
      * @return Complex interleaved output
      */
     public static double[] freqTranslateComplex(double[] inSig, double normFreq) {
-        if (normFreq > 1 || normFreq < -1)
+        if (normFreq > 1 || normFreq < -1) {
             throw new IllegalArgumentException(
                 "norm frequency should be in range (-1,1)");
+        }
 
         // --------------------  perform translate  -------------------------
-        double pi = Math.PI*0.5;
+        double pi = Math.PI * 0.5;
         double[] output = new double[inSig.length];
         for (int ind0 = 0; ind0 < inSig.length; ind0+=2) {
             output[ind0] =
@@ -141,7 +143,7 @@ public class ComplexInterleaved {
      * @return real and imaginary array
      */
     public static float[][] getRealImag(float[] complexIn) {
-        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        assert (complexIn.length & 1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         float[][] out = new float[2][numOut];
         for (int ind0 = 0; ind0 < numOut; ind0++) {
@@ -157,7 +159,7 @@ public class ComplexInterleaved {
      * @return real and imaginary array
      */
     public static double[][] getRealImag(double[] complexIn) {
-        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        assert (complexIn.length & 1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         double[][] out = new double[2][numOut];
         for (int ind0 = 0; ind0 < numOut; ind0++) {
@@ -173,7 +175,7 @@ public class ComplexInterleaved {
      * @return real and imaginary array
      */
     public static int[][] getRealImag(int[] complexIn) {
-        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        assert (complexIn.length & 1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         int[][] out = new int[2][numOut];
         for (int ind0 = 0; ind0 < numOut; ind0++) {
@@ -189,7 +191,7 @@ public class ComplexInterleaved {
      * @return real and imaginary array
      */
     public static short[][] getRealImag(short[] complexIn) {
-        assert (complexIn.length&1) == 0 : "Expecting even number of values";
+        assert (complexIn.length & 1) == 0 : "Expecting even number of values";
         int numOut = complexIn.length / 2;
         short[][] out = new short[2][numOut];
         for (int ind0 = 0; ind0 < numOut; ind0++) {

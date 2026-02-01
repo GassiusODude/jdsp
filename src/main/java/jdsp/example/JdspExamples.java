@@ -19,13 +19,11 @@ public class JdspExamples extends JTabbedPane{
     /**
      * The Constructor
      */
-    public JdspExamples()
-    {
+    public JdspExamples() {
         super();
 
         // table example
         // ------------------------------------------------------
-        
         DataObject dataObject0 = new DataObject("Hello");
         float[] f1 = {1.0f, 2.0f};
         boolean[] b1 = {true, false};
@@ -80,15 +78,14 @@ public class JdspExamples extends JTabbedPane{
 
     }
 
-    /** 
+    /**
      * Main function
      * @param args Input arguments
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
             public void run(){
-                javax.swing.JFrame newFrame = new javax.swing.JFrame("JdspExamples");
+                JFrame newFrame = new JFrame("JdspExamples");
                 newFrame.addWindowListener(new WindowAdapter(){
                     public void windowClosing(WindowEvent event){
                       System.exit(0);
@@ -97,8 +94,7 @@ public class JdspExamples extends JTabbedPane{
                 JdspExamples examples = new JdspExamples();
 
                 newFrame.add(examples);
-
-                newFrame.setSize(600,400);
+                newFrame.setSize(600, 400);
                 newFrame.setVisible(true);
             }
         });
