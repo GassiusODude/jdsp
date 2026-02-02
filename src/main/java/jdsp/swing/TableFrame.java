@@ -5,7 +5,7 @@
 package net.kcundercover.jdsp.swing;
 import javax.swing.JFrame;
 import net.kcundercover.jdsp.swing.TableUI;
-/** 
+/**
  * Class for the TableFrame
  */
 public class TableFrame extends JFrame{
@@ -20,7 +20,7 @@ public class TableFrame extends JFrame{
         table = new TableUI();
 
         this.add(table);
-        setSize(500,500);
+        setSize(500, 500);
         setVisible(true);
     }
 
@@ -33,7 +33,7 @@ public class TableFrame extends JFrame{
         table = new TableUI();
 
         this.add(table);
-        setSize(500,500);
+        setSize(500, 500);
         setVisible(true);
     }
 
@@ -76,7 +76,7 @@ public class TableFrame extends JFrame{
         if (msgs.length != tokens.length){
             throw new Exception("Length of msgs and tokens do not match!");
         }
-        for (int ind0=0; ind0<msgs.length; ind0++){
+        for (int ind0 = 0; ind0 < msgs.length; ind0++) {
             table.addRow(msgs[ind0], tokens[ind0]);
         }
     }

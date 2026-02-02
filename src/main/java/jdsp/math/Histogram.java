@@ -22,7 +22,7 @@ public class Histogram {
      * @return The integer counts
      */
     public int[] getHistCounts(){
-        return histCounts;
+        return (this.histCounts == null) ? null : this.histCounts.clone();
     }
 
     /**
@@ -30,7 +30,7 @@ public class Histogram {
      * @return The edges used
      */
     public double[] getHistEdges(){
-        return histEdges;
+        return (this.histEdges == null) ? null : this.histEdges.clone();
     }
 
     /**
@@ -53,7 +53,7 @@ public class Histogram {
             histEdges[0] = minMax[0] + 1;
             histCounts = new int[1];
             histCounts[0] = vec1.length;
-            return histCounts;
+            return histCounts.clone();
         }
 
         // identify range
@@ -70,12 +70,13 @@ public class Histogram {
 
         // update
         for (double elem : vec1){
-            for (int ind0 = 0; ind0 < histEdges.length; ind0++)
+            for (int ind0 = 0; ind0 < histEdges.length; ind0++) {
                 if (elem < histEdges[ind0]){
                     histCounts[ind0]++;
                     break;
                 }
+            }
         }
-        return histCounts;
+        return histCounts.clone();
     }
 }

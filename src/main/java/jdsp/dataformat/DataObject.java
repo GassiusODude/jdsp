@@ -7,13 +7,13 @@ package net.kcundercover.jdsp.dataformat;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.lang.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.ConsoleHandler;
@@ -21,7 +21,7 @@ import java.util.logging.ConsoleHandler;
 /**
  * DataObject class
  */
-public class DataObject extends DefaultTableModel{
+public final class DataObject extends DefaultTableModel implements Cloneable {
     /** Serial Version UID */
     private static final long serialVersionUID = 1L;
 
@@ -69,6 +69,20 @@ public class DataObject extends DefaultTableModel{
         featureTypes = new ArrayList<String>();
         setDataFormat(featureNames);
     }
+
+        // ...
+    @Override
+    public DataObject clone() {
+        try {
+            DataObject cloned = (DataObject) super.clone();
+            // IMPORTANT: If DataObject contains arrays, you must clone them too!
+            // cloned.someArray = this.someArray.clone();
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Should not happen
+        }
+    }
+
 
     /** Set the data format of feature names
      * @param featureNames List of names for the features.
@@ -130,8 +144,8 @@ public class DataObject extends DefaultTableModel{
         return numObs;
     }
 
-    /** 
-     * Get the name of the column/feature 
+    /**
+     * Get the name of the column/feature
      * @param col Column or feature index
      * @return The name of the feature
      */
@@ -140,7 +154,7 @@ public class DataObject extends DefaultTableModel{
         return this.getFeatureName(col);
     }
 
-    /** 
+    /**
      * Get the value of the provided observation/feature
      * @param row Observation Index
      * @param col Feature index
@@ -257,8 +271,9 @@ public class DataObject extends DefaultTableModel{
 
         // convert to ArrayList
         ArrayList myArray = new ArrayList<Float>(floatData.length);
-        for (int ind0 = 0; ind0 < floatData.length; ind0++)
+        for (int ind0 = 0; ind0 < floatData.length; ind0++) {
             myArray.add(floatData[ind0]);
+        }
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("float");
@@ -280,8 +295,9 @@ public class DataObject extends DefaultTableModel{
 
         // convert to ArrayList
         ArrayList myArray = new ArrayList<String>(strData.length);
-        for (int ind0 = 0; ind0 < strData.length; ind0++)
+        for (int ind0 = 0; ind0 < strData.length; ind0++) {
             myArray.add(strData[ind0]);
+        }
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("str");
@@ -303,8 +319,9 @@ public class DataObject extends DefaultTableModel{
 
         // convert to ArrayList
         ArrayList myArray = new ArrayList<Integer>(intData.length);
-        for (int ind0 = 0; ind0 < intData.length; ind0++)
+        for (int ind0 = 0; ind0 < intData.length; ind0++) {
             myArray.add(intData[ind0]);
+        }
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("int");
@@ -326,8 +343,9 @@ public class DataObject extends DefaultTableModel{
 
         // convert to ArrayList
         ArrayList myArray = new ArrayList<Short>(shortData.length);
-        for (int ind0 = 0; ind0 < shortData.length; ind0++)
+        for (int ind0 = 0; ind0 < shortData.length; ind0++) {
             myArray.add(shortData[ind0]);
+        }
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("short");
@@ -349,8 +367,9 @@ public class DataObject extends DefaultTableModel{
 
         // convert to ArrayList
         ArrayList myArray = new ArrayList<Double>(doubleData.length);
-        for (int ind0 = 0; ind0 < doubleData.length; ind0++)
+        for (int ind0 = 0; ind0 < doubleData.length; ind0++) {
             myArray.add(doubleData[ind0]);
+        }
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("double");
@@ -372,8 +391,9 @@ public class DataObject extends DefaultTableModel{
 
         // convert to ArrayList
         ArrayList myArray = new ArrayList<Boolean>(boolData.length);
-        for (int ind0 = 0; ind0 < boolData.length; ind0++)
+        for (int ind0 = 0; ind0 < boolData.length; ind0++) {
             myArray.add(boolData[ind0]);
+        }
         features.add(myArray);
         featureNames.add(featureName);
         featureTypes.add("bool");
@@ -386,16 +406,16 @@ public class DataObject extends DefaultTableModel{
      * @param input CSV string
      * @param token Token representation separation.
      */
-    public void addObservation(String input, String token){
+    public void addObservation(String input, String token) {
         String[] elements;
         String featType, tmp, tmpNoSpace;
-        ArrayList aList = new ArrayList();;
+        ArrayList aList = new ArrayList();
 
         // --------------------------  parse the elements  ------------------
-        elements = input.split(token, this.features.size()+1);
-        if (elements.length != this.features.size())
+        elements = input.split(token, this.features.size() + 1);
+        if (elements.length != this.features.size()) {
             throw new RuntimeException("Number of features do not match(" + elements.length + ", " + this.features.size() + ")");
-
+        }
         // verify
         try {
             for (int ind = 0; ind < elements.length; ind++){
@@ -423,8 +443,7 @@ public class DataObject extends DefaultTableModel{
                         aList.add(tmp);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.severe("Exception caught " + e.toString());
             throw new RuntimeException("Exception caught " + e.toString());
             //return;
@@ -443,7 +462,7 @@ public class DataObject extends DefaultTableModel{
         numObs = 0;
 
         // remove data and feature names
-        for (int featInd=0; featInd < features.size(); featInd++) {
+        for (int featInd = 0; featInd < features.size(); featInd++) {
             features.get(featInd).clear();
         }
         features.clear();
@@ -456,8 +475,9 @@ public class DataObject extends DefaultTableModel{
     /** Display the current state of the data object.*/
     public void display(){
         logger.info("Number features = " + this.features.size());
-        for (String feature : this.featureNames)
+        for (String feature : this.featureNames) {
             logger.info("Features = " + feature);
+        }
         logger.info("Number observations = " + this.numObs);
     }
 
@@ -472,7 +492,8 @@ public class DataObject extends DefaultTableModel{
         try {
             // open file and get buffered stream
             FileInputStream fis = new FileInputStream(f);
-            br = new BufferedReader(new InputStreamReader(fis));
+
+            br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
 
             // allocate string to read one line of the file
             // allocate array of string for parsed output
@@ -500,11 +521,11 @@ public class DataObject extends DefaultTableModel{
                             tmpNames[ind0] = "feature " + ind0;
                         }
                     }
-                    if (firstRowHeader)
+                    if (firstRowHeader) {
                         // recorded as header, do not add as a data point.
                         continue;
-                }
-                else {
+                    }
+                } else {
                     if (tmpTokens.length != tmpNumFeats){
                         // TODO: handle missing data
                         // currently, ignore line if it does not match
@@ -522,18 +543,15 @@ public class DataObject extends DefaultTableModel{
             // ====================================
             // add all feature lists
             // ====================================
-            for (int indFeat = 0; indFeat < tmpNumFeats; indFeat++){
+            for (int indFeat = 0; indFeat < tmpNumFeats; indFeat++) {
                 this.addFeature(aList[indFeat], tmpNames[indFeat]);
             }
             this.fireTableStructureChanged();
-        }
-        catch(java.io.FileNotFoundException fnfe) {
+        } catch(java.io.FileNotFoundException fnfe) {
             logger.warning("File not found.");
-        }
-        catch(java.io.IOException ioe) {
+        } catch(java.io.IOException ioe) {
             logger.warning("IO Exception");
-        }
-        finally {
+        } finally {
             try {
                 if (br != null) {
                     br.close();
@@ -550,7 +568,7 @@ public class DataObject extends DefaultTableModel{
      */
     public final void saveCSV(File f, boolean firstRowHeader, String token) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+            BufferedWriter writer = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8);
 
             // ---------------------  write column names  -------------------
             if (firstRowHeader) {
@@ -574,11 +592,9 @@ public class DataObject extends DefaultTableModel{
                 }
             }
             writer.close();
-        }
-        catch(java.io.FileNotFoundException fnfe) {
+        } catch(java.io.FileNotFoundException fnfe) {
             logger.warning("File not found.");
-        }
-        catch(java.io.IOException ioe) {
+        } catch(java.io.IOException ioe) {
             logger.warning("IO Exception");
         }
     }

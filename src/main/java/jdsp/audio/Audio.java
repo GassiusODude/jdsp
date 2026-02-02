@@ -11,16 +11,21 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.ConsoleHandler;
-import javax.sound.sampled.*;
+// import javax.sound.sampled.
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.sound.sampled.AudioFormat.Encoding;
 import net.kcundercover.jdsp.dataformat.DataObject;
 import net.kcundercover.jdsp.io.FileReader;
 
 /**
- * The Audio class supports extracting an audio file from file and 
+ * The Audio class supports extracting an audio file from file and
  * mu-law encode/decode.
  */
-public class Audio {
+public final class Audio {
     /** Audio logger */
     private static Logger logger = Logger.getLogger("Audio");
 
@@ -62,8 +67,8 @@ public class Audio {
             int bufferSize = maxNumFrames * frameSizeInBytes;
 
             // ----------------  print info on the wave file  ---------------
-            
-            logger.info("\n\tNumber samples = " + numSamples + 
+
+            logger.info("\n\tNumber samples = " + numSamples +
                 "\n\tNum bytes per sample = " + nBytesPerSample +
                 "\n\tEncoding = " + enc.toString() +
                 "\n\tBig Endian = " + bigEndian);
@@ -85,10 +90,11 @@ public class Audio {
                     signed = true;
                     break;
                 case "PCM_UNSIGNED":
-                    if (nBytesPerSample == 2)
+                    if (nBytesPerSample == 2) {
                         sMod = -32767;
-                    else
+                    } else {
                         sMod = -127;
+                    }
                     break;
                 case "ULAW":
                     break;
@@ -108,32 +114,32 @@ public class Audio {
                     tmp[indexChan][indexSample] = (intBuffer[ind0] + sMod);
 
                     indexChan  = (indexChan + 1) % numChannels;
-                    if (indexChan == 0)
+                    if (indexChan == 0) {
                         indexSample += 1;
-                    if (indexSample >= maxNumFrames)
+                    }
+                    if (indexSample >= maxNumFrames) {
                         break;
+                    }
                 }
-                if (indexSample >= maxNumFrames)
+                if (indexSample >= maxNumFrames) {
                     break;
+                }
             }
 
             if (dObj != null) {
                 // add to data object
                 for (int chanInd = 0; chanInd < numChannels; chanInd++) {
                     logger.info("Loading dataObject with channel " + chanInd);
-                    dObj.addFeature(tmp[chanInd], "Channel "+ chanInd);
+                    dObj.addFeature(tmp[chanInd], "Channel " + chanInd);
                 }
             } else {
                 logger.warning("dataObject is null");
             }
-        }
-        catch(UnsupportedAudioFileException uafe) {
+        } catch(UnsupportedAudioFileException uafe) {
             System.err.println(uafe.toString());
-        }
-        catch(IOException ioe) {
+        } catch(IOException ioe) {
             System.err.print("Failed to load file." + ioe.toString());
         }
-
         return tmp;
     }
 
@@ -147,7 +153,7 @@ public class Audio {
 
         short mult = (short)((in <= 0) ? -1 : 1);
         short output = (short) Math.abs(in);
-        output = (short) (mult * Math.log(1 + mu * output) / Math.log(1+mu));
+        output = (short) (mult * Math.log(1 + mu * output) / Math.log(1 + mu));
         return output;
     }
 

@@ -13,7 +13,7 @@ import jdk.incubator.vector.LongVector;
 import jdk.incubator.vector.ShortVector;
 import jdk.incubator.vector.VectorSpecies;
 import jdk.incubator.vector.VectorOperators;
-import java.util.Arrays;
+
 
 /**
  * The Vector class supports some commonly used operations (add, multiply, subtract, divide)
@@ -33,7 +33,7 @@ public class Vector {
     //                                      Double Support
     // ============================================================================================
     /**Add two vectors together element-wise
-     * 
+     *
      * @param vec1 Input vector 1
      * @param vec2 Input vector 2
      * @return Element-wise sum of the two vectors
@@ -71,7 +71,7 @@ public class Vector {
     }
 
     /**Add a scalar to each element of the vector
-     * 
+     *
      * @param vec1 Input vector
      * @param scalar Scalar value
      * @return The updated vector
@@ -79,7 +79,7 @@ public class Vector {
     public static double[] add(final double[] vec1, double scalar) {
         int ind0 = 0;
         double[] output = new double[vec1.length];
-        
+
         // Process in chunks of vector length
         for (; ind0 + SPECIES_DOUBLE.length() <= vec1.length; ind0 += SPECIES_DOUBLE.length()) {
             DoubleVector v = DoubleVector.fromArray(SPECIES_DOUBLE, vec1, ind0);
@@ -110,7 +110,7 @@ public class Vector {
         for (; ind0 + SPECIES_DOUBLE.length() <= vec1.length; ind0 += SPECIES_DOUBLE.length()) {
             DoubleVector v1 = DoubleVector.fromArray(SPECIES_DOUBLE, vec1, ind0);
             DoubleVector v2 = DoubleVector.fromArray(SPECIES_DOUBLE, vec2, ind0);
-            
+
             // in-place: write result directly into vec1
             (v1.add(v2)).intoArray(vec1, ind0);
         }
@@ -122,7 +122,7 @@ public class Vector {
     }
 
     /**Add scalar to the vector in-place
-     * 
+     *
      * @param vec1 Input vector and target of where the sum is returned
      * @param scalar Value to add
      */
@@ -878,7 +878,7 @@ public class Vector {
     }
 
     /**
-     * Element-wise division 
+     * Element-wise division
      * @param vec1 Input vector 1 (dividend)
      * @param vec2 Input vector 2 (divisor)
      * @return Output (quotient)
@@ -903,7 +903,7 @@ public class Vector {
     }
 
     /**
-     * Element-wise division 
+     * Element-wise division
      * @param vec1 Input vector 1 (dividend)
      * @param scalar Value to divide by (divisor)
      * @return Output (quotient)
@@ -925,7 +925,7 @@ public class Vector {
     }
 
     /**
-     * Element-wise division 
+     * Element-wise division
      * @param vec1 Input vector 1 (dividend) and output (quotient)
      * @param vec2 Input vector 2 (divisor)
      */
@@ -947,7 +947,7 @@ public class Vector {
     }
 
         /**
-     * Element-wise division 
+     * Element-wise division
      * @param vec1 Input vector 1 (dividend) and output (quotient)
      * @param scalar Input scalar value (divisor)
      */
@@ -1133,7 +1133,9 @@ public class Vector {
      * @return Element-wise sum
      */
     public static long[] add(final long[] vec1, final long[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("add(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("add(): lengths must match");
+        }
 
         long[] output = new long[vec1.length];
         int ind0 = 0;
@@ -1178,7 +1180,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void addMe(long[] vec1, final long[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("addMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("addMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_LONG.length() <= vec1.length; ind0 += SPECIES_LONG.length()) {
@@ -1231,7 +1235,9 @@ public class Vector {
      * @return Vec1 - vec2
      */
     public static long[] subtract(final long[] vec1, final long[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("subtract(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("subtract(): lengths must match");
+        }
         long[] output = new long[vec1.length];
         int ind0 = 0;
 
@@ -1275,7 +1281,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void subtractMe(long[] vec1, final long[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("subtractMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("subtractMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_LONG.length() <= vec1.length; ind0 += SPECIES_LONG.length()) {
@@ -1315,7 +1323,9 @@ public class Vector {
      * @return Element-wise product
      */
     public static long[] multiply(final long[] vec1, final long[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("multiply(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("multiply(): lengths must match");
+        }
         long[] output = new long[vec1.length];
         int ind0 = 0;
 
@@ -1359,7 +1369,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void multiplyMe(long[] vec1, final long[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("multiplyMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("multiplyMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_LONG.length() <= vec1.length; ind0 += SPECIES_LONG.length()) {
@@ -1534,7 +1546,9 @@ public class Vector {
      * @return Element-wise sum
      */
     public static int[] add(final int[] vec1, final int[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("add(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("add(): lengths must match");
+        }
 
         int[] output = new int[vec1.length];
         int ind0 = 0;
@@ -1579,7 +1593,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void addMe(int[] vec1, final int[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("addMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("addMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_INT.length() <= vec1.length; ind0 += SPECIES_INT.length()) {
@@ -1619,7 +1635,9 @@ public class Vector {
      * @return Element-wise subtraction
      */
     public static int[] subtract(final int[] vec1, final int[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("subtract(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("subtract(): lengths must match");
+        }
         int[] output = new int[vec1.length];
         int ind0 = 0;
 
@@ -1663,7 +1681,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void subtractMe(int[] vec1, final int[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("subtractMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("subtractMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_INT.length() <= vec1.length; ind0 += SPECIES_INT.length()) {
@@ -1703,7 +1723,9 @@ public class Vector {
      * @return Element-wise product
      */
     public static int[] multiply(final int[] vec1, final int[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("multiply(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("multiply(): lengths must match");
+        }
         int[] output = new int[vec1.length];
         int ind0 = 0;
 
@@ -1747,7 +1769,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void multiplyMe(int[] vec1, final int[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("multiplyMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("multiplyMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_INT.length() <= vec1.length; ind0 += SPECIES_INT.length()) {
@@ -1937,7 +1961,9 @@ public class Vector {
      * @return Element-wise sum
      */
     public static short[] add(final short[] vec1, final short[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("add(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("add(): lengths must match");
+        }
         short[] output = new short[vec1.length];
         int ind0 = 0;
 
@@ -1983,7 +2009,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void addMe(short[] vec1, final short[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("addMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("addMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_SHORT.length() <= vec1.length; ind0 += SPECIES_SHORT.length()) {
@@ -2023,7 +2051,9 @@ public class Vector {
      * @return Element-wise subtraction
      */
     public static short[] subtract(final short[] vec1, final short[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("subtract(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("subtract(): lengths must match");
+        }
         short[] output = new short[vec1.length];
         int ind0 = 0;
 
@@ -2069,7 +2099,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void subtractMe(short[] vec1, final short[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("subtractMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("subtractMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_SHORT.length() <= vec1.length; ind0 += SPECIES_SHORT.length()) {
@@ -2109,7 +2141,9 @@ public class Vector {
      * @return Element-wise product
      */
     public static short[] multiply(final short[] vec1, final short[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("multiply(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("multiply(): lengths must match");
+        }
         short[] output = new short[vec1.length];
         int ind0 = 0;
 
@@ -2155,7 +2189,9 @@ public class Vector {
      * @param vec2 Input vector 2
      */
     public static void multiplyMe(short[] vec1, final short[] vec2) {
-        if (vec1.length != vec2.length) throw new IllegalArgumentException("multiplyMe(): lengths must match");
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("multiplyMe(): lengths must match");
+        }
         int ind0 = 0;
 
         for (; ind0 + SPECIES_SHORT.length() <= vec1.length; ind0 += SPECIES_SHORT.length()) {
@@ -2336,10 +2372,13 @@ public class Vector {
     public static void clampMe(short[] vec1, short min, short max) {
         for (int ind0 = 0; ind0 < vec1.length; ind0++) {
             int v = vec1[ind0];
-            if (v < min) v = min;
-            if (v > max) v = max;
+            if (v < min) {
+                v = min;
+            }
+            if (v > max) {
+                v = max;
+            }
             vec1[ind0] = (short) v;
         }
     }
-
 }

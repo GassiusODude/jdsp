@@ -1,8 +1,15 @@
 package net.kcundercover.jdsp.math;
-import org.apache.commons.math3.complex.Complex;
 import java.util.stream.IntStream;
 
+/**
+ * Calculates the Cyclic Autocorrelation Function (CAF)
+ */
 public class CyclicAutoCorrelation {
+    /** Default Constructor */
+    public CyclicAutoCorrelation() {
+
+    }
+
     /**
      * Calculate the CAF for the given alph and tau
      * @param real Real part of the input signal
@@ -11,9 +18,13 @@ public class CyclicAutoCorrelation {
      * @param tauRange Delays to apply
      * @param alphaRange Cyclic frequencies to apply
      * @return CAF grid
+     * @throws IllegalArgumentException on the real and imaginary vector lengths
      */
     public static double[][] calculateCafGrid(double[] real, double[] imag, double fs, int[] tauRange, double[] alphaRange) {
-        int N = real.length;
+        if (real.length != imag.length) {
+            throw new IllegalArgumentException("Real and imaginary list must equal");
+        }
+        int numSamples = real.length;
         int numAlphas = alphaRange.length;
         int numTaus = tauRange.length;
         double[][] cafGrid = new double[numAlphas][numTaus];
@@ -23,10 +34,10 @@ public class CyclicAutoCorrelation {
             double alpha = alphaRange[aIdx];
 
             // 2. Precompute the frequency shift (exp term) for this alpha
-            // This saves us N * numTaus complex multiplications
-            double[] cosAlpha = new double[N];
-            double[] sinAlpha = new double[N];
-            for (int i = 0; i < N; i++) {
+            // This saves us numSamples * numTaus complex multiplications
+            double[] cosAlpha = new double[numSamples];
+            double[] sinAlpha = new double[numSamples];
+            for (int i = 0; i < numSamples; i++) {
                 double angle = -2.0 * Math.PI * alpha * (i / fs);
                 cosAlpha[i] = Math.cos(angle);
                 sinAlpha[i] = Math.sin(angle);
@@ -38,11 +49,13 @@ public class CyclicAutoCorrelation {
                 double sumI = 0;
 
                 int start = tau >= 0 ? 0 : -tau;
-                int end   = tau >= 0 ? N - tau : N;
+                int end   = tau >= 0 ? numSamples - tau : numSamples;
 
                 for (int i = start; i < end; i++) {
                     int sIdx = i + tau;
-                    if (sIdx < 0) sIdx += N;
+                    if (sIdx < 0) {
+                        sIdx += numSamples;
+                    }
 
                     // 3. Inlined Complex Math: signal[i] * conj(signal[sIdx])
                     double r1 = real[i], i1 = imag[i];
@@ -60,8 +73,8 @@ public class CyclicAutoCorrelation {
                 }
 
                 // 5. Finalize mean and phase correction (abs removes need for complex division)
-                double meanR = sumR / N;
-                double meanI = sumI / N;
+                double meanR = sumR / numSamples;
+                double meanI = sumI / numSamples;
 
                 // Magnitude is invariant to the phase correction rotation,
                 // so we can often skip the phase_corr multiplication if only magnitude is needed.

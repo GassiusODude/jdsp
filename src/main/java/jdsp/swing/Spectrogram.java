@@ -4,17 +4,16 @@
  * @author Keith Chow
  */
 package net.kcundercover.jdsp.swing;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import net.kcundercover.jdsp.math.DTFT;
-import java.awt.Graphics2D;
-import net.kcundercover.jdsp.math.Vector;
 import net.kcundercover.jdsp.math.ComplexInterleaved;
 
 /** Spectrogram Plot */
-public class Spectrogram extends Plot{
+public class Spectrogram extends Plot {
     /** The buffered image */
     private BufferedImage bImage;
     /** Window */
@@ -29,8 +28,8 @@ public class Spectrogram extends Plot{
     private float timeOffset = 0;
     /** minMax value to scale spectrogram by */
     private float[] minMax = {-30.0f, 25.0f};
-    
-    private static final int COLOR_MAX_VALUE = 255*255;
+
+    private static final int COLOR_MAX_VALUE = 255 * 255;
     private static final int COLOR_MIN_VALUE = 0;
 
     /** Constructor */
@@ -92,13 +91,13 @@ public class Spectrogram extends Plot{
         final Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         loadLineType(g2);
-        g2.setColor(COLOR_MAP[0 % COLOR_MAP.length]);
+        g2.setColor(getColorMap()[0 % getColorMap().length]);
 
-        if (data.getNumFeatures() == 1)
+        if (data.getNumFeatures() == 1) {
             // ---------------  send real signal to draw  -------------------
             draw(g2, data.getFeature(0));
 
-        else if (data.getNumFeatures() > 1) {
+        } else if (data.getNumFeatures() > 1) {
             // -----------  interleave real/imaginary together  -------------
             int n = data.getRowCount();
             ArrayList a = new ArrayList(2 * n);
@@ -109,7 +108,6 @@ public class Spectrogram extends Plot{
                 a.add(d1.get(ind0));
                 a.add(d2.get(ind0));
             }
-
             // ---------------------  send to draw  -------------------------
             draw(g2, a);
         }
@@ -120,18 +118,18 @@ public class Spectrogram extends Plot{
     }
 
     @Override
-    public void draw(Graphics2D g2, ArrayList aList){
+    public void draw(Graphics2D g2, ArrayList aList) {
         // -------------------  initialize image  ---------------------------
         bImage = new BufferedImage(plotWidth, plotHeight,
             BufferedImage.TYPE_BYTE_GRAY);
 
         // ------------------ get number of windows  ------------------------
         int numWindows = aList.size() / window;
-        if (numWindows == 0){
+        if (numWindows == 0) {
             // ----------- draw something since no windows  -----------------
             for (int ind0 = 0; ind0 < plotWidth; ind0++){
                 for (int ind1 = 0; ind1 < plotHeight; ind1++){
-                    bImage.setRGB(ind0, ind1, (ind0 + ind1)%COLOR_MAX_VALUE);
+                    bImage.setRGB(ind0, ind1, (ind0 + ind1) % COLOR_MAX_VALUE);
                 }
             }
             g2.drawImage(bImage, marginX, marginY, null);
@@ -144,25 +142,26 @@ public class Spectrogram extends Plot{
         int val, colLoc;
         String tmpStr;
         boolean isComplex = data.getNumFeatures() > 1;
-        for (int winIndex = 0; winIndex < numWindows; winIndex++){
+        for (int winIndex = 0; winIndex < numWindows; winIndex++) {
             // -------------------  load current window  ----------------
-            for (int sampleIndex = 0; sampleIndex < window; sampleIndex++){
+            for (int sampleIndex = 0; sampleIndex < window; sampleIndex++) {
                 // FIXME: why convert to string and back
                 tmpStr = aList.get(winIndex * window + sampleIndex).toString();
                 currWindow[sampleIndex] = Float.parseFloat(tmpStr);
             }
 
             // -----------------  calculate magn spectrum  --------------
-            if (!isComplex)
+            if (!isComplex) {
                 fftOut = DTFT.discreteFourierTransform(currWindow, nfft);
-            else
+            } else {
                 fftOut = DTFT.discreteFourierTransformComplex(currWindow, nfft);
+            }
             currMagn = ComplexInterleaved.magnitude(fftOut);
             currMagn = DTFT.fftShift(currMagn);
 
             // ---------------------  update image  ---------------------
-            for (int row = 0; row < plotHeight; row++)
-                for (int col = 0; col < plotWidth / numWindows; col++){
+            for (int row = 0; row < plotHeight; row++) {
+                for (int col = 0; col < plotWidth / numWindows; col++) {
                     // calculate current column location
                     colLoc = plotWidth * winIndex / numWindows + col;
 
@@ -171,37 +170,35 @@ public class Spectrogram extends Plot{
                         (int)(row * 1.0 / plotHeight * nfft)]));
 
                     // ----------  scale value to select color  -------------
-                    if (valF < minMax[0])
+                    if (valF < minMax[0]) {
                         val = COLOR_MIN_VALUE;
-                    else if (valF > minMax[1])
+                    } else if (valF > minMax[1]) {
                         val = (int) COLOR_MAX_VALUE;
-                    else
+                    } else {
                         // normalize value in range and scale color
                         val = (int)((valF - minMax[0]) /
                             (minMax[1] - minMax[0]) * COLOR_MAX_VALUE);
+                    }
 
                     // set the color of the current pixel
                     bImage.setRGB(colLoc, row, (int) val);
                 }
-
+            }
             // ---------------------  update axis  --------------------------
             float[] newAxes = new float[4];
-            if (isComplex){
+            if (isComplex) {
                 newAxes[0] = timeOffset;
                 newAxes[1] = timeOffset + 0.5f * aList.size() / sampleRate;
                 newAxes[2] = centerFrequency - sampleRate / 2;
                 newAxes[3] = centerFrequency + sampleRate / 2;
-            }
-            else{
+            } else{
                 newAxes[0] = timeOffset;
                 newAxes[1] = timeOffset + aList.size() / sampleRate;
                 newAxes[2] = 0;
                 newAxes[3] = centerFrequency + sampleRate / 2;
             }
-
             setAxes(newAxes);
         }
-
         // ---------------------   draw image  ------------------------------
         g2.drawImage(bImage, marginX, marginY, null);
     }
@@ -211,8 +208,9 @@ public class Spectrogram extends Plot{
      * @param g2 Graphics object
      */
     public void drawFloatData(Graphics2D g2){
-        if (floatData == null)
+        if (floatData == null) {
             return;
+        }
 
         // -------------------  initialize image  ---------------------------
         bImage = new BufferedImage(plotWidth, plotHeight,
@@ -220,11 +218,11 @@ public class Spectrogram extends Plot{
 
         // ------------------ get number of windows  ------------------------
         int numWindows = floatData.length / window;
-        if (numWindows == 0){
+        if (numWindows == 0) {
             // ----------- draw something since no windows  -----------------
-            for (int ind0 = 0; ind0 < plotWidth; ind0++){
-                for (int ind1 = 0; ind1 < plotHeight; ind1++){
-                    bImage.setRGB(ind0, ind1, (ind0 + ind1)%COLOR_MAX_VALUE);
+            for (int ind0 = 0; ind0 < plotWidth; ind0++) {
+                for (int ind1 = 0; ind1 < plotHeight; ind1++) {
+                    bImage.setRGB(ind0, ind1, (ind0 + ind1) % COLOR_MAX_VALUE);
                 }
             }
             g2.drawImage(bImage, marginX, marginY, null);
@@ -242,15 +240,16 @@ public class Spectrogram extends Plot{
             System.arraycopy(floatData, winIndex * window, currWindow, 0, window);
 
             // -----------------  calculate magn spectrum  --------------
-            if (!isComplex)
+            if (!isComplex) {
                 fftOut = DTFT.discreteFourierTransform(currWindow, nfft);
-            else
+            } else {
                 fftOut = DTFT.discreteFourierTransformComplex(currWindow, nfft);
+            }
             currMagn = ComplexInterleaved.magnitude(fftOut);
             currMagn = DTFT.fftShift(currMagn);
 
             // ---------------------  update image  ---------------------
-            for (int row = 0; row < plotHeight; row++)
+            for (int row = 0; row < plotHeight; row++) {
                 for (int col = 0; col < plotWidth / numWindows; col++){
                     // calculate current column location
                     colLoc = plotWidth * winIndex / numWindows + col;
@@ -260,28 +259,28 @@ public class Spectrogram extends Plot{
                         (int)(row * 1.0 / plotHeight * nfft)]));
 
                     // ----------  scale value to select color  -------------
-                    if (valF < minMax[0])
+                    if (valF < minMax[0]) {
                         val = COLOR_MIN_VALUE;
-                    else if (valF > minMax[1])
+                    } else if (valF > minMax[1]) {
                         val = (int) COLOR_MAX_VALUE;
-                    else
+                    } else {
                         // normalize value in range and scale color
                         val = (int)((valF - minMax[0]) /
                             (minMax[1] - minMax[0]) * COLOR_MAX_VALUE);
-
+                    }
                     // set the color of the current pixel
                     bImage.setRGB(colLoc, row, (int) val);
                 }
+            }
 
             // ---------------------  update axis  --------------------------
             float[] newAxes = new float[4];
-            if (isComplex){
+            if (isComplex) {
                 newAxes[0] = timeOffset;
                 newAxes[1] = timeOffset + 0.5f * floatData.length / sampleRate;
                 newAxes[2] = centerFrequency - sampleRate / 2;
                 newAxes[3] = centerFrequency + sampleRate / 2;
-            }
-            else{
+            } else {
                 newAxes[0] = timeOffset;
                 newAxes[1] = timeOffset + floatData.length / sampleRate;
                 newAxes[2] = 0;

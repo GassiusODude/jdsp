@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 /** SignalInfo object */
-public class SignalInfo extends FileInfo{
+public final class SignalInfo extends FileInfo{
     /** Sampling rate of the signal */
     protected double samplingRate = 1.0;
 
@@ -74,19 +74,25 @@ public class SignalInfo extends FileInfo{
      * Get the sampling rate information
      * @return Sampling rate.
      */
-    public double getSamplingRate(){ return samplingRate;}
+    public double getSamplingRate() {
+        return samplingRate;
+    }
 
     /**
      * Get the center frequency.
      * @return Center frequency
      */
-    public double getCenterFrequency(){ return centerFrequency;}
+    public double getCenterFrequency() {
+        return centerFrequency;
+    }
 
     /**
      * Check if the signal is complex
      * @return Whether the signal is complex
      */
-    public boolean getComplex(){ return isComplex; }
+    public boolean getComplex() {
+        return isComplex;
+    }
 
     /**
      * Convert the specified time (long) to JDBC timestamp escape format.

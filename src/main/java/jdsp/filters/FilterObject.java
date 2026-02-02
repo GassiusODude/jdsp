@@ -24,13 +24,17 @@ public class FilterObject{
      * Get the numerator (feed forward taps)
      * @return Feed forward taps of a filter
      */
-    public double[] getNumerator() { return this.numerator; }
+    public double[] getNumerator() {
+        return (this.numerator == null) ? null : this.numerator.clone();
+    }
 
-    /** 
+    /**
      * Get the denominatory (feedback taps)
      * @return The feedback taps
      */
-    public double[] getDenominator() { return this.denominator; }
+    public double[] getDenominator() {
+        return (this.denominator == null) ? null : this.denominator.clone();
+    }
 
     // ======================================================================
     // -------------------------  set methods  ------------------------------
@@ -39,18 +43,22 @@ public class FilterObject{
      *
      * @param numerator Numerator of the filter
      */
-    public void setNumerator(double [] numerator){
-        assert numerator.length >= 1:
-            "Expecting numerator with length >= 1";
-        this.numerator = numerator;
+    public void setNumerator(double[] numerator) {
+        if (numerator == null) {
+            this.numerator = null;
+            return;
+        }
+
+        this.numerator = numerator.clone();
     }
 
     /** Set the denominator (feedback taps) of the FilterObject
      *
      * @param denominator The new denominator of the filter object
      */
-    public void setDenominator(double[] denominator){
-        this.denominator = denominator;
+    public void setDenominator(double[] denominator) {
+        // Clone the input to ensure the filter's state isn't tied to an external array
+        this.denominator = (denominator == null) ? null : denominator.clone();
     }
 
     /**Filter applied on a complex interleaved input

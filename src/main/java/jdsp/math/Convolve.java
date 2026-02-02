@@ -37,13 +37,12 @@ public class Convolve {
             }
             for (int ind0 = len1; ind0 < len3; ind0++){
                 start = (ind0 - len2 + 1 < 0) ? 0 : ind0 - len2 + 1;
-                for (int ind1=start; ind1 < len1; ind1++){
+                for (int ind1 = start; ind1 < len1; ind1++){
                     int tmp = input2[ind0 - ind1];
                     output[ind0] += input1[ind1] * tmp;
                 }
             }
-        }
-        else{
+        } else {
             for (int ind0 = 0; ind0 < len2; ind0++){
                 for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0] += input2[ind0 - ind1] * input1[ind1];
@@ -51,7 +50,7 @@ public class Convolve {
             }
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
-                for (int ind1=start; ind1 < len2; ind1++){
+                for (int ind1 = start; ind1 < len2; ind1++){
                     int tmp = input1[ind0 - ind1];
                     output[ind0] += input2[ind1] * tmp;
                 }
@@ -84,13 +83,12 @@ public class Convolve {
             }
             for (int ind0 = len1; ind0 < len3; ind0++){
                 start = (ind0 - len2 + 1 < 0) ? 0 : ind0 - len2 + 1;
-                for (int ind1=start; ind1 < len1; ind1++){
+                for (int ind1 = start; ind1 < len1; ind1++){
                     float tmp = input2[ind0 - ind1];
                     output[ind0] += input1[ind1] * tmp;
                 }
             }
-        }
-        else{
+        } else {
             for (int ind0 = 0; ind0 < len2; ind0++){
                 for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0] += input2[ind0 - ind1] * input1[ind1];
@@ -98,7 +96,7 @@ public class Convolve {
             }
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
-                for (int ind1=start; ind1 < len2; ind1++){
+                for (int ind1 = start; ind1 < len2; ind1++){
                     float tmp = input1[ind0 - ind1];
                     output[ind0] += input2[ind1] * tmp;
                 }
@@ -125,19 +123,18 @@ public class Convolve {
 
         if (len2 >= len1){
             for (int ind0 = 0; ind0 < len1; ind0++){
-                for (int ind1 = 0; ind1 < ind0+1; ind1++){
+                for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0] += input1[ind0 - ind1] * input2[ind1];
                 }
             }
             for (int ind0 = len1; ind0 < len3; ind0++){
-                start = (ind0-len2+1<0) ? 0 : ind0 - len2 + 1;
-                for (int ind1=start; ind1 < len1; ind1++){
+                start = (ind0 - len2 + 1 < 0) ? 0 : ind0 - len2 + 1;
+                for (int ind1 = start; ind1 < len1; ind1++){
                     double tmp = input2[ind0 - ind1];
                     output[ind0] += input1[ind1] * tmp;
                 }
             }
-        }
-        else{
+        } else {
             for (int ind0 = 0; ind0 < len2; ind0++){
                 for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0] += input2[ind0 - ind1] * input1[ind1];
@@ -145,7 +142,7 @@ public class Convolve {
             }
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
-                for (int ind1=start; ind1 < len2; ind1++){
+                for (int ind1 = start; ind1 < len2; ind1++){
                     double tmp = input1[ind0 - ind1];
                     output[ind0] += input2[ind1] * tmp;
                 }
@@ -165,9 +162,10 @@ public class Convolve {
     public static final double[] convolveRealComplex(double[] input1, double[] input2){
         // ---------------------  error checking  ---------------------------
         // expecting complex interleaved should be even.
-        if (input2.length % 2 == 1)
+        if (input2.length % 2 == 1) {
             throw new IllegalArgumentException(
                 "Expecting interleaved complex, should be even number");
+        }
 
         // ----------------  setup local variables  -------------------------
         int len1 = input1.length;
@@ -180,31 +178,30 @@ public class Convolve {
 
         if (len2 >= len1){
             for (int ind0 = 0; ind0 < len1; ind0++){
-                for (int ind1 = 0; ind1 < ind0+1; ind1++){
+                for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
                     output[ind0 * 2] += input1[ind0 - ind1] * input2[ind1 * 2];
                     output[ind0 * 2 + 1] += input1[ind0 - ind1] * input2[ind1 * 2 + 1];
                 }
             }
             for (int ind0 = len1; ind0 < len3; ind0++){
-                start = (ind0-len2+1<0) ? 0 : ind0 - len2 + 1;
-                for (int ind1=start; ind1 < len1; ind1++){
+                start = (ind0 - len2 + 1 < 0) ? 0 : ind0 - len2 + 1;
+                for (int ind1 = start; ind1 < len1; ind1++){
                     output[ind0 * 2] += input1[ind1] * input2[2 * (ind0 - ind1)];
                     output[ind0 * 2 + 1] += input1[ind1] * input2[2 * (ind0 - ind1) + 1];
                 }
             }
-        }
-        else{
+        } else {
             for (int ind0 = 0; ind0 < len2; ind0++){
                 for (int ind1 = 0; ind1 < ind0 + 1; ind1++){
-                    output[ind0 * 2] += input2[2*(ind0 - ind1)] * input1[ind1];
-                    output[ind0 * 2 + 1] += input2[2*(ind0 - ind1) + 1] * input1[ind1];
+                    output[ind0 * 2] += input2[2 * (ind0 - ind1)] * input1[ind1];
+                    output[ind0 * 2 + 1] += input2[2 * (ind0 - ind1) + 1] * input1[ind1];
                 }
             }
             for (int ind0 = len2; ind0 < len3; ind0++){
                 start = (ind0 - len1 + 1 < 0) ? 0 : ind0 - len1 + 1;
-                for (int ind1=start; ind1 < len2; ind1++){
+                for (int ind1 = start; ind1 < len2; ind1++){
                     double tmp = input1[ind0 - ind1];
-                    output[2 * ind0] += input2[2 * ind1] * input1[ind0-ind1];
+                    output[2 * ind0] += input2[2 * ind1] * input1[ind0 - ind1];
                     output[2 * ind0 + 1] += input2[2 * ind1 + 1] * input1[ind0 - ind1];
                 }
             }

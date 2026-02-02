@@ -8,18 +8,23 @@
  * @since June 20, 2019
  */
 package net.kcundercover.jdsp.swing;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import net.kcundercover.jdsp.dataformat.DataObject;
 import java.io.File;
-import java.awt.Dimension;
 import java.awt.BorderLayout;
 
 /** Panel to demonstrate use of tables */
 public class TableUI extends JPanel{
     /** Commonly uses separator token */
-    String[] TOKENS = {",", "$", "~", ".", "?", "#", "@", "+", " "};
+    private static final String[] TOKENS = {",", "$", "~", ".", "?", "#", "@", "+", " "};
     /** Button to reset the data */
     private JButton buttonReset = new JButton("Reset Data");
     /** Button to load data from CSV */

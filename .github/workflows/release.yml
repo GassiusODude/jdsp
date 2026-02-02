@@ -2,9 +2,11 @@ name: Release and Publish
 
 on:
   push:
-    branches: [ master ] # Validates code on every master push
+    branches:
+      - '**'
     tags:
-      - 'v*' # Full release process on tags like v1.1 or v1.0.2
+      - 'v*'  # tag with "v1.0" format
+  workflow_dispatch:
 
 jobs:
   build-and-release:

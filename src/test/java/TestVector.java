@@ -1,5 +1,6 @@
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import org.junit.jupiter.api.Test;
 import net.kcundercover.jdsp.math.Vector;
 
 public class TestVector {
@@ -15,34 +16,34 @@ public class TestVector {
     public void testDoubleAdd() {
         double[] a = {1, 2, 3};
         double[] b = {4, 5, 6};
-        assertArrayEquals(new double[]{5, 7, 9}, Vector.add(a, b), D_THRESH);
+        assertArrayEquals(new double[]{5, 7, 9}, Vector.add(a, b), D_THRESH, "testDoubleAdd failed");
     }
 
     @Test
     public void testDoubleSubtract() {
         double[] a = {5, 7, 9};
         double[] b = {1, 2, 3};
-        assertArrayEquals(new double[]{4, 5, 6}, Vector.subtract(a, b), D_THRESH);
+        assertArrayEquals(new double[]{4, 5, 6}, Vector.subtract(a, b), D_THRESH, "testDoubleSubtract failed");
     }
 
     @Test
     public void testDoubleMultiply() {
         double[] a = {2, 3, 4};
         double[] b = {5, 6, 7};
-        assertArrayEquals(new double[]{10, 18, 28}, Vector.multiply(a, b), D_THRESH);
+        assertArrayEquals(new double[]{10, 18, 28}, Vector.multiply(a, b), D_THRESH, "testDoubleMultiply failed");
     }
 
     @Test
     public void testDoubleDivide() {
         double[] a = {10, 20, 30};
         double[] b = {2, 4, 5};
-        assertArrayEquals(new double[]{5, 5, 6}, Vector.divide(a, b), D_THRESH);
+        assertArrayEquals(new double[]{5, 5, 6}, Vector.divide(a, b), D_THRESH, "testDoubleDivide failed");
     }
 
     @Test
     public void testDoubleSumAndProduct() {
         double[] a = {1, 2, 3, 4};
-        assertEquals(10, Vector.sum(a), D_THRESH);
+        assertEquals(10, Vector.sum(a), D_THRESH, "testDoubleSumAndProduct failed");
         assertEquals(24, Vector.product(a), D_THRESH);
     }
 
@@ -50,8 +51,8 @@ public class TestVector {
     public void testDoubleDotAndNorms() {
         double[] a = {1, 2, 3};
         double[] b = {4, 5, 6};
-        assertEquals(32, Vector.dot(a, b), D_THRESH);   // 1*4+2*5+3*6
-        assertEquals(Math.sqrt(14), Vector.norm2(a), D_THRESH);
+        assertEquals(32, Vector.dot(a, b), D_THRESH, "testDoubleDotAndNormsAdd failed (dot product)");   // 1*4+2*5+3*6
+        assertEquals(Math.sqrt(14), Vector.norm2(a), D_THRESH, "testDoubleDotAndNorms failed (norm2)");
     }
 
     // =========================================================
@@ -62,7 +63,7 @@ public class TestVector {
     public void testFloatAddAndMultiply() {
         float[] a = {1f, 2f, 3f};
         float[] b = {4f, 5f, 6f};
-        assertArrayEquals(new float[]{5f, 7f, 9f}, Vector.add(a, b), F_THRESH);
+        assertArrayEquals(new float[]{5f, 7f, 9f}, Vector.add(a, b), F_THRESH, "testFloatAddAndMultiply");
         assertArrayEquals(new float[]{4f, 10f, 18f}, Vector.multiply(a, b), F_THRESH);
     }
 
