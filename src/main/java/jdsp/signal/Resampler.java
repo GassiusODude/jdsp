@@ -70,10 +70,11 @@ public final class Resampler {
         double[][] out = resample(basebandReal, basebandImag);
 
         RESAMPLER_LOGGER.info(String.format(
-            "Downconverted {} samples ({} samples per second) to {} samples ({} samples per second)",
+            "Downconverted %d samples (%f samples per second) to %d samples (%f samples per second)",
             inReal.length, sampleRate,
             out[0].length, sampleRate * upFactor / downFactor
         ));
+
         return out;
     }
 

@@ -32,7 +32,7 @@ public class PowerSpectralDensity {
     public static double[][] calculatePsdWelch(double[][] data, double sampleRate, int windowSize) {
         int nfft;
         if (isPowerOfTwo(windowSize)) {
-            PSD_LOGGER.info(String.format(
+            PSD_LOGGER.fine(String.format(
                 "Using Apache Common Math FFT requires windowSize(%d) to be a power of 2, setting nfft to match",
                 windowSize));
             nfft = windowSize;
